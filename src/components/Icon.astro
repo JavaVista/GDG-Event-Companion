@@ -1,0 +1,17 @@
+---
+import type { SemanticIconName } from '../config/icons';
+
+interface Props {
+  name: SemanticIconName;
+  class?: string;
+  size?: number; // Sizing in pixels
+}
+
+const { name, class: className = '', size = 24 } = Astro.props;
+---
+
+<span
+  class={`icon-base icon-${name} ${className}`}
+  style={`width: ${size}px; height: ${size}px;`}
+  role="img"
+  aria-label={`${name} icon`}></span>

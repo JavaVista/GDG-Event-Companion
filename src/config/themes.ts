@@ -1,3 +1,5 @@
+import { DEFAULT_ICONS, type SemanticIconName } from './icons';
+
 export interface ThemeColors {
   primary: string;
   secondary: string;
@@ -16,12 +18,7 @@ export interface ThemeConfig {
   name: string;
   description: string;
   colors: ThemeColors;
-  iconSet: {
-    event: string;
-    speaker: string;
-    location: string;
-    badge: string;
-  };
+  iconOverrides?: Partial<Record<SemanticIconName, string>>;
   heroStyle: {
     gradientStart: string;
     gradientEnd: string;
@@ -47,16 +44,7 @@ export const THEMES: ThemeConfig[] = [
       warning: '#f9ab00',
       danger: '#ea4335',
     },
-    iconSet: {
-      event:
-        "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2' ry='2'></rect><line x1='16' y1='2' x2='16' y2='6'></line><line x1='8' y1='2' x2='8' y2='6'></line><line x1='3' y1='10' x2='21' y2='10'></line></svg>",
-      speaker:
-        "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'></path><circle cx='12' cy='7' r='4'></circle></svg>",
-      location:
-        "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z'></path><circle cx='12' cy='10' r='3'></circle></svg>",
-      badge:
-        "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'></circle><path d='M8 14s1.5 2 4 2 4-2 4-2'></path><line x1='9' y1='9' x2='9.01' y2='9'></line><line x1='15' y1='9' x2='15.01' y2='9'></line></svg>",
-    },
+    // No overrides: maps exactly to DEFAULT_ICONS
     heroStyle: {
       gradientStart: 'rgba(66, 133, 244, 0.1)',
       gradientEnd: 'rgba(188, 82, 238, 0.05)',
@@ -81,14 +69,15 @@ export const THEMES: ThemeConfig[] = [
       warning: '#fbbf24',
       danger: '#ef4444',
     },
-    iconSet: {
-      event:
+    iconOverrides: {
+      // DevFest specific overrides (retro-tech style)
+      calendar:
         "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='3' width='18' height='18' rx='1'></rect><line x1='9' y1='9' x2='15' y2='9'></line><line x1='9' y1='13' x2='15' y2='13'></line><line x1='9' y1='17' x2='13' y2='17'></line></svg>",
       speaker:
         "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='16 18 22 12 16 6'></polyline><polyline points='8 6 2 12 8 18'></polyline></svg>",
-      location:
+      venue:
         "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'></circle><circle cx='12' cy='12' r='3'></circle><line x1='12' y1='2' x2='12' y2='22'></line><line x1='2' y1='12' x2='22' y2='12'></line></svg>",
-      badge:
+      privacy:
         "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'></path></svg>",
     },
     heroStyle: {
@@ -115,15 +104,16 @@ export const THEMES: ThemeConfig[] = [
       warning: '#e0b034',
       danger: '#b3261e',
     },
-    iconSet: {
-      event:
+    iconOverrides: {
+      // Holiday overrides (tree, snowflakes, gift-box)
+      calendar:
         "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2L3 17h18L12 2z'></path><path d='M9 17v4a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-4'></path><path d='M12 7l-4 6h8l-4-6z'></path></svg>",
       speaker:
         "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'></path></svg>",
-      location:
+      venue:
         "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2v20M2 12h20M5 5l14 14M19 5L5 19'></path></svg>",
-      badge:
-        "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='8' width='18' height='12' rx='2'></rect><path d='M12 8V5a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v3M12 8V5a2 2 0 0 0-2-2h0a2 2 0 0 0-2 2v3'></path><line x1='12' y1='8' x2='12' y2='20'></line><line x1='3' y1='14' x2='21' y2='14'></line></svg>",
+      privacy:
+        "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='8' width='18' height='12' rx='2'></rect><path d='M12 8V5a2 2 0 0 1 2-2h0a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v3M12 8V5a2 2 0 0 0-2-2h0a2 2 0 0 0-2 2v3'></path><line x1='12' y1='8' x2='12' y2='20'></line><line x1='3' y1='14' x2='21' y2='14'></line></svg>",
     },
     heroStyle: {
       gradientStart: 'rgba(179, 38, 30, 0.08)',
@@ -156,11 +146,12 @@ export function applyTheme(theme: ThemeConfig) {
   root.style.setProperty('--md-sys-color-warning', theme.colors.warning);
   root.style.setProperty('--md-sys-color-danger', theme.colors.danger);
 
-  // Dynamic Mask Icons
-  root.style.setProperty('--icon-event', `url("${theme.iconSet.event}")`);
-  root.style.setProperty('--icon-speaker', `url("${theme.iconSet.speaker}")`);
-  root.style.setProperty('--icon-location', `url("${theme.iconSet.location}")`);
-  root.style.setProperty('--icon-badge', `url("${theme.iconSet.badge}")`);
+  // Set all 17 custom semantic icon properties
+  Object.keys(DEFAULT_ICONS).forEach((key) => {
+    const iconName = key as SemanticIconName;
+    const iconUrl = theme.iconOverrides?.[iconName] || DEFAULT_ICONS[iconName];
+    root.style.setProperty(`--icon-${iconName}`, `url("${iconUrl}")`);
+  });
 
   // Hero custom styling
   root.style.setProperty(
@@ -170,7 +161,7 @@ export function applyTheme(theme: ThemeConfig) {
   root.style.setProperty('--hero-gradient-end', theme.heroStyle.gradientEnd);
   root.style.setProperty('--hero-pattern', theme.heroStyle.pattern || 'none');
 
-  // Attribute selector for any CSS target overrides
+  // Attribute selector for any CSS overrides
   root.setAttribute('data-theme', theme.id);
 }
 
