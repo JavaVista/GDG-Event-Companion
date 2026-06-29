@@ -1,39 +1,36 @@
 @import 'tailwindcss';
 
 /* -------------------------------------------------------------------------- */
-/* 1. BRAND COLORS & CONFIGURATION                                             */
+/* 1. DYNAMIC THEME VARIABLE DEFINITIONS (WITH GDG DEFAULT FALLBACKS)          */
 /* -------------------------------------------------------------------------- */
 
 :root {
-  /* Google Developer Groups (GDG) Standard Color Palette */
-  --gdg-blue-500: #4285f4;
-  --gdg-green-500: #34a853;
-  --gdg-yellow-600: #f9ab00;
-  --gdg-red-500: #ea4335;
+  /* Fallback color values (maps to GDG Default theme) */
+  --md-sys-color-primary: #4285f4;
+  --md-sys-color-secondary: #34a853;
+  --md-sys-color-accent: #f9ab00;
+  --md-sys-color-background: #ffffff;
+  --md-sys-color-surface: #ffffff;
+  --md-sys-color-text: #1e1e1e;
+  --md-sys-color-muted: #5f6368;
+  --md-sys-color-success: #34a853;
+  --md-sys-color-warning: #f9ab00;
+  --md-sys-color-danger: #ea4335;
 
-  /* GDG Pastel Tonal Tones (for containers/backgrounds) */
-  --gdg-pastel-blue: #e8f0fe;
-  --gdg-pastel-green: #e6f4ea;
-  --gdg-pastel-yellow: #fef7e0;
-  --gdg-pastel-red: #fce8e6;
+  /* Default Icons (Fallbacks) */
+  --icon-event: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2' ry='2'></rect><line x1='16' y1='2' x2='16' y2='6'></line><line x1='8' y1='2' x2='8' y2='6'></line><line x1='3' y1='10' x2='21' y2='10'></line></svg>");
+  --icon-speaker: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'></path><circle cx='12' cy='7' r='4'></circle></svg>");
+  --icon-location: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z'></path><circle cx='12' cy='10' r='3'></circle></svg>");
+  --icon-badge: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'></circle><path d='M8 14s1.5 2 4 2 4-2 4-2'></path><line x1='9' y1='9' x2='9.01' y2='9'></line><line x1='15' y1='9' x2='15.01' y2='9'></line></svg>");
 
-  /* Grayscale & Defaults */
-  --gdg-white: #ffffff;
-  --gdg-black: #1e1e1e;
-  --gdg-gray-100: #f1f3f4;
-  --gdg-gray-200: #e8eaed;
-  --gdg-gray-600: #5f6368;
-  --gdg-gray-800: #3c4043;
-
-  /* Holiday Theme Color Palette (e.g. Festive Winter Celebration) */
-  --holiday-primary: #b3261e; /* Festive red */
-  --holiday-primary-container: #fde8e8; /* Soft red container */
-  --holiday-secondary: #137333; /* Pine green */
-  --holiday-secondary-container: #e6f4ea; /* Soft green container */
-  --holiday-tertiary: #e0b034; /* Metallic gold */
-  --holiday-background: #faf8f5; /* Warm off-white */
-  --holiday-surface: #ffffff;
-  --holiday-on-surface: #1e1e1e;
+  /* Hero Fallbacks */
+  --hero-gradient-start: rgba(66, 133, 244, 0.1);
+  --hero-gradient-end: rgba(188, 82, 238, 0.05);
+  --hero-pattern: radial-gradient(
+    circle at 10% 20%,
+    rgba(66, 133, 244, 0.05) 0%,
+    transparent 40%
+  );
 
   /* Material Design 3 Shape Tokens (Radii) */
   --md-shape-none: 0px;
@@ -56,183 +53,50 @@
     0px 2px 3px 0px rgba(0, 0, 0, 0.3), 0px 6px 10px 4px rgba(0, 0, 0, 0.15);
   --md-elevation-5:
     0px 4px 4px 0px rgba(0, 0, 0, 0.3), 0px 8px 12px 6px rgba(0, 0, 0, 0.15);
-}
 
-/* -------------------------------------------------------------------------- */
-/* 2. THEME & ICON SYSTEM (SWAPPABLE IN A SINGLE PLACE)                       */
-/* -------------------------------------------------------------------------- */
+  /* Automatically generate overlay/text color states using color-mix! */
+  --md-sys-color-on-primary: #ffffff;
+  --md-sys-color-on-secondary: #ffffff;
+  --md-sys-color-on-accent: #ffffff;
 
-/* [GDG LIGHT THEME] (Default) */
-:root {
-  --md-sys-color-primary: var(--gdg-blue-500);
-  --md-sys-color-on-primary: var(--gdg-white);
-  --md-sys-color-primary-container: var(--gdg-pastel-blue);
-  --md-sys-color-on-primary-container: #042f66;
+  --md-sys-color-outline: color-mix(
+    in srgb,
+    var(--md-sys-color-text) 12%,
+    transparent
+  );
+  --md-sys-color-outline-variant: color-mix(
+    in srgb,
+    var(--md-sys-color-text) 6%,
+    transparent
+  );
+  --md-sys-color-surface-variant: color-mix(
+    in srgb,
+    var(--md-sys-color-text) 6%,
+    var(--md-sys-color-surface)
+  );
+  --md-sys-color-on-surface-variant: var(--md-sys-color-muted);
 
-  --md-sys-color-secondary: var(--gdg-green-500);
-  --md-sys-color-on-secondary: var(--gdg-white);
-  --md-sys-color-secondary-container: var(--gdg-pastel-green);
-  --md-sys-color-on-secondary-container: #0c381c;
+  /* MD3 Containers generated dynamically from active theme colors */
+  --md-sys-color-primary-container: color-mix(
+    in srgb,
+    var(--md-sys-color-primary) 12%,
+    var(--md-sys-color-surface)
+  );
+  --md-sys-color-on-primary-container: var(--md-sys-color-primary);
 
-  --md-sys-color-tertiary: var(--gdg-yellow-600);
-  --md-sys-color-on-tertiary: var(--gdg-white);
-  --md-sys-color-tertiary-container: var(--gdg-pastel-yellow);
-  --md-sys-color-on-tertiary-container: #423000;
+  --md-sys-color-secondary-container: color-mix(
+    in srgb,
+    var(--md-sys-color-secondary) 12%,
+    var(--md-sys-color-surface)
+  );
+  --md-sys-color-on-secondary-container: var(--md-sys-color-secondary);
 
-  --md-sys-color-error: var(--gdg-red-500);
-  --md-sys-color-on-error: var(--gdg-white);
-  --md-sys-color-error-container: var(--gdg-pastel-red);
-  --md-sys-color-on-error-container: #5f150e;
-
-  --md-sys-color-background: #ffffff;
-  --md-sys-color-on-background: var(--gdg-black);
-
-  --md-sys-color-surface: #ffffff;
-  --md-sys-color-on-surface: var(--gdg-black);
-  --md-sys-color-surface-variant: var(--gdg-gray-100);
-  --md-sys-color-on-surface-variant: var(--gdg-gray-600);
-
-  --md-sys-color-outline: var(--gdg-gray-200);
-  --md-sys-color-outline-variant: var(--gdg-gray-100);
-
-  /* GLOBAL CUSTOM ICONS (Defined as SVG Data URIs - update these to update everywhere) */
-  --icon-event: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2' ry='2'></rect><line x1='16' y1='2' x2='16' y2='6'></line><line x1='8' y1='2' x2='8' y2='6'></line><line x1='3' y1='10' x2='21' y2='10'></line></svg>");
-  --icon-speaker: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'></path><circle cx='12' cy='7' r='4'></circle></svg>");
-  --icon-location: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z'></path><circle cx='12' cy='10' r='3'></circle></svg>");
-  --icon-badge: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'></circle><path d='M8 14s1.5 2 4 2 4-2 4-2'></path><line x1='9' y1='9' x2='9.01' y2='9'></line><line x1='15' y1='9' x2='15.01' y2='9'></line></svg>");
-}
-
-/* [GDG DARK THEME] (Default OS preference or explicit attribute) */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --md-sys-color-primary: #8ab4f8; /* Light google blue */
-    --md-sys-color-on-primary: #042f66;
-    --md-sys-color-primary-container: #1a73e8;
-    --md-sys-color-on-primary-container: var(--gdg-pastel-blue);
-
-    --md-sys-color-secondary: #81c995; /* Light google green */
-    --md-sys-color-on-secondary: #0c381c;
-    --md-sys-color-secondary-container: #188038;
-    --md-sys-color-on-secondary-container: var(--gdg-pastel-green);
-
-    --md-sys-color-tertiary: #fde293; /* Light google yellow */
-    --md-sys-color-on-tertiary: #423000;
-    --md-sys-color-tertiary-container: #f9ab00;
-    --md-sys-color-on-tertiary-container: var(--gdg-pastel-yellow);
-
-    --md-sys-color-error: #f28b82; /* Light google red */
-    --md-sys-color-on-error: #5f150e;
-    --md-sys-color-error-container: #d93025;
-    --md-sys-color-on-error-container: var(--gdg-pastel-red);
-
-    --md-sys-color-background: #121212;
-    --md-sys-color-on-background: var(--gdg-gray-200);
-
-    --md-sys-color-surface: #1e1e1e;
-    --md-sys-color-on-surface: var(--gdg-gray-200);
-    --md-sys-color-surface-variant: #2d2d2d;
-    --md-sys-color-on-surface-variant: var(--gdg-gray-600);
-
-    --md-sys-color-outline: var(--gdg-gray-800);
-    --md-sys-color-outline-variant: #2d2d2d;
-  }
-}
-
-/* Explicit data-theme selectors allow dynamic client-side swappability */
-[data-theme='gdg-light'] {
-  --md-sys-color-primary: var(--gdg-blue-500);
-  --md-sys-color-on-primary: var(--gdg-white);
-  --md-sys-color-primary-container: var(--gdg-pastel-blue);
-  --md-sys-color-on-primary-container: #042f66;
-  --md-sys-color-secondary: var(--gdg-green-500);
-  --md-sys-color-on-secondary: var(--gdg-white);
-  --md-sys-color-secondary-container: var(--gdg-pastel-green);
-  --md-sys-color-on-secondary-container: #0c381c;
-  --md-sys-color-tertiary: var(--gdg-yellow-600);
-  --md-sys-color-on-tertiary: var(--gdg-white);
-  --md-sys-color-tertiary-container: var(--gdg-pastel-yellow);
-  --md-sys-color-on-tertiary-container: #423000;
-  --md-sys-color-error: var(--gdg-red-500);
-  --md-sys-color-on-error: var(--gdg-white);
-  --md-sys-color-error-container: var(--gdg-pastel-red);
-  --md-sys-color-on-error-container: #5f150e;
-  --md-sys-color-background: #ffffff;
-  --md-sys-color-on-background: var(--gdg-black);
-  --md-sys-color-surface: #ffffff;
-  --md-sys-color-on-surface: var(--gdg-black);
-  --md-sys-color-surface-variant: var(--gdg-gray-100);
-  --md-sys-color-on-surface-variant: var(--gdg-gray-600);
-  --md-sys-color-outline: var(--gdg-gray-200);
-}
-
-[data-theme='gdg-dark'] {
-  --md-sys-color-primary: #8ab4f8;
-  --md-sys-color-on-primary: #042f66;
-  --md-sys-color-primary-container: #1a73e8;
-  --md-sys-color-on-primary-container: var(--gdg-pastel-blue);
-  --md-sys-color-secondary: #81c995;
-  --md-sys-color-on-secondary: #0c381c;
-  --md-sys-color-secondary-container: #188038;
-  --md-sys-color-on-secondary-container: var(--gdg-pastel-green);
-  --md-sys-color-tertiary: #fde293;
-  --md-sys-color-on-tertiary: #423000;
-  --md-sys-color-tertiary-container: #f9ab00;
-  --md-sys-color-on-tertiary-container: var(--gdg-pastel-yellow);
-  --md-sys-color-error: #f28b82;
-  --md-sys-color-on-error: #5f150e;
-  --md-sys-color-error-container: #d93025;
-  --md-sys-color-on-error-container: var(--gdg-pastel-red);
-  --md-sys-color-background: #121212;
-  --md-sys-color-on-background: var(--gdg-gray-200);
-  --md-sys-color-surface: #1e1e1e;
-  --md-sys-color-on-surface: var(--gdg-gray-200);
-  --md-sys-color-surface-variant: #2d2d2d;
-  --md-sys-color-on-surface-variant: var(--gdg-gray-600);
-  --md-sys-color-outline: var(--gdg-gray-800);
-}
-
-/* [HOLIDAY CELEBRATION THEME] */
-[data-theme='holiday'] {
-  --md-sys-color-primary: var(--holiday-primary);
-  --md-sys-color-on-primary: var(--gdg-white);
-  --md-sys-color-primary-container: var(--holiday-primary-container);
-  --md-sys-color-on-primary-container: #601410;
-
-  --md-sys-color-secondary: var(--holiday-secondary);
-  --md-sys-color-on-secondary: var(--gdg-white);
-  --md-sys-color-secondary-container: var(--holiday-secondary-container);
-  --md-sys-color-on-secondary-container: #0d4a21;
-
-  --md-sys-color-tertiary: var(--holiday-tertiary);
-  --md-sys-color-on-tertiary: var(--gdg-black);
-  --md-sys-color-tertiary-container: #ffeebb;
-  --md-sys-color-on-tertiary-container: #332000;
-
-  --md-sys-color-error: #b3261e;
-  --md-sys-color-on-error: var(--gdg-white);
-  --md-sys-color-error-container: #f9dedc;
-  --md-sys-color-on-error-container: #410e0b;
-
-  --md-sys-color-background: var(--holiday-background);
-  --md-sys-color-on-background: var(--holiday-on-surface);
-
-  --md-sys-color-surface: var(--holiday-surface);
-  --md-sys-color-on-surface: var(--holiday-on-surface);
-  --md-sys-color-surface-variant: #f3efe9;
-  --md-sys-color-on-surface-variant: #6b6357;
-
-  --md-sys-color-outline: #e0d9cd;
-  --md-sys-color-outline-variant: #f3efe9;
-
-  /* HOLIDAY THEMED ICONS - Swapped in Christmas / Gift elements globally */
-  /* Event Icon -> Christmas Tree */
-  --icon-event: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2L3 17h18L12 2z'></path><path d='M9 17v4a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-4'></path><path d='M12 7l-4 6h8l-4-6z'></path></svg>");
-  /* Speaker Icon -> Santa Hat/Helper Badge */
-  --icon-speaker: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M17 10a5 5 0 0 0-10 0v4a5 5 0 0 0 10 0v-4z'></path><circle cx='12' cy='4' r='1.5'></circle><path d='M6 14h12l-1 5H7l-1-5z'></path></svg>");
-  /* Location Icon -> Snowflake/Star Symbol */
-  --icon-location: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2v20M2 12h20M5 5l14 14M19 5L5 19'></path></svg>");
-  /* Badge Icon -> Gift Box */
-  --icon-badge: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='8' width='18' height='12' rx='2'></rect><path d='M12 8V5a2 2 0 0 1 2-2h0a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v3M12 8V5a2 2 0 0 0-2-2h0a2 2 0 0 0-2 2v3'></path><line x1='12' y1='8' x2='12' y2='20'></line><line x1='3' y1='14' x2='21' y2='14'></line></svg>");
+  --md-sys-color-tertiary-container: color-mix(
+    in srgb,
+    var(--md-sys-color-accent) 12%,
+    var(--md-sys-color-surface)
+  );
+  --md-sys-color-on-tertiary-container: var(--md-sys-color-accent);
 }
 
 /* -------------------------------------------------------------------------- */

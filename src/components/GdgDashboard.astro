@@ -1,6 +1,7 @@
 ---
 // GDG Event Companion Showcase Dashboard
 // Implements Material Design 3 guidelines, dynamic themes, and swappable global icons.
+import { THEMES } from '../config/themes';
 ---
 
 <div class="min-h-screen flex flex-col transition-colors duration-300">
@@ -39,10 +40,7 @@
         id="theme-select"
         class="select-theme bg-surface-variant text-on-surface-variant text-sm font-medium py-2 px-4 pr-8 rounded-full border border-outline hover:border-primary transition-all duration-200 cursor-pointer focus:outline-none appearance-none"
       >
-        <option value="system">Google Developer Groups (System Default)</option>
-        <option value="gdg-light">Google Developer Groups (Light Mode)</option>
-        <option value="gdg-dark">Google Developer Groups (Dark Mode)</option>
-        <option value="holiday">🎄 Holiday Celebration (Custom Theme)</option>
+        {THEMES.map((theme) => <option value={theme.id}>{theme.name}</option>)}
       </select>
     </div>
   </header>
@@ -52,7 +50,8 @@
 <main class="flex-grow max-w-6xl w-full mx-auto px-6 py-8 flex flex-col gap-8">
   <!-- HERO SECTION (Elevated Card) -->
   <section
-    class="card card-elevated flex flex-col md:flex-row gap-8 items-center bg-gradient-to-br from-surface to-primary-container/10"
+    class="card card-elevated flex flex-col md:flex-row gap-8 items-center bg-surface transition-all duration-300"
+    style="background-image: var(--hero-pattern); background-color: var(--hero-gradient-start);"
   >
     <div class="flex-grow flex flex-col gap-4 text-left">
       <div
@@ -114,18 +113,15 @@
         How to test theme & icon swappability:
       </h3>
       <p class="text-xs text-on-surface-variant leading-relaxed">
-        Open the <strong>Active Theme</strong> dropdown in the header and choose <strong
-          >Holiday Celebration</strong
-        >. Notice how the color system completely switches to Christmas-inspired
-        tones (Pine Green, Berry Red, and Gold), and the icons dynamically
-        update instantly! The Calendar icon changes to a <strong
-          >Christmas Tree</strong
-        >, the Location pin becomes a <strong>Snowflake</strong>, the Speaker
-        icon becomes a <strong>Santa Hat helper</strong>, and the Attendee Smile
-        Badge becomes a <strong>Gift Box</strong>. This is accomplished cleanly
-        by mapping CSS mask variables in <a
-          href="file:///Users/javi/Desktop/CodeVista/GDG/GDG%20Event%20Companion/src/styles/global.css"
-          class="text-primary hover:underline font-semibold">global.css</a
+        Open the <strong>Active Theme</strong> dropdown in the header to swap themes.
+        Select <strong>GDG DevFest 2026</strong> for a vibrant, retro-futuristic dark
+        mode theme, or <strong>Holiday Celebration</strong> for a festive pines/crimson
+        theme. Notice that colors, backgrounds, gradients, and icons (e.g. keynotes
+        icon, attendee badge, locations) all switch instantly and are saved in <code
+          >localStorage</code
+        >! This is powered by a strongly-typed theme config model defined in <a
+          href="file:///Users/javi/Desktop/CodeVista/GDG/GDG%20Event%20Companion/src/config/themes.ts"
+          class="text-primary hover:underline font-semibold">themes.ts</a
         >.
       </p>
     </div>
@@ -332,31 +328,18 @@
 </footer>
 
 <script>
-  // Dynamic client-side theme swappability
+  import { getActiveTheme, setActiveThemeId } from '../config/themes';
+
   const themeSelect = document.getElementById(
     'theme-select'
   ) as HTMLSelectElement;
   if (themeSelect) {
-    // Check local storage or existing DOM theme
-    const savedTheme = localStorage.getItem('gdg-active-theme');
-    if (savedTheme) {
-      themeSelect.value = savedTheme;
-      if (savedTheme === 'system') {
-        document.documentElement.removeAttribute('data-theme');
-      } else {
-        document.documentElement.setAttribute('data-theme', savedTheme);
-      }
-    }
+    // Set the dropdown to match active theme
+    themeSelect.value = getActiveTheme().id;
 
     themeSelect.addEventListener('change', (e) => {
-      const selected = (e.target as HTMLSelectElement).value;
-      localStorage.setItem('gdg-active-theme', selected);
-
-      if (selected === 'system') {
-        document.documentElement.removeAttribute('data-theme');
-      } else {
-        document.documentElement.setAttribute('data-theme', selected);
-      }
+      const selectedId = (e.target as HTMLSelectElement).value;
+      setActiveThemeId(selectedId);
     });
   }
 </script>
