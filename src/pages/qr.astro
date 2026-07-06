@@ -1,57 +1,192 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
+import type { SemanticIconName } from '../config/icons';
+
+const qrItems = [
+  {
+    id: 'discord',
+    title: 'Discord Link',
+    subtitle: 'Join our community',
+    url: 'https://discord.com/invite/mMgkFY2nQS',
+    qrIcon: 'discord',
+    color: 'bg-primary/10 text-primary border-primary/20',
+  },
+  {
+    id: 'gdg',
+    title: 'GDG Central Florida',
+    subtitle: 'Our community page',
+    url: 'https://gdg.community.dev/gdg-central-florida/',
+    qrIcon: 'devfest',
+    color: 'bg-secondary/10 text-secondary border-secondary/20',
+  },
+  {
+    id: 'blog',
+    title: 'Google Devs Central Florida',
+    subtitle: 'Blog and updates',
+    url: 'https://googledevscentralflorida.com',
+    qrIcon: 'blog',
+    color: 'bg-tertiary/10 text-tertiary border-tertiary/20',
+  },
+  {
+    id: 'devfest',
+    title: 'DevFest Florida',
+    subtitle: 'DevFest website',
+    url: 'https://devfestflorida.com',
+    qrIcon: 'devfest',
+    color: 'bg-primary/10 text-primary border-primary/20',
+  },
+  {
+    id: 'conduct',
+    title: 'Code of Conduct',
+    subtitle: 'Our community guidelines',
+    url: 'https://goo.gle/codeofconduct',
+    qrIcon: 'codeOfConduct',
+    color: 'bg-error/10 text-error border-error/20',
+  },
+];
 ---
 
 <BaseLayout
   title="QR Center | GDG Event Companion"
-  description="Scan ticket or check in to event locations"
+  description="Scan or tap to show full screen QR codes perfect for projecting"
 >
-  <div class="flex flex-col items-center gap-6 py-6 text-center">
-    <div class="flex flex-col items-center gap-2">
+  <div class="flex flex-col gap-5 py-2">
+    <div class="flex flex-col gap-1 text-center sm:text-left">
       <h2 class="text-xl font-bold">QR Center</h2>
-      <p class="text-xs text-on-surface-variant max-w-xs">
-        Use your personalized ticket QR code for quick check-ins at session
-        rooms and registration desks.
+      <p class="text-xs text-on-surface-variant leading-relaxed">
+        Scan or tap to show full screen QR codes perfect for projecting.
       </p>
     </div>
 
-    <!-- Mock QR Code Container -->
-    <div
-      class="card card-elevated p-6 flex flex-col items-center justify-center gap-4 bg-surface max-w-[280px] w-full border border-outline/10 shadow-elevation-2"
-    >
-      <div
-        class="w-48 h-48 bg-on-surface/5 rounded-2xl flex items-center justify-center border-2 border-dashed border-outline/35 relative overflow-hidden group"
-      >
-        <!-- Interactive target lines -->
-        <div class="absolute inset-4 border-2 border-primary/45 rounded-lg">
-        </div>
-        <div class="absolute inset-0 bg-primary/5 animate-pulse"></div>
-        <!-- Mock QR Scanner Graphic -->
-        <Icon name="qr" size={72} class="text-primary/70 animate-bounce" />
-      </div>
-      <div class="flex flex-col gap-0.5">
-        <span
-          class="text-[10px] text-on-surface-variant font-bold uppercase tracking-wider"
-          >Ticket Code</span
-        >
-        <code
-          class="text-xs font-mono bg-surface-variant/40 px-2 py-0.5 rounded text-on-surface"
-          >GDG-2026-COMPANION</code
-        >
-      </div>
-    </div>
+    <!-- QR List -->
+    <div class="flex flex-col gap-3">
+      {
+        qrItems.map((item) => (
+          <button
+            class="qr-trigger card card-outlined border-outline/25 p-3.5 flex justify-between items-center bg-surface/50 hover:border-primary/60 hover:bg-surface transition-all duration-200 cursor-pointer w-full text-left"
+            data-title={item.title}
+            data-url={item.url}
+            data-icon={item.qrIcon}
+          >
+            <div class="flex items-center gap-3">
+              <div
+                class={`w-10 h-10 rounded-xl flex items-center justify-center ${item.color}`}
+              >
+                <Icon name={item.qrIcon as SemanticIconName} size={20} />
+              </div>
+              <div class="flex flex-col">
+                <h3 class="text-sm font-bold text-on-surface">{item.title}</h3>
+                <p class="text-[10px] text-on-surface-variant font-medium">
+                  {item.subtitle}
+                </p>
+                <span class="text-[9px] text-primary hover:underline font-mono truncate max-w-[180px] mt-0.5">
+                  {item.url.replace('https://', '')}
+                </span>
+              </div>
+            </div>
 
-    <!-- Instruction Info -->
-    <div class="card card-filled p-4 text-left w-full max-w-xs flex gap-3">
-      <div class="text-secondary text-lg shrink-0">🛡️</div>
-      <div class="flex flex-col gap-0.5">
-        <h3 class="text-xs font-bold">Offline Available</h3>
-        <p class="text-[10px] text-on-surface-variant leading-relaxed">
-          Your check-in token is cached on device. You can check in even when
-          the venue Wi-Fi is offline!
+            {/* Small QR Code Mock Icon */}
+            <div class="w-12 h-12 bg-on-surface/5 border border-outline/20 rounded-lg flex items-center justify-center relative shrink-0">
+              <Icon name="qr" size={24} class="text-on-surface-variant/40" />
+            </div>
+          </button>
+        ))
+      }
+    </div>
+  </div>
+
+  <!-- Fullscreen Modal Overlay for projecting QRs -->
+  <div
+    id="qr-modal"
+    class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div
+      class="bg-surface rounded-[28px] max-w-[320px] w-full p-6 flex flex-col items-center gap-5 border border-outline/10 shadow-elevation-5 transform scale-95 transition-transform duration-200"
+    >
+      <div class="flex flex-col items-center gap-1 text-center w-full">
+        <h3 id="modal-title" class="text-lg font-bold text-on-surface">
+          QR Code
+        </h3>
+        <p
+          id="modal-url"
+          class="text-[10px] text-on-surface-variant font-mono truncate w-full max-w-[240px]"
+        >
+          url
         </p>
       </div>
+
+      <!-- Large Mock QR Container -->
+      <div
+        class="w-52 h-52 bg-white rounded-2xl flex items-center justify-center border border-outline/15 shadow-inner relative overflow-hidden group"
+      >
+        <div class="absolute inset-4 border-2 border-primary/30 rounded-lg">
+        </div>
+        <!-- Mock scannable grid look -->
+        <div
+          class="absolute inset-0 opacity-10 bg-[radial-gradient(#000_1px,transparent_1px)] [background-size:8px_8px]"
+        >
+        </div>
+        <div class="relative flex flex-col items-center gap-2 text-black">
+          <span id="modal-icon-container">
+            <Icon id="modal-icon" name="qr" size={80} class="text-primary" />
+          </span>
+          <span
+            class="text-[8px] font-bold tracking-widest text-on-surface-variant font-mono uppercase bg-on-surface/5 px-2 py-0.5 rounded"
+            >Scan Me</span
+          >
+        </div>
+      </div>
+
+      <button
+        id="modal-close"
+        class="btn btn-tonal w-full py-2.5 text-xs font-bold"
+      >
+        Close / Back
+      </button>
     </div>
   </div>
 </BaseLayout>
+
+<script>
+  const qrTriggers = document.querySelectorAll('.qr-trigger');
+  const modal = document.getElementById('qr-modal');
+  const modalTitle = document.getElementById('modal-title');
+  const modalUrl = document.getElementById('modal-url');
+  const modalIconContainer = document.getElementById('modal-icon-container');
+  const modalClose = document.getElementById('modal-close');
+
+  if (modal && modalTitle && modalUrl && modalIconContainer && modalClose) {
+    qrTriggers.forEach((trigger) => {
+      trigger.addEventListener('click', () => {
+        const title = trigger.getAttribute('data-title') || '';
+        const url = trigger.getAttribute('data-url') || '';
+        const icon = trigger.getAttribute('data-icon') || 'qr';
+
+        modalTitle.textContent = title;
+        modalUrl.textContent = url;
+
+        // Dynamically insert the icon component look
+        modalIconContainer.innerHTML = `<span class="icon-base icon-${icon} text-primary" style="width: 80px; height: 80px;" role="img" aria-label="${icon} icon"></span>`;
+
+        // Open modal
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        modal.firstElementChild?.classList.remove('scale-95');
+        modal.firstElementChild?.classList.add('scale-100');
+      });
+    });
+
+    const closeModal = () => {
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      modal.firstElementChild?.classList.remove('scale-100');
+      modal.firstElementChild?.classList.add('scale-95');
+    };
+
+    modalClose.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+  }
+</script>
