@@ -1,0 +1,104 @@
+---
+import { THEMES } from '../config/themes';
+import BottomNav from './BottomNav.astro';
+---
+
+<div
+  class="min-h-screen flex justify-center bg-surface-variant/20 sm:bg-surface-variant/40 transition-colors duration-300"
+>
+  <!-- Mobile frame container -->
+  <div
+    class="w-full max-w-md min-h-screen flex flex-col bg-background shadow-2xl relative border-x border-outline/10 transition-colors duration-300"
+  >
+    <!-- Header -->
+    <header
+      class="sticky top-0 z-40 bg-surface/85 backdrop-blur-md border-b border-outline/15 px-4 py-3 flex items-center justify-between transition-colors duration-300"
+    >
+      <div class="flex items-center gap-2">
+        <!-- GDG branding: 4 brand color circles -->
+        <div class="flex gap-1">
+          <span class="w-2.5 h-2.5 rounded-full bg-primary" title="Google Blue"
+          ></span>
+          <span
+            class="w-2.5 h-2.5 rounded-full bg-secondary"
+            title="Google Green"></span>
+          <span
+            class="w-2.5 h-2.5 rounded-full bg-tertiary"
+            title="Google Yellow"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-error" title="Google Red"
+          ></span>
+        </div>
+        <h1
+          class="text-base font-bold tracking-tight text-on-background flex items-center gap-1"
+        >
+          GDG <span
+            class="text-primary font-medium text-xs px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20"
+            >Companion</span
+          >
+        </h1>
+      </div>
+
+      <!-- Theme Select Dropdown -->
+      <div class="flex items-center gap-2">
+        <select
+          id="shell-theme-select"
+          class="select-theme bg-surface-variant text-on-surface-variant text-xs font-semibold py-1.5 px-3 pr-7 rounded-full border border-outline hover:border-primary transition-all duration-200 cursor-pointer focus:outline-none appearance-none"
+          aria-label="Select Theme"
+        >
+          {
+            THEMES.map((theme) => (
+              <option value={theme.id}>
+                {theme.id === 'gdg-default'
+                  ? 'Default'
+                  : theme.id === 'gdg-devfest'
+                    ? 'DevFest'
+                    : 'Holiday'}
+              </option>
+            ))
+          }
+        </select>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow w-full px-4 pt-4 pb-28 flex flex-col gap-6">
+      <slot />
+    </main>
+
+    <!-- Bottom Navigation Bar Fixed Container -->
+    <div
+      class="fixed bottom-0 left-0 right-0 z-50 flex justify-center pointer-events-none"
+    >
+      <div
+        class="w-full max-w-md bg-surface/90 backdrop-blur-md border-t border-outline/15 pointer-events-auto shadow-elevation-3"
+      >
+        <BottomNav />
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { getActiveTheme, setActiveThemeId } from '../config/themes';
+
+  const themeSelect = document.getElementById(
+    'shell-theme-select'
+  ) as HTMLSelectElement;
+  if (themeSelect) {
+    // Sync the theme selector with the active theme from localStorage
+    themeSelect.value = getActiveTheme().id;
+
+    // Listen for theme selection change
+    themeSelect.addEventListener('change', (e) => {
+      const selectedId = (e.target as HTMLSelectElement).value;
+      setActiveThemeId(selectedId);
+    });
+
+    // Also sync the theme selector when the theme is changed from elsewhere
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'gdg-active-theme-config-id') {
+        themeSelect.value = getActiveTheme().id;
+      }
+    });
+  }
+</script>

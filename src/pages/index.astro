@@ -1,8 +1,80 @@
 ---
-import GdgDashboard from '../components/GdgDashboard.astro';
-import Layout from '../layouts/Layout.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
 ---
 
-<Layout>
-  <GdgDashboard />
-</Layout>
+<BaseLayout title="Home | GDG Event Companion">
+  <!-- Hero Section -->
+  <div
+    class="card card-elevated overflow-hidden relative flex flex-col gap-4 p-6 text-on-surface"
+    style="background-image: var(--hero-pattern); background-color: var(--hero-gradient-start);"
+  >
+    <div
+      class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container text-on-primary-container text-[11px] font-bold self-start uppercase tracking-wider"
+    >
+      <Icon name="devfest" size={14} />
+      GDG DevFest 2026
+    </div>
+    <div class="flex flex-col gap-1">
+      <h2 class="text-2xl font-black leading-tight">Welcome, Developer!</h2>
+      <p class="text-xs text-on-surface-variant/95 leading-relaxed max-w-xs">
+        Your ultimate companion for navigating sessions, scanning check-ins, and
+        connecting with organizers.
+      </p>
+    </div>
+    <div class="flex gap-2.5 mt-2">
+      <a href="/qr" class="btn btn-filled text-xs py-2 px-4 shadow-elevation-1">
+        <Icon name="qr" size={16} />
+        Check-In Now
+      </a>
+      <a href="/events" class="btn btn-tonal text-xs py-2 px-4"> Schedule </a>
+    </div>
+  </div>
+
+  <!-- Quick Info Cards -->
+  <div class="grid grid-cols-2 gap-4">
+    <div class="card card-filled p-4 flex flex-col gap-3 justify-between">
+      <div
+        class="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center"
+      >
+        <Icon name="calendar" size={18} />
+      </div>
+      <div>
+        <h3 class="text-xs font-bold text-on-surface-variant">NEXT EVENT</h3>
+        <p class="text-sm font-black mt-0.5 truncate">DevFest Keynotes</p>
+        <span class="text-[10px] text-on-surface/60 font-medium"
+          >9:00 AM - Stage A</span
+        >
+      </div>
+    </div>
+
+    <div class="card card-filled p-4 flex flex-col gap-3 justify-between">
+      <div
+        class="w-9 h-9 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center"
+      >
+        <Icon name="community" size={18} />
+      </div>
+      <div>
+        <h3 class="text-xs font-bold text-on-surface-variant">ATTENDEES</h3>
+        <p class="text-sm font-black mt-0.5">1,240 Registered</p>
+        <span class="text-[10px] text-on-surface/60 font-medium"
+          >Join Discord channel</span
+        >
+      </div>
+    </div>
+  </div>
+
+  <!-- Announcement Alert -->
+  <div
+    class="card card-outlined border-outline/25 p-4 flex gap-3.5 bg-surface/50"
+  >
+    <div class="text-primary text-xl shrink-0">📢</div>
+    <div class="flex flex-col gap-0.5">
+      <h3 class="text-xs font-bold">Registration is open</h3>
+      <p class="text-[11px] text-on-surface-variant leading-relaxed">
+        Make sure to complete your attendee profile to get your personalized
+        badge print layout!
+      </p>
+    </div>
+  </div>
+</BaseLayout>

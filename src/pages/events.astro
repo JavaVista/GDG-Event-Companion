@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+
+const events = [
+  {
+    time: '08:30 AM',
+    title: 'Registration & Coffee',
+    room: 'Main Entrance Lobby',
+    tag: 'Check-In',
+    tagColor: 'bg-primary/10 text-primary border-primary/20',
+  },
+  {
+    time: '09:00 AM',
+    title: 'Opening DevFest Keynote',
+    room: 'Grand Hall A',
+    tag: 'Keynote',
+    tagColor: 'bg-secondary/10 text-secondary border-secondary/20',
+  },
+  {
+    time: '10:00 AM',
+    title: 'Building PWAs with Astro',
+    room: 'Room 204 (Tech)',
+    tag: 'Workshop',
+    tagColor: 'bg-tertiary/10 text-tertiary border-tertiary/20',
+  },
+  {
+    time: '11:00 AM',
+    title: 'Material Design 3 Best Practices',
+    room: 'Room 105 (Design)',
+    tag: 'Session',
+    tagColor: 'bg-error/10 text-error border-error/20',
+  },
+];
+---
+
+<BaseLayout
+  title="Events | GDG Event Companion"
+  description="View conference schedule and details"
+>
+  <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-1">
+      <h2 class="text-xl font-bold">Schedule Events</h2>
+      <p class="text-xs text-on-surface-variant">
+        Browse and join events scheduled across rooms at the conference.
+      </p>
+    </div>
+
+    <div class="flex flex-col gap-3.5 mt-2">
+      {
+        events.map((event) => (
+          <div class="card card-outlined border-outline/25 p-4 flex justify-between items-center bg-surface/50 hover:border-primary/50 transition-colors duration-200">
+            <div class="flex flex-col gap-1 max-w-[70%]">
+              <span class="text-[10px] font-bold text-on-surface-variant">
+                {event.time}
+              </span>
+              <h3 class="text-sm font-bold text-on-surface truncate">
+                {event.title}
+              </h3>
+              <span class="text-[10px] text-on-surface/60 font-medium flex items-center gap-1">
+                <Icon name="venue" size={12} class="text-primary/70 shrink-0" />
+                {event.room}
+              </span>
+            </div>
+            <span
+              class={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${event.tagColor}`}
+            >
+              {event.tag}
+            </span>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</BaseLayout>

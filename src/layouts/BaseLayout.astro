@@ -1,0 +1,94 @@
+---
+import '../styles/global.css';
+import AppShell from '../components/AppShell.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'GDG Event Companion',
+  description = 'A companion web application for GDG event attendees',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO and Meta Tags -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <!-- Synchronous inline script to apply colors and prevent Flash of Un-themed Content (FOUC) -->
+    <script is:inline>
+      (function () {
+        const STORAGE_KEY = 'gdg-active-theme-config-id';
+        const activeThemeId =
+          localStorage.getItem(STORAGE_KEY) || 'gdg-default';
+        document.documentElement.setAttribute('data-theme', activeThemeId);
+
+        const themes = {
+          'gdg-default': {
+            primary: '#4285f4',
+            secondary: '#34a853',
+            accent: '#f9ab00',
+            background: '#ffffff',
+            surface: '#ffffff',
+            text: '#1e1e1e',
+            mutedText: '#5f6368',
+          },
+          'gdg-devfest': {
+            primary: '#ea4335',
+            secondary: '#4285f4',
+            accent: '#f9ab00',
+            background: '#0f172a',
+            surface: '#1e293b',
+            text: '#f8fafc',
+            mutedText: '#94a3b8',
+          },
+          'holiday-generic': {
+            primary: '#b3261e',
+            secondary: '#137333',
+            accent: '#e0b034',
+            background: '#faf8f5',
+            surface: '#ffffff',
+            text: '#1c1b1f',
+            mutedText: '#6b6357',
+          },
+        };
+
+        const theme = themes[activeThemeId] || themes['gdg-default'];
+        const root = document.documentElement;
+
+        root.style.setProperty('--md-sys-color-primary', theme.primary);
+        root.style.setProperty('--md-sys-color-secondary', theme.secondary);
+        root.style.setProperty('--md-sys-color-accent', theme.accent);
+        root.style.setProperty('--md-sys-color-background', theme.background);
+        root.style.setProperty('--md-sys-color-surface', theme.surface);
+        root.style.setProperty('--md-sys-color-text', theme.text);
+        root.style.setProperty('--md-sys-color-muted', theme.mutedText);
+      })();
+    </script>
+
+    <!-- Complete client-side bundling of full theme options (icons, shapes, gradients) -->
+    <script>
+      import { getActiveTheme, applyTheme } from '../config/themes';
+      applyTheme(getActiveTheme());
+    </script>
+  </head>
+  <body>
+    <AppShell>
+      <slot />
+    </AppShell>
+  </body>
+</html>

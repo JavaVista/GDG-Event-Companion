@@ -1,0 +1,86 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<BaseLayout
+  title="More | GDG Event Companion"
+  description="App settings and details"
+>
+  <div class="flex flex-col gap-6">
+    <div class="flex flex-col gap-1">
+      <h2 class="text-xl font-bold">More Options</h2>
+      <p class="text-xs text-on-surface-variant">
+        Manage your profile, view developer information, and configure options.
+      </p>
+    </div>
+
+    <!-- Quick profile card -->
+    <div class="card card-filled p-4 flex items-center gap-4">
+      <div
+        class="w-12 h-12 rounded-full bg-primary text-on-primary flex items-center justify-center text-lg font-black shadow-elevation-1"
+      >
+        JD
+      </div>
+      <div>
+        <h3 class="text-sm font-bold">John Doe</h3>
+        <p class="text-[10px] text-on-surface-variant/90">johndoe@gmail.com</p>
+        <span
+          class="text-[9px] font-bold bg-secondary/15 text-secondary px-2 py-0.5 rounded-full border border-secondary/20 inline-block mt-1"
+          >Attendee Badge</span
+        >
+      </div>
+    </div>
+
+    <!-- Action list -->
+    <div class="flex flex-col gap-2">
+      <div
+        class="card card-outlined border-outline/25 p-4 flex items-center justify-between hover:bg-surface-variant/10 cursor-pointer transition-colors duration-150"
+      >
+        <div class="flex items-center gap-3">
+          <Icon name="organizer" size={20} class="text-primary" />
+          <span class="text-xs font-bold">Organizer Portal</span>
+        </div>
+        <span class="text-xs text-on-surface-variant">🔒 Admin only</span>
+      </div>
+
+      <div
+        class="card card-outlined border-outline/25 p-4 flex items-center justify-between hover:bg-surface-variant/10 cursor-pointer transition-colors duration-150"
+      >
+        <div class="flex items-center gap-3">
+          <Icon name="discord" size={20} class="text-[#5865F2]" />
+          <span class="text-xs font-bold">Join Community Discord</span>
+        </div>
+        <span class="text-xs text-on-surface-variant">👉 Join</span>
+      </div>
+
+      <div
+        class="card card-outlined border-outline/25 p-4 flex items-center justify-between hover:bg-surface-variant/10 cursor-pointer transition-colors duration-150"
+      >
+        <div class="flex items-center gap-3">
+          <Icon name="codeOfConduct" size={20} class="text-secondary" />
+          <span class="text-xs font-bold">Code of Conduct</span>
+        </div>
+        <span class="text-xs text-on-surface-variant">Read</span>
+      </div>
+
+      <div
+        class="card card-outlined border-outline/25 p-4 flex items-center justify-between hover:bg-surface-variant/10 cursor-pointer transition-colors duration-150"
+      >
+        <div class="flex items-center gap-3">
+          <Icon name="privacy" size={20} class="text-error" />
+          <span class="text-xs font-bold">Privacy Policy</span>
+        </div>
+        <span class="text-xs text-on-surface-variant">Read</span>
+      </div>
+    </div>
+
+    <!-- App Version details -->
+    <div
+      class="text-center text-[10px] text-on-surface-variant/60 font-medium py-2"
+    >
+      GDG Event Companion v1.0.0 (Astro SSG)<br />
+      Designed with Material Design 3 guidelines
+    </div>
+  </div>
+</BaseLayout>
