@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
+import { THEMES } from '../config/themes';
 ---
 
 <BaseLayout
@@ -10,7 +11,7 @@ import Icon from '../components/Icon.astro';
   <!-- 1. LOCKED VIEW: Enter Organizer Code -->
   <div
     id="unlock-container"
-    class="flex flex-col items-center gap-6 py-8 text-center transition-opacity duration-300"
+    class="flex flex-col items-center gap-6 py-6 text-center transition-opacity duration-300"
   >
     <div class="flex flex-col items-center gap-2">
       <!-- Lock Avatar -->
@@ -28,37 +29,37 @@ import Icon from '../components/Icon.astro';
 
     <!-- Code Input Card -->
     <div
-      class="card card-elevated p-6 flex flex-col items-stretch gap-4 bg-surface max-w-[280px] w-full border border-outline/10 shadow-elevation-2"
+      class="card card-elevated p-6 flex flex-col items-stretch gap-4 bg-surface max-w-[280px] w-full border border-outline/10 shadow-elevation-2 rounded-[24px]"
     >
       <div class="flex flex-col gap-1 text-left">
         <label
           for="organizer-code"
-          class="text-[10px] text-on-surface-variant font-bold uppercase tracking-wider"
+          class="text-[12px] text-on-surface-variant font-bold uppercase tracking-wider"
         >
           Enter Organizer Code
         </label>
         <input
           type="text"
           id="organizer-code"
-          placeholder="e.g. gdg"
+          placeholder="Enter code here"
           class="w-full bg-surface-variant text-on-surface text-sm font-semibold py-2.5 px-4 rounded-xl border border-outline focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all duration-200"
         />
       </div>
 
       <button
         id="unlock-btn"
-        class="btn btn-filled text-xs py-2.5 shadow-elevation-1 w-full"
+        class="btn btn-filled text-xs py-2.5 shadow-elevation-1 w-full cursor-pointer"
       >
         <Icon name="lock" size={16} />
         Unlock Dashboard
       </button>
 
-      <span id="error-msg" class="text-[10px] text-error font-semibold hidden">
-        ❌ Incorrect code. Try "gdg"
+      <span id="error-msg" class="text-[12px] text-error font-semibold hidden">
+        ❌ Incorrect code!
       </span>
     </div>
 
-    <p class="text-[10px] text-on-surface-variant/70 font-medium">
+    <p class="text-[12px] text-on-surface-variant/70 font-medium">
       Not an organizer? Enjoy the event!
     </p>
   </div>
@@ -73,7 +74,7 @@ import Icon from '../components/Icon.astro';
         <h2 class="text-xl font-bold flex items-center gap-1.5">
           Organizer Dashboard
           <span
-            class="text-[9px] font-bold bg-secondary/15 text-secondary px-2 py-0.5 rounded-full border border-secondary/20 uppercase tracking-wide"
+            class="text-[11px] font-bold bg-secondary/15 text-secondary px-2.5 py-0.5 rounded-full border border-secondary/20 uppercase tracking-wide"
           >
             Unlocked
           </span>
@@ -85,7 +86,7 @@ import Icon from '../components/Icon.astro';
 
       <button
         id="lock-btn"
-        class="btn btn-text text-error text-[10px] py-1.5 px-3 border border-error/20 hover:bg-error/5 rounded-full shrink-0"
+        class="btn btn-text text-error text-[11px] py-1.5 px-3 border border-error/20 hover:bg-error/5 rounded-full shrink-0 cursor-pointer"
       >
         Lock Portal
       </button>
@@ -95,16 +96,16 @@ import Icon from '../components/Icon.astro';
     <div class="grid grid-cols-2 gap-3.5 mt-2">
       <!-- 1. Current Event -->
       <div
-        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200"
+        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200 rounded-2xl"
       >
         <div
-          class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0"
+          class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 animate-pulse"
         >
           <Icon name="calendar" size={16} />
         </div>
         <div>
           <h3 class="text-xs font-bold text-on-surface">Current Event</h3>
-          <p class="text-[9px] text-on-surface-variant mt-0.5 leading-tight">
+          <p class="text-[11px] text-on-surface-variant mt-0.5 leading-tight">
             View & edit event details
           </p>
         </div>
@@ -112,7 +113,7 @@ import Icon from '../components/Icon.astro';
 
       <!-- 2. Intro Script -->
       <div
-        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200"
+        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200 rounded-2xl"
       >
         <div
           class="w-8 h-8 rounded-lg bg-secondary/10 text-secondary flex items-center justify-center shrink-0"
@@ -121,7 +122,7 @@ import Icon from '../components/Icon.astro';
         </div>
         <div>
           <h3 class="text-xs font-bold text-on-surface">Intro Script</h3>
-          <p class="text-[9px] text-on-surface-variant mt-0.5 leading-tight">
+          <p class="text-[11px] text-on-surface-variant mt-0.5 leading-tight">
             Read / edit intro script
           </p>
         </div>
@@ -129,7 +130,7 @@ import Icon from '../components/Icon.astro';
 
       <!-- 3. Outro Script -->
       <div
-        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200"
+        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200 rounded-2xl"
       >
         <div
           class="w-8 h-8 rounded-lg bg-secondary/10 text-secondary flex items-center justify-center shrink-0"
@@ -138,7 +139,7 @@ import Icon from '../components/Icon.astro';
         </div>
         <div>
           <h3 class="text-xs font-bold text-on-surface">Outro Script</h3>
-          <p class="text-[9px] text-on-surface-variant mt-0.5 leading-tight">
+          <p class="text-[11px] text-on-surface-variant mt-0.5 leading-tight">
             Read / edit outro script
           </p>
         </div>
@@ -147,7 +148,7 @@ import Icon from '../components/Icon.astro';
       <!-- 4. QR Center -->
       <a
         href="/qr"
-        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200"
+        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200 rounded-2xl"
       >
         <div
           class="w-8 h-8 rounded-lg bg-tertiary/10 text-tertiary flex items-center justify-center shrink-0"
@@ -156,7 +157,7 @@ import Icon from '../components/Icon.astro';
         </div>
         <div>
           <h3 class="text-xs font-bold text-on-surface">QR Center</h3>
-          <p class="text-[9px] text-on-surface-variant mt-0.5 leading-tight">
+          <p class="text-[11px] text-on-surface-variant mt-0.5 leading-tight">
             Show QR codes
           </p>
         </div>
@@ -164,7 +165,7 @@ import Icon from '../components/Icon.astro';
 
       <!-- 5. Speaker -->
       <div
-        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200"
+        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200 rounded-2xl"
       >
         <div
           class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0"
@@ -173,7 +174,7 @@ import Icon from '../components/Icon.astro';
         </div>
         <div>
           <h3 class="text-xs font-bold text-on-surface">Speaker</h3>
-          <p class="text-[9px] text-on-surface-variant mt-0.5 leading-tight">
+          <p class="text-[11px] text-on-surface-variant mt-0.5 leading-tight">
             Speaker info & links
           </p>
         </div>
@@ -181,7 +182,7 @@ import Icon from '../components/Icon.astro';
 
       <!-- 6. Venue -->
       <div
-        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200"
+        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200 rounded-2xl"
       >
         <div
           class="w-8 h-8 rounded-lg bg-secondary/10 text-secondary flex items-center justify-center shrink-0"
@@ -190,7 +191,7 @@ import Icon from '../components/Icon.astro';
         </div>
         <div>
           <h3 class="text-xs font-bold text-on-surface">Venue</h3>
-          <p class="text-[9px] text-on-surface-variant mt-0.5 leading-tight">
+          <p class="text-[11px] text-on-surface-variant mt-0.5 leading-tight">
             Venue details
           </p>
         </div>
@@ -198,7 +199,7 @@ import Icon from '../components/Icon.astro';
 
       <!-- 7. Notes -->
       <div
-        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200"
+        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200 rounded-2xl"
       >
         <div
           class="w-8 h-8 rounded-lg bg-tertiary/10 text-tertiary flex items-center justify-center shrink-0"
@@ -207,7 +208,7 @@ import Icon from '../components/Icon.astro';
         </div>
         <div>
           <h3 class="text-xs font-bold text-on-surface">Notes</h3>
-          <p class="text-[9px] text-on-surface-variant mt-0.5 leading-tight">
+          <p class="text-[11px] text-on-surface-variant mt-0.5 leading-tight">
             Organizer notes
           </p>
         </div>
@@ -215,7 +216,7 @@ import Icon from '../components/Icon.astro';
 
       <!-- 8. Event Checklist -->
       <div
-        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200"
+        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200 rounded-2xl"
       >
         <div
           class="w-8 h-8 rounded-lg bg-error/10 text-error flex items-center justify-center shrink-0"
@@ -224,16 +225,58 @@ import Icon from '../components/Icon.astro';
         </div>
         <div>
           <h3 class="text-xs font-bold text-on-surface">Event Checklist</h3>
-          <p class="text-[9px] text-on-surface-variant mt-0.5 leading-tight">
+          <p class="text-[11px] text-on-surface-variant mt-0.5 leading-tight">
             Event checklist
           </p>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- 3. ALWAYS VISIBLE: Settings Section (Theme Selector Card) -->
+  <div
+    class="card card-outlined border-outline/25 p-4 flex flex-col gap-3 bg-surface/50 mt-1 rounded-[24px]"
+  >
+    <div class="flex justify-between items-center w-full">
+      <div class="flex items-center gap-2.5">
+        <div
+          class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0"
+        >
+          <Icon name="theme" size={16} />
+        </div>
+        <div class="flex flex-col">
+          <span class="text-xs font-bold text-on-surface">App Active Theme</span
+          >
+          <span class="text-[11px] text-on-surface-variant"
+            >Switch event visual styles instantly</span
+          >
+        </div>
+      </div>
+
+      <select
+        id="shell-theme-select-more"
+        class="select-theme bg-surface-variant text-on-surface-variant text-xs font-semibold py-1.5 px-3 pr-7 rounded-full border border-outline hover:border-primary transition-all duration-200 cursor-pointer focus:outline-none appearance-none"
+        aria-label="Select Theme"
+      >
+        {
+          THEMES.map((theme) => (
+            <option value={theme.id}>
+              {theme.id === 'gdg-default'
+                ? 'Default'
+                : theme.id === 'gdg-devfest'
+                  ? 'DevFest'
+                  : 'Holiday'}
+            </option>
+          ))
+        }
+      </select>
+    </div>
+  </div>
 </BaseLayout>
 
 <script>
+  import { getActiveTheme, setActiveThemeId } from '../config/themes';
+
   const unlockContainer = document.getElementById('unlock-container');
   const dashboardContainer = document.getElementById('dashboard-container');
   const codeInput = document.getElementById(
@@ -242,7 +285,11 @@ import Icon from '../components/Icon.astro';
   const unlockBtn = document.getElementById('unlock-btn');
   const lockBtn = document.getElementById('lock-btn');
   const errorMsg = document.getElementById('error-msg');
+  const themeSelect = document.getElementById(
+    'shell-theme-select-more'
+  ) as HTMLSelectElement;
 
+  // 1. Organizer Mode Toggle logic
   const checkUnlockedState = () => {
     if (sessionStorage.getItem('gdg-organizer-unlocked') === 'true') {
       unlockContainer?.classList.add('hidden');
@@ -253,7 +300,6 @@ import Icon from '../components/Icon.astro';
     }
   };
 
-  // Run immediately on page load
   checkUnlockedState();
 
   if (unlockBtn && codeInput && errorMsg) {
@@ -278,6 +324,22 @@ import Icon from '../components/Icon.astro';
     lockBtn.addEventListener('click', () => {
       sessionStorage.removeItem('gdg-organizer-unlocked');
       checkUnlockedState();
+    });
+  }
+
+  // 2. Settings Theme Selector logic
+  if (themeSelect) {
+    themeSelect.value = getActiveTheme().id;
+
+    themeSelect.addEventListener('change', (e) => {
+      const selectedId = (e.target as HTMLSelectElement).value;
+      setActiveThemeId(selectedId);
+    });
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'gdg-active-theme-config-id') {
+        themeSelect.value = getActiveTheme().id;
+      }
     });
   }
 </script>

@@ -1,50 +1,26 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
-import type { SemanticIconName } from '../config/icons';
+import { PUBLIC_LINKS } from '../config/links';
 
-const qrItems = [
-  {
-    id: 'discord',
-    title: 'Discord Link',
-    subtitle: 'Join our community',
-    url: 'https://discord.com/invite/mMgkFY2nQS',
-    qrIcon: 'discord',
-    color: 'bg-primary/10 text-primary border-primary/20',
-  },
-  {
-    id: 'gdg',
-    title: 'GDG Central Florida',
-    subtitle: 'Our community page',
-    url: 'https://gdg.community.dev/gdg-central-florida/',
-    qrIcon: 'devfest',
-    color: 'bg-secondary/10 text-secondary border-secondary/20',
-  },
-  {
-    id: 'blog',
-    title: 'Google Devs Central Florida',
-    subtitle: 'Blog and updates',
-    url: 'https://googledevscentralflorida.com',
-    qrIcon: 'blog',
-    color: 'bg-tertiary/10 text-tertiary border-tertiary/20',
-  },
-  {
-    id: 'devfest',
-    title: 'DevFest Florida',
-    subtitle: 'DevFest website',
-    url: 'https://devfestflorida.com',
-    qrIcon: 'devfest',
-    color: 'bg-primary/10 text-primary border-primary/20',
-  },
-  {
-    id: 'conduct',
-    title: 'Code of Conduct',
-    subtitle: 'Our community guidelines',
-    url: 'https://goo.gle/codeofconduct',
-    qrIcon: 'codeOfConduct',
-    color: 'bg-error/10 text-error border-error/20',
-  },
-];
+const getContainerColorClasses = (colorToken: string) => {
+  switch (colorToken) {
+    case 'primary':
+      return 'bg-primary/10 text-primary border-primary/20';
+    case 'secondary':
+      return 'bg-secondary/10 text-secondary border-secondary/20';
+    case 'accent':
+      return 'bg-tertiary/10 text-tertiary border-tertiary/20';
+    case 'error':
+      return 'bg-error/10 text-error border-error/20';
+    case 'success':
+      return 'bg-secondary/10 text-secondary border-secondary/20';
+    case 'purple':
+      return 'bg-purple-500/10 text-purple-600 border-purple-500/20 dark:text-purple-400';
+    default:
+      return 'bg-surface-variant/10 text-on-surface-variant/80 border-outline/25';
+  }
+};
 ---
 
 <BaseLayout
@@ -62,25 +38,25 @@ const qrItems = [
     <!-- QR List -->
     <div class="flex flex-col gap-3">
       {
-        qrItems.map((item) => (
+        PUBLIC_LINKS.map((item) => (
           <button
             class="qr-trigger card card-outlined border-outline/25 p-3.5 flex justify-between items-center bg-surface/50 hover:border-primary/60 hover:bg-surface transition-all duration-200 cursor-pointer w-full text-left"
             data-title={item.title}
             data-url={item.url}
-            data-icon={item.qrIcon}
+            data-icon={item.icon}
           >
             <div class="flex items-center gap-3">
               <div
-                class={`w-10 h-10 rounded-xl flex items-center justify-center ${item.color}`}
+                class={`w-10 h-10 rounded-xl flex items-center justify-center ${getContainerColorClasses(item.colorToken)}`}
               >
-                <Icon name={item.qrIcon as SemanticIconName} size={20} />
+                <Icon name={item.icon} size={20} />
               </div>
               <div class="flex flex-col">
                 <h3 class="text-sm font-bold text-on-surface">{item.title}</h3>
-                <p class="text-[10px] text-on-surface-variant font-medium">
-                  {item.subtitle}
+                <p class="text-[12px] text-on-surface-variant font-medium mt-0.5">
+                  {item.description}
                 </p>
-                <span class="text-[9px] text-primary hover:underline font-mono truncate max-w-[180px] mt-0.5">
+                <span class="text-[11px] text-primary hover:underline font-mono truncate max-w-[180px] mt-0.5">
                   {item.url.replace('https://', '')}
                 </span>
               </div>
@@ -112,7 +88,7 @@ const qrItems = [
         </h3>
         <p
           id="modal-url"
-          class="text-[10px] text-on-surface-variant font-mono truncate w-full max-w-[240px]"
+          class="text-[12px] text-on-surface-variant font-mono truncate w-full max-w-[240px] mt-0.5"
         >
           url
         </p>
@@ -131,10 +107,10 @@ const qrItems = [
         </div>
         <div class="relative flex flex-col items-center gap-2 text-black">
           <span id="modal-icon-container">
-            <Icon id="modal-icon" name="qr" size={80} class="text-primary" />
+            <Icon name="qr" size={80} class="text-primary" />
           </span>
           <span
-            class="text-[8px] font-bold tracking-widest text-on-surface-variant font-mono uppercase bg-on-surface/5 px-2 py-0.5 rounded"
+            class="text-[10px] font-bold tracking-widest text-on-surface-variant font-mono uppercase bg-on-surface/5 px-2 py-0.5 rounded"
             >Scan Me</span
           >
         </div>

@@ -16,6 +16,8 @@
   --md-sys-color-success: #34a853;
   --md-sys-color-warning: #f9ab00;
   --md-sys-color-danger: #ea4335;
+  --md-sys-color-tertiary: var(--md-sys-color-accent);
+  --md-sys-color-error: var(--md-sys-color-danger);
 
   /* Default Icons (Fallbacks) */
   --icon-discord: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9 10h.01M15 10h.01M17.5 4.5S16 3 13 3h-2C8 3 6.5 4.5 6.5 4.5A13 13 0 0 0 5 13c0 4 3 6.5 7 6.5l1-.5.5.5c4 0 7-2.5 7-6.5a13 13 0 0 0-1.5-8.5z'/><path d='M8.5 14.5c2 1.5 5 1.5 7 0'/></svg>");
@@ -113,6 +115,13 @@
     var(--md-sys-color-surface)
   );
   --md-sys-color-on-tertiary-container: var(--md-sys-color-accent);
+
+  --md-sys-color-error-container: color-mix(
+    in srgb,
+    var(--md-sys-color-error) 12%,
+    var(--md-sys-color-surface)
+  );
+  --md-sys-color-on-error-container: var(--md-sys-color-error);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -179,12 +188,10 @@ body {
   width: 100%;
   height: 100%;
   font-family:
+    'Google Sans Flex',
     'Inter',
-    Roboto,
     system-ui,
     -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
     sans-serif;
   color: var(--md-sys-color-on-background);
   background-color: var(--md-sys-color-background);
@@ -200,10 +207,24 @@ h2,
 h3,
 h4,
 h5,
-h6 {
+h6,
+.font-display {
+  font-family:
+    'Google Sans Flex',
+    system-ui,
+    -apple-system,
+    sans-serif;
   color: var(--md-sys-color-on-background);
-  font-weight: 600;
+  font-weight: 800;
   letter-spacing: -0.02em;
+}
+
+code,
+pre,
+.font-mono {
+  font-family:
+    'Google Sans Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    monospace !important;
 }
 
 /* -------------------------------------------------------------------------- */

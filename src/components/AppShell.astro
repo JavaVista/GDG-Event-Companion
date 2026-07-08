@@ -1,5 +1,4 @@
 ---
-import { THEMES } from '../config/themes';
 import BottomNav from './BottomNav.astro';
 ---
 
@@ -14,50 +13,50 @@ import BottomNav from './BottomNav.astro';
     <header
       class="sticky top-0 z-40 bg-surface/85 backdrop-blur-md border-b border-outline/15 px-4 py-3 flex items-center justify-between transition-colors duration-300"
     >
+      <!-- Center: GDG Logo Image + Local Text -->
       <div class="flex items-center gap-2">
-        <!-- GDG branding: 4 brand color circles -->
-        <div class="flex gap-1">
-          <span class="w-2.5 h-2.5 rounded-full bg-primary" title="Google Blue"
-          ></span>
-          <span
-            class="w-2.5 h-2.5 rounded-full bg-secondary"
-            title="Google Green"></span>
-          <span
-            class="w-2.5 h-2.5 rounded-full bg-tertiary"
-            title="Google Yellow"></span>
-          <span class="w-2.5 h-2.5 rounded-full bg-error" title="Google Red"
-          ></span>
-        </div>
+        <img
+          src="/images/gdg-logo.png"
+          alt="GDG Logo"
+          class="h-11 w-auto object-contain"
+        />
         <h1
-          class="text-base font-bold tracking-tight text-on-background flex items-center gap-1"
+          class="font-black text-on-surface tracking-tight leading-tight flex flex-col items-start"
         >
-          GDG <span
-            class="text-primary font-medium text-xs px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20"
-            >Companion</span
+          <span
+            class="text-[17px] font-black text-primary uppercase tracking-wider leading-none"
+            >GDG</span
+          >
+          <span
+            class="text-[11px] text-on-surface-variant font-semibold tracking-wide leading-none mt-0.5"
+            >Central Florida</span
           >
         </h1>
       </div>
 
-      <!-- Theme Select Dropdown -->
-      <div class="flex items-center gap-2">
-        <select
-          id="shell-theme-select"
-          class="select-theme bg-surface-variant text-on-surface-variant text-xs font-semibold py-1.5 px-3 pr-7 rounded-full border border-outline hover:border-primary transition-all duration-200 cursor-pointer focus:outline-none appearance-none"
-          aria-label="Select Theme"
+      <!-- Right: About Info button -->
+      <button
+        id="about-btn"
+        class="text-on-surface-variant hover:bg-on-surface/5 p-1.5 rounded-full transition-colors focus:outline-none cursor-pointer flex items-center justify-center"
+        aria-label="About"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-5.5 h-5.5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
         >
-          {
-            THEMES.map((theme) => (
-              <option value={theme.id}>
-                {theme.id === 'gdg-default'
-                  ? 'Default'
-                  : theme.id === 'gdg-devfest'
-                    ? 'DevFest'
-                    : 'Holiday'}
-              </option>
-            ))
-          }
-        </select>
-      </div>
+          <path
+            d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12c0 1.821.487 3.53 1.338 5L2.5 21.5l4.5-.838A9.955 9.955 0 0 0 12 22z"
+          ></path>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+      </button>
     </header>
 
     <!-- Main Content Area -->
@@ -78,27 +77,101 @@ import BottomNav from './BottomNav.astro';
   </div>
 </div>
 
+<!-- About Modal Dialog Overlay -->
+<div
+  id="about-modal"
+  class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200"
+  role="dialog"
+  aria-modal="true"
+>
+  <div
+    class="bg-surface rounded-[28px] max-w-[320px] w-full p-6 flex flex-col gap-4 border border-outline/10 shadow-elevation-5 transform scale-95 transition-transform duration-200"
+  >
+    <!-- Logo & Brand Title -->
+    <div class="flex flex-col items-center gap-2 text-center w-full">
+      <img
+        src="/images/gdg-logo.png"
+        alt="GDG Logo"
+        class="h-12 w-auto object-contain"
+      />
+      <h3 class="text-base font-extrabold text-on-surface mt-1">
+        GDG Event Companion
+      </h3>
+      <p class="text-[10px] text-on-surface-variant/80 font-medium">
+        Version 1.0.0
+      </p>
+    </div>
+
+    <!-- Description & Author Details -->
+    <div
+      class="flex flex-col gap-3 text-xs text-on-surface-variant leading-relaxed"
+    >
+      <p class="text-center font-medium px-1">
+        "Your ultimate companion for accessing community links, projecting QR
+        codes, and viewing presentation scripts."
+      </p>
+
+      <div class="border-t border-outline/10 pt-3 flex flex-col gap-1.5">
+        <div class="flex justify-between items-center text-[11px]">
+          <span class="font-bold text-on-surface">Made by:</span>
+          <span class="font-black text-primary">Javi</span>
+        </div>
+        <div class="flex justify-between items-center text-[11px]">
+          <span class="font-bold text-on-surface">Built for:</span>
+          <span class="font-semibold">GDG Organizers</span>
+        </div>
+        <div class="flex justify-between items-center text-[11px]">
+          <span class="font-bold text-on-surface">Framework:</span>
+          <span class="font-black text-primary">Astro</span>
+        </div>
+        <div class="flex justify-between items-center text-[11px]">
+          <span class="font-bold text-on-surface">Design System:</span>
+          <span class="font-semibold text-on-surface-variant"
+            >Material Design 3</span
+          >
+        </div>
+        <div class="flex justify-between items-center text-[11px]">
+          <span class="font-bold text-on-surface">Icons by:</span>
+          <a
+            href="https://icons8.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-primary hover:underline font-bold">Icons8</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <button
+      id="about-close"
+      class="btn btn-filled w-full py-2.5 text-xs font-bold mt-2 cursor-pointer"
+    >
+      Close
+    </button>
+  </div>
+</div>
+
 <script>
-  import { getActiveTheme, setActiveThemeId } from '../config/themes';
+  const aboutBtn = document.getElementById('about-btn');
+  const aboutModal = document.getElementById('about-modal');
+  const aboutClose = document.getElementById('about-close');
 
-  const themeSelect = document.getElementById(
-    'shell-theme-select'
-  ) as HTMLSelectElement;
-  if (themeSelect) {
-    // Sync the theme selector with the active theme from localStorage
-    themeSelect.value = getActiveTheme().id;
-
-    // Listen for theme selection change
-    themeSelect.addEventListener('change', (e) => {
-      const selectedId = (e.target as HTMLSelectElement).value;
-      setActiveThemeId(selectedId);
+  if (aboutBtn && aboutModal && aboutClose) {
+    aboutBtn.addEventListener('click', () => {
+      aboutModal.classList.remove('opacity-0', 'pointer-events-none');
+      aboutModal.firstElementChild?.classList.remove('scale-95');
+      aboutModal.firstElementChild?.classList.add('scale-100');
     });
 
-    // Also sync the theme selector when the theme is changed from elsewhere
-    window.addEventListener('storage', (e) => {
-      if (e.key === 'gdg-active-theme-config-id') {
-        themeSelect.value = getActiveTheme().id;
-      }
+    const closeAbout = () => {
+      aboutModal.classList.add('opacity-0', 'pointer-events-none');
+      aboutModal.firstElementChild?.classList.remove('scale-100');
+      aboutModal.firstElementChild?.classList.add('scale-95');
+    };
+
+    aboutClose.addEventListener('click', closeAbout);
+    aboutModal.addEventListener('click', (e) => {
+      if (e.target === aboutModal) closeAbout();
     });
   }
 </script>

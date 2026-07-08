@@ -25,7 +25,7 @@ export type SemanticIconName =
  */
 export const DEFAULT_ICONS: Record<SemanticIconName, string> = {
   discord:
-    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M9 10h.01M15 10h.01M17.5 4.5S16 3 13 3h-2C8 3 6.5 4.5 6.5 4.5A13 13 0 0 0 5 13c0 4 3 6.5 7 6.5l1-.5.5.5c4 0 7-2.5 7-6.5a13 13 0 0 0-1.5-8.5z'/><path d='M8.5 14.5c2 1.5 5 1.5 7 0'/></svg>",
+    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 127 96' fill='none'><path fill='currentColor' d='M107.7,8.07A105.15,105.15,0,0,0,77.26,0a77.19,77.19,0,0,0-3.3,6.83A96.67,96.67,0,0,0,52.88,6.83,77.19,77.19,0,0,0,49.58,0,105.15,105.15,0,0,0,19.14,8.07C2.75,32.4-1.69,56.12.51,79.48a105.73,105.73,0,0,0,32,16.14,79.11,79.11,0,0,0,6.75-11,68.6,68.6,0,0,1-10.64-5.12c.91-.67,1.81-1.37,2.69-2.1a75.8,75.8,0,0,0,64.83,0c.88.73,1.78,1.43,2.69,2.1a68.86,68.86,0,0,1-10.64,5.12,78.85,78.85,0,0,0,6.75,11,105.73,105.73,0,0,0,32-16.14C129.56,50.15,124.73,26.66,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53S36.18,40.36,42.45,40.36,53.83,46,53.83,53,48.72,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.24,60,73.24,53S78.41,40.36,84.69,40.36,96.07,46,96.07,53,91,65.69,84.69,65.69Z'/></svg>",
 
   calendar:
     "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2' ry='2'></rect><line x1='16' y1='2' x2='16' y2='6'></line><line x1='8' y1='2' x2='8' y2='6'></line><line x1='3' y1='10' x2='21' y2='10'></line></svg>",

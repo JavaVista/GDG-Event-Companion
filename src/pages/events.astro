@@ -51,19 +51,19 @@ const events = [
         events.map((event) => (
           <div class="card card-outlined border-outline/25 p-4 flex justify-between items-center bg-surface/50 hover:border-primary/50 transition-colors duration-200">
             <div class="flex flex-col gap-1 max-w-[70%]">
-              <span class="text-[10px] font-bold text-on-surface-variant">
+              <span class="text-[12px] font-bold text-on-surface-variant">
                 {event.time}
               </span>
               <h3 class="text-sm font-bold text-on-surface truncate">
                 {event.title}
               </h3>
-              <span class="text-[10px] text-on-surface/60 font-medium flex items-center gap-1">
+              <span class="text-[11px] text-on-surface/60 font-medium flex items-center gap-1">
                 <Icon name="venue" size={12} class="text-primary/70 shrink-0" />
                 {event.room}
               </span>
             </div>
             <span
-              class={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${event.tagColor}`}
+              class={`text-[11px] font-bold px-2 py-0.5 rounded-full border ${event.tagColor}`}
             >
               {event.tag}
             </span>

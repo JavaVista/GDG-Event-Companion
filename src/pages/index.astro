@@ -1,80 +1,261 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
+import { PUBLIC_LINKS } from '../config/links';
+
+const getColorClasses = (colorToken: string) => {
+  switch (colorToken) {
+    case 'primary':
+      return 'bg-[#4285f4] text-white'; // Google Blue
+    case 'secondary':
+      return 'bg-[#34a853] text-white'; // Google Green
+    case 'accent':
+      return 'bg-[#f9ab00] text-white'; // Google Yellow/Gold (White text/icon)
+    case 'error':
+      return 'bg-[#ea4335] text-white'; // Google Red
+    case 'success':
+      return 'bg-[#34a853] text-white'; // Google Green (Success)
+    case 'purple':
+      return 'bg-[#a142f4] text-white'; // Purple brand color
+    default:
+      return 'bg-surface-variant text-on-surface-variant';
+  }
+};
 ---
 
 <BaseLayout title="Home | GDG Event Companion">
-  <!-- Hero Section -->
+  <div class="py-1 mt-1">
+    <div class="flex flex-col">
+      <h2
+        class="text-[18px] font-black tracking-tight flex items-center gap-1.5 text-on-background"
+      >
+        Hola, Javi! <span class="animate-bounce">👋</span>
+      </h2>
+      <p class="text-[12px] text-on-surface-variant font-medium mt-0.5">
+        Welcome to your event companion.
+      </p>
+    </div>
+  </div>
+
+  <!-- Hero Event Card -->
   <div
-    class="card card-elevated overflow-hidden relative flex flex-col gap-4 p-6 text-on-surface"
-    style="background-image: var(--hero-pattern); background-color: var(--hero-gradient-start);"
+    class="card card-elevated p-0 overflow-hidden border border-outline/10 flex flex-col bg-surface shadow-elevation-2 rounded-[24px] transition-all duration-300"
   >
+    <!-- Card Image Banner (Orlando skyline) -->
     <div
-      class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container text-on-primary-container text-[11px] font-bold self-start uppercase tracking-wider"
+      class="h-32 w-full relative bg-cover bg-center shrink-0 border-b border-outline/5"
+      style="background-image: url('/images/orlando-skyline.png');"
     >
-      <Icon name="devfest" size={14} />
-      GDG DevFest 2026
+      <!-- Floating Header overlay inside the card -->
+      <div
+        class="absolute inset-x-0 top-0 p-4 flex justify-between items-center bg-gradient-to-b from-black/45 to-transparent"
+      >
+        <div
+          class="flex items-center gap-1.5 text-white font-bold text-[10px] tracking-wider uppercase"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-4 h-4 text-white"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2.5"
+          >
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          Current Event
+        </div>
+        <span
+          class="text-[10px] font-black bg-secondary text-white px-2.5 py-0.5 rounded-full border border-white/20 animate-pulse tracking-wider uppercase"
+        >
+          Live
+        </span>
+      </div>
     </div>
-    <div class="flex flex-col gap-1">
-      <h2 class="text-2xl font-black leading-tight">Welcome, Developer!</h2>
-      <p class="text-xs text-on-surface-variant/95 leading-relaxed max-w-xs">
-        Your ultimate companion for accessing community links, projecting QR
-        codes, and viewing presentation scripts.
-      </p>
-    </div>
-    <div class="flex gap-2.5 mt-2">
-      <a href="/qr" class="btn btn-filled text-xs py-2 px-4 shadow-elevation-1">
-        <Icon name="qr" size={16} />
-        QR Center
-      </a>
-      <a href="/events" class="btn btn-tonal text-xs py-2 px-4"> Schedule </a>
+
+    <!-- Card Details Area -->
+    <div class="p-4.5 flex justify-between items-center gap-4 bg-surface">
+      <div class="flex flex-col gap-1.5 max-w-[72%]">
+        <h3 class="text-[15px] font-extrabold leading-tight text-on-surface">
+          Making AI Honesty Machine-Readable
+        </h3>
+        <p
+          class="text-[12px] text-on-surface-variant font-medium leading-normal mt-0.5"
+        >
+          A Hands-On Workshop with Muntaser Syed
+        </p>
+
+        <!-- Details Grid -->
+        <div class="flex flex-col gap-1 border-t border-outline/5 pt-2.5 mt-1">
+          <div
+            class="flex items-center gap-1.5 text-[11px] text-on-surface-variant/80 font-medium"
+          >
+            <span>📅 May 31, 2025</span>
+            <span class="opacity-30">•</span>
+            <span>⏰ 9:30 AM - 12:00 PM</span>
+          </div>
+          <div
+            class="flex items-center gap-1 text-[11px] text-on-surface-variant font-semibold"
+          >
+            <span>📍 Tech Hub Orlando</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Speaker Avatar Circular Image on Right -->
+      <div class="flex flex-col items-center shrink-0">
+        <div
+          class="w-13 h-13 rounded-full border-2 border-primary/25 overflow-hidden shadow-elevation-1 bg-surface-variant"
+        >
+          <img
+            src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120"
+            alt="Speaker Avatar"
+            class="w-full h-full object-cover"
+          />
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Quick Info Cards -->
-  <div class="grid grid-cols-2 gap-4">
-    <div class="card card-filled p-4 flex flex-col gap-3 justify-between">
-      <div
-        class="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center"
+  <!-- Upcoming Events Section -->
+  <div class="flex flex-col gap-2 mt-1">
+    <div class="flex justify-between items-center">
+      <h3
+        class="text-[12px] font-bold uppercase text-on-surface-variant tracking-wider"
       >
-        <Icon name="calendar" size={18} />
-      </div>
-      <div>
-        <h3 class="text-xs font-bold text-on-surface-variant">NEXT EVENT</h3>
-        <p class="text-sm font-black mt-0.5 truncate">DevFest Keynotes</p>
-        <span class="text-[10px] text-on-surface/60 font-medium"
-          >9:00 AM - Stage A</span
-        >
-      </div>
+        Upcoming Events
+      </h3>
+      <a
+        href="/events"
+        class="text-[12px] font-bold text-primary hover:underline">View all</a
+      >
     </div>
 
-    <div class="card card-filled p-4 flex flex-col gap-3 justify-between">
-      <div
-        class="w-9 h-9 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center"
-      >
-        <Icon name="community" size={18} />
-      </div>
-      <div>
-        <h3 class="text-xs font-bold text-on-surface-variant">ATTENDEES</h3>
-        <p class="text-sm font-black mt-0.5">1,240 Registered</p>
-        <span class="text-[10px] text-on-surface/60 font-medium"
-          >Join Discord channel</span
+    <!-- Upcoming Event Card -->
+    <a
+      href="/events"
+      class="card card-outlined border-outline/25 p-3 flex items-center justify-between gap-3 bg-surface/40 hover:border-primary/50 transition-colors duration-150 rounded-2xl"
+    >
+      <div class="flex items-center gap-3">
+        <!-- Date Block (JUN 27) -->
+        <div
+          class="w-12 h-12 rounded-xl bg-primary text-on-primary flex flex-col items-center justify-center shrink-0 shadow-elevation-1"
         >
+          <span
+            class="text-[10px] font-black uppercase tracking-wide leading-none"
+            >Jun</span
+          >
+          <span class="text-[15px] font-black leading-none mt-0.5">27</span>
+        </div>
+
+        <!-- Info -->
+        <div class="flex flex-col gap-0.5 max-w-[170px]">
+          <h4
+            class="text-[13px] font-black text-on-surface truncate leading-tight"
+          >
+            Build with AI: Gemini on Firebase
+          </h4>
+          <span class="text-[11px] text-on-surface-variant font-semibold"
+            >Workshop</span
+          >
+          <span
+            class="text-[11px] text-on-surface-variant/80 font-medium flex items-center gap-0.5 mt-0.5"
+          >
+            📍 Tech Hub Orlando
+          </span>
+        </div>
       </div>
+
+      <!-- Right countdown & arrow -->
+      <div class="flex items-center gap-2 shrink-0">
+        <div class="flex flex-col items-end leading-none">
+          <span class="text-sm font-black text-primary">12</span>
+          <span
+            class="text-[9px] font-bold text-on-surface-variant uppercase mt-0.5"
+            >Days</span
+          >
+        </div>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-3.5 h-3.5 text-on-surface-variant/60"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </div>
+    </a>
+
+    <!-- Carousel Dot Indicators (Matching panel 1 prototype, shifted to upcoming events) -->
+    <div class="flex justify-center gap-1.5 mt-1">
+      <span class="w-1.5 h-1.5 rounded-full bg-primary transition-all"></span>
+      <span class="w-1.5 h-1.5 rounded-full bg-outline-variant/60"></span>
+      <span class="w-1.5 h-1.5 rounded-full bg-outline-variant/60"></span>
     </div>
   </div>
 
-  <!-- Announcement Alert -->
-  <div
-    class="card card-outlined border-outline/25 p-4 flex gap-3.5 bg-surface/50"
+  <!-- Quick Links Grid (Matching panel 1 prototype with bright solid background, 3 columns, vertical stack with white text/icons) -->
+  <div class="flex flex-col gap-2 mt-1">
+    <div class="flex justify-between items-center">
+      <h3
+        class="text-[12px] text-on-surface-variant font-bold uppercase tracking-wider"
+      >
+        Quick Links
+      </h3>
+      <span
+        class="text-[12px] font-bold text-primary cursor-pointer hover:underline"
+        >Edit</span
+      >
+    </div>
+    <div class="grid grid-cols-3 gap-3">
+      {
+        PUBLIC_LINKS.map((link) => (
+          <a
+            href={link.url}
+            target={link.isExternal ? '_blank' : undefined}
+            rel={link.isExternal ? 'noopener noreferrer' : undefined}
+            class={`flex flex-col items-center justify-center text-center gap-2 py-4 px-1.5 rounded-[20px] shadow-elevation-1 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 hover:shadow-elevation-2 min-h-[96px] ${getColorClasses(link.colorToken)}`}
+          >
+            <Icon name={link.icon} size={28} class="shrink-0" />
+            <span class="text-[11px] font-extrabold tracking-wide leading-tight break-words w-full px-0.5">
+              {link.title}
+            </span>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+
+  <!-- Organizer Tools Gate -->
+  <a
+    href="/more"
+    class="card card-outlined border-outline/25 p-3.5 flex items-center justify-between hover:bg-surface-variant/10 cursor-pointer transition-colors duration-150 mt-1 rounded-2xl"
   >
-    <div class="text-primary text-xl shrink-0">📢</div>
-    <div class="flex flex-col gap-0.5">
-      <h3 class="text-xs font-bold">Quick Links & Resources</h3>
-      <p class="text-[11px] text-on-surface-variant leading-relaxed">
-        Use the bottom tabs to view scannable community QR codes, browse session
-        schedules, or unlock Organizer Tools using the code <code>gdg</code>!
-      </p>
+    <div class="flex items-center gap-3">
+      <Icon name="lock" size={18} class="text-primary shrink-0" />
+      <div class="flex flex-col">
+        <span class="text-[13px] font-bold text-on-surface"
+          >Organizer Tools</span
+        >
+        <span class="text-[11px] text-on-surface-variant mt-0.5"
+          >Enter code to access presenter scripts</span
+        >
+      </div>
     </div>
-  </div>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="w-3.5 h-3.5 text-on-surface-variant/60"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      stroke-width="2.5"
+    >
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </a>
 </BaseLayout>
