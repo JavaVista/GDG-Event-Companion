@@ -1,54 +1,25 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
-
-const events = [
-  {
-    time: '08:30 AM',
-    title: 'Registration & Coffee',
-    room: 'Main Entrance Lobby',
-    tag: 'Check-In',
-    tagColor: 'bg-primary/10 text-primary border-primary/20',
-  },
-  {
-    time: '09:00 AM',
-    title: 'Opening DevFest Keynote',
-    room: 'Grand Hall A',
-    tag: 'Keynote',
-    tagColor: 'bg-secondary/10 text-secondary border-secondary/20',
-  },
-  {
-    time: '10:00 AM',
-    title: 'Building PWAs with Astro',
-    room: 'Room 204 (Tech)',
-    tag: 'Workshop',
-    tagColor: 'bg-tertiary/10 text-tertiary border-tertiary/20',
-  },
-  {
-    time: '11:00 AM',
-    title: 'Material Design 3 Best Practices',
-    room: 'Room 105 (Design)',
-    tag: 'Session',
-    tagColor: 'bg-error/10 text-error border-error/20',
-  },
-];
+import { SCHEDULE_EVENTS } from '../config/events';
 ---
 
 <BaseLayout
   title="Events | GDG Event Companion"
-  description="View conference schedule and details"
+  description="Organizer guide to upcoming community events"
 >
   <div class="flex flex-col gap-4">
     <div class="flex flex-col gap-1">
-      <h2 class="text-xl font-bold">Schedule Events</h2>
-      <p class="text-xs text-on-surface-variant">
-        Browse and join events scheduled across rooms at the conference.
+      <h2 class="text-xl font-bold">Upcoming Events</h2>
+      <p class="text-[12px] text-on-surface-variant leading-relaxed">
+        Invite guests to join our other upcoming events throughout the year by
+        going to our online event page.
       </p>
     </div>
 
     <div class="flex flex-col gap-3.5 mt-2">
       {
-        events.map((event) => (
+        SCHEDULE_EVENTS.map((event) => (
           <div class="card card-outlined border-outline/25 p-4 flex justify-between items-center bg-surface/50 hover:border-primary/50 transition-colors duration-200">
             <div class="flex flex-col gap-1 max-w-[70%]">
               <span class="text-[12px] font-bold text-on-surface-variant">

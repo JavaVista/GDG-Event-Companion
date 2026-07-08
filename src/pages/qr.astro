@@ -39,17 +39,19 @@ const getContainerColorClasses = (colorToken: string) => {
     <div class="flex flex-col gap-3">
       {
         PUBLIC_LINKS.map((item) => (
-          <button
-            class="qr-trigger card card-outlined border-outline/25 p-3.5 flex justify-between items-center bg-surface/50 hover:border-primary/60 hover:bg-surface transition-all duration-200 cursor-pointer w-full text-left"
+          <div
+            class="qr-trigger card card-outlined border-outline/25 p-3.5 flex justify-between items-center bg-surface/50 hover:border-primary/60 hover:bg-surface transition-all duration-200 cursor-pointer w-full text-left rounded-2xl"
+            role="button"
+            tabindex="0"
             data-title={item.title}
             data-url={item.url}
             data-icon={item.icon}
           >
             <div class="flex items-center gap-3">
               <div
-                class={`w-10 h-10 rounded-xl flex items-center justify-center ${getContainerColorClasses(item.colorToken)}`}
+                class={`w-12 h-12 rounded-xl flex items-center justify-center ${getContainerColorClasses(item.colorToken)}`}
               >
-                <Icon name={item.icon} size={20} />
+                <Icon name={item.icon} size={24} />
               </div>
               <div class="flex flex-col">
                 <h3 class="text-sm font-bold text-on-surface">{item.title}</h3>
@@ -66,7 +68,7 @@ const getContainerColorClasses = (colorToken: string) => {
             <div class="w-12 h-12 bg-on-surface/5 border border-outline/20 rounded-lg flex items-center justify-center relative shrink-0">
               <Icon name="qr" size={24} class="text-on-surface-variant/40" />
             </div>
-          </button>
+          </div>
         ))
       }
     </div>
@@ -151,6 +153,15 @@ const getContainerColorClasses = (colorToken: string) => {
         modal.classList.remove('opacity-0', 'pointer-events-none');
         modal.firstElementChild?.classList.remove('scale-95');
         modal.firstElementChild?.classList.add('scale-100');
+      });
+
+      // Keyboard accessibility
+      trigger.addEventListener('keydown', (e) => {
+        const keyEvent = e as KeyboardEvent;
+        if (keyEvent.key === 'Enter' || keyEvent.key === ' ') {
+          keyEvent.preventDefault();
+          (trigger as HTMLElement).click();
+        }
       });
     });
 
