@@ -17,7 +17,8 @@ export type SemanticIconName =
   | 'pwa'
   | 'privacy'
   | 'home'
-  | 'more';
+  | 'more'
+  | 'linkedin';
 
 /**
  * Standard default SVG icons.
@@ -36,7 +37,7 @@ export const DEFAULT_ICONS: Record<SemanticIconName, string> = {
     "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'></path><path d='M8 11h8M12 8v6'></path></svg>",
 
   devfest:
-    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'></path></svg>",
+    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M13 22c-1-5-1.5-10 1-14.5'></path><path d='M14 7.5C11 6.5 7.5 7 5 8.5c2.5-.5 6-.5 9-1z'></path><path d='M14 7.5c1.5-2.5 4.5-4 7.5-3.5-2.5 1-4.5 3.5-7.5 3.5z'></path><path d='M14 7.5C12.5 4.5 9.5 2 6.5 1.5c2.5 1.5 4.5 4 7.5 6z'></path><path d='M14 7.5c2.5-1 5.5.5 7 2-2.5 0-5-1-7-2z'></path><path d='M14 7.5c-.5 2.5-2 5-4.5 6.5 1-2.5 2-5.5 4.5-6.5z'></path><path d='M14 7.5c1.5 2 3 4.5 3 7.5-1.5-2-2.5-5-3-7.5z'></path></svg>",
 
   community:
     "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2'></path><circle cx='9' cy='7' r='4'></circle><path d='M23 21v-2a4 4 0 0 0-3-3.87'></path><path d='M16 3.13a4 4 0 0 1 0 7.75'></path></svg>",
@@ -74,6 +75,9 @@ export const DEFAULT_ICONS: Record<SemanticIconName, string> = {
   home: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'></path><polyline points='9 22 9 12 15 12 15 22'></polyline></svg>",
 
   more: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='1' fill='currentColor'></circle><circle cx='19' cy='12' r='1' fill='currentColor'></circle><circle cx='5' cy='12' r='1' fill='currentColor'></circle></svg>",
+
+  linkedin:
+    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z'></path><rect x='2' y='9' width='4' height='12'></rect><circle cx='4' cy='4' r='2'></circle></svg>",
 };
 
 /**
