@@ -1,0 +1,103 @@
+---
+import Icon from './Icon.astro';
+import type { SemanticIconName } from '../config/icons';
+
+interface CardItem {
+  id: string;
+  title: string;
+  description: string;
+  icon: SemanticIconName;
+  href?: string;
+  colorClass: string;
+  pulse?: boolean;
+}
+
+const cards: CardItem[] = [
+  {
+    id: 'current-event',
+    title: 'Current Event',
+    description: 'View event details',
+    icon: 'calendar',
+    href: '/events',
+    colorClass: 'bg-primary/10 text-primary',
+    pulse: true,
+  },
+  {
+    id: 'intro-script',
+    title: 'Intro Script',
+    description: 'Read / edit intro script',
+    icon: 'notes',
+    colorClass: 'bg-secondary/10 text-secondary',
+  },
+  {
+    id: 'outro-script',
+    title: 'Outro Script',
+    description: 'Read / edit outro script',
+    icon: 'notes',
+    colorClass: 'bg-secondary/10 text-secondary',
+  },
+  {
+    id: 'qr-center',
+    title: 'QR Center',
+    description: 'Show QR codes',
+    icon: 'qr',
+    href: '/qr',
+    colorClass: 'bg-tertiary/10 text-tertiary',
+  },
+  {
+    id: 'speaker',
+    title: 'Speaker',
+    description: 'Speaker info & links',
+    icon: 'speaker',
+    colorClass: 'bg-primary/10 text-primary',
+  },
+  {
+    id: 'venue',
+    title: 'Venue',
+    description: 'View venue details',
+    icon: 'venue',
+    colorClass: 'bg-secondary/10 text-secondary',
+  },
+  {
+    id: 'notes',
+    title: 'Notes',
+    description: 'Organizer notes',
+    icon: 'notes',
+    colorClass: 'bg-tertiary/10 text-tertiary',
+  },
+  {
+    id: 'checklist',
+    title: 'Event Checklist',
+    description: 'Track setup tasks',
+    icon: 'checklist',
+    colorClass: 'bg-error/10 text-error',
+  },
+];
+---
+
+<div class="grid grid-cols-2 gap-3.5 mt-2">
+  {
+    cards.map((card) => {
+      const Element = card.href ? 'a' : 'div';
+      return (
+        <Element
+          href={card.href}
+          data-modal-id={!card.href ? card.id : undefined}
+          class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 hover:scale-[1.01] active:scale-[0.99] cursor-pointer group transition-all duration-200 rounded-2xl select-none"
+        >
+          <div
+            class={`w-8 h-8 rounded-lg ${card.colorClass} flex items-center justify-center shrink-0 ${card.pulse ? 'animate-pulse' : ''}`}
+          >
+            <Icon name={card.icon} size={16} />
+          </div>
+          <div>
+            <h3 class="text-xs font-bold text-on-surface">{card.title}</h3>
+            <p class="text-[11px] text-on-surface-variant mt-0.5 leading-tight">
+              {card.description}
+            </p>
+          </div>
+        </Element>
+      );
+    })
+  }
+</div>

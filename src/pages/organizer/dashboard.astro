@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Icon from '../../components/Icon.astro';
+import OrganizerDashboardGrid from '../../components/OrganizerDashboardGrid.astro';
 ---
 
 <BaseLayout
@@ -35,144 +35,291 @@ import Icon from '../../components/Icon.astro';
       </div>
     </div>
 
-    <!-- Dashboard Tools Grid -->
-    <div class="grid grid-cols-2 gap-3.5 mt-2">
-      <!-- 1. Current Event -->
+    <!-- Dashboard Tools Grid Component -->
+    <OrganizerDashboardGrid />
+  </div>
+
+  <!-- MODALS SYSTEM OVERLAYS -->
+
+  <!-- 1. Intro Script Modal -->
+  <div
+    id="modal-intro-script"
+    class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div
+      class="bg-surface rounded-[28px] max-w-[340px] w-full p-6 flex flex-col gap-4 border border-outline/10 shadow-elevation-5 transform scale-95 transition-transform duration-200"
+    >
+      <div class="flex flex-col gap-1">
+        <h3 class="text-base font-extrabold text-on-surface">
+          Presenter Intro Script
+        </h3>
+        <p class="text-[10px] text-on-surface-variant/80 font-medium">
+          Read at start of event
+        </p>
+      </div>
       <div
-        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200 rounded-2xl"
+        class="bg-surface-variant/40 border border-outline/5 rounded-2xl p-4"
       >
-        <div
-          class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 animate-pulse"
+        <p
+          id="intro-text"
+          class="text-xs text-on-surface leading-relaxed font-medium"
         >
-          <Icon name="calendar" size={16} />
+          "Welcome everyone to today's Google Developer Groups event! We are
+          thrilled to have you here in Orlando. A special thank you to our
+          speaker Muntaser Syed for joining us to present 'Making AI Honesty
+          Machine-Readable'. Remember to scan the QR code to join our Discord
+          community, and check out our upcoming schedule. If you'd like to see
+          any QR codes or links later, just let me know and I can display them
+          for you. Let's get started!"
+        </p>
+      </div>
+      <div class="flex gap-3.5 mt-2">
+        <button
+          data-copy-target="intro-text"
+          class="btn btn-outlined flex-1 py-2 text-xs font-bold cursor-pointer"
+        >
+          Copy Script
+        </button>
+        <button
+          data-modal-close
+          class="btn btn-filled flex-1 py-2 text-xs font-bold cursor-pointer"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Outro Script Modal -->
+  <div
+    id="modal-outro-script"
+    class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div
+      class="bg-surface rounded-[28px] max-w-[340px] w-full p-6 flex flex-col gap-4 border border-outline/10 shadow-elevation-5 transform scale-95 transition-transform duration-200"
+    >
+      <div class="flex flex-col gap-1">
+        <h3 class="text-base font-extrabold text-on-surface">
+          Presenter Outro Script
+        </h3>
+        <p class="text-[10px] text-on-surface-variant/80 font-medium">
+          Read at conclusion of event
+        </p>
+      </div>
+      <div
+        class="bg-surface-variant/40 border border-outline/5 rounded-2xl p-4"
+      >
+        <p
+          id="outro-text"
+          class="text-xs text-on-surface leading-relaxed font-medium"
+        >
+          "Thank you all for joining us today! We hope you enjoyed the workshop
+          on AI Honesty. Huge thanks again to Muntaser Syed. Please take a
+          moment to join our Discord if you haven't yet, and keep an eye on our
+          next event 'Build with AI: Gemini on Firebase' on June 27. Enjoy the
+          networking session and have a safe trip home!"
+        </p>
+      </div>
+      <div class="flex gap-3.5 mt-2">
+        <button
+          data-copy-target="outro-text"
+          class="btn btn-outlined flex-1 py-2 text-xs font-bold cursor-pointer"
+        >
+          Copy Script
+        </button>
+        <button
+          data-modal-close
+          class="btn btn-filled flex-1 py-2 text-xs font-bold cursor-pointer"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Speaker Modal -->
+  <div
+    id="modal-speaker"
+    class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div
+      class="bg-surface rounded-[28px] max-w-[340px] w-full p-6 flex flex-col gap-4 border border-outline/10 shadow-elevation-5 transform scale-95 transition-transform duration-200"
+    >
+      <div class="flex flex-col gap-1">
+        <h3 class="text-base font-extrabold text-on-surface">
+          Speaker Profile
+        </h3>
+        <p class="text-[10px] text-on-surface-variant/80 font-medium">
+          Speaker spotlight details
+        </p>
+      </div>
+      <div
+        class="flex flex-col gap-3 bg-surface-variant/40 border border-outline/5 rounded-2xl p-4 text-xs font-medium"
+      >
+        <div class="flex justify-between border-b border-outline/5 pb-2">
+          <span class="text-on-surface-variant">Speaker:</span>
+          <span class="text-on-surface font-bold">Muntaser Syed</span>
         </div>
-        <div>
-          <h3 class="text-xs font-bold text-on-surface">Current Event</h3>
-          <p class="text-[11px] text-on-surface-variant mt-0.5 leading-tight">
-            View & edit event details
-          </p>
+        <div class="flex flex-col gap-1 border-b border-outline/5 pb-2">
+          <span class="text-on-surface-variant">Bio:</span>
+          <span class="text-on-surface font-normal leading-normal"
+            >AI safety researcher and developer advocate specializing in
+            machine-readable integrity models.</span
+          >
+        </div>
+        <div class="flex justify-between border-b border-outline/5 pb-2">
+          <span class="text-on-surface-variant">Social Links:</span>
+          <a href="https://MuntaserSyed" class="text-primary font-bold"
+            >@MuntaserSyed</a
+          >
         </div>
       </div>
-
-      <!-- 2. Intro Script -->
-      <div
-        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200 rounded-2xl"
+      <button
+        data-modal-close
+        class="btn btn-filled w-full py-2.5 text-xs font-bold cursor-pointer mt-1"
       >
-        <div
-          class="w-8 h-8 rounded-lg bg-secondary/10 text-secondary flex items-center justify-center shrink-0"
-        >
-          <Icon name="notes" size={16} />
+        Close
+      </button>
+    </div>
+  </div>
+
+  <!-- 4. Venue Modal -->
+  <div
+    id="modal-venue"
+    class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div
+      class="bg-surface rounded-[28px] max-w-[340px] w-full p-6 flex flex-col gap-4 border border-outline/10 shadow-elevation-5 transform scale-95 transition-transform duration-200"
+    >
+      <div class="flex flex-col gap-1">
+        <h3 class="text-base font-extrabold text-on-surface">
+          Venue Logistics
+        </h3>
+        <p class="text-[10px] text-on-surface-variant/80 font-medium">
+          Technical & wifi configurations
+        </p>
+      </div>
+      <div
+        class="flex flex-col gap-3 bg-surface-variant/40 border border-outline/5 rounded-2xl p-4 text-xs font-medium"
+      >
+        <div class="flex justify-between border-b border-outline/5 pb-2">
+          <span class="text-on-surface-variant">Location:</span>
+          <span class="text-on-surface font-bold text-right"
+            >Tech Hub Orlando</span
+          >
         </div>
-        <div>
-          <h3 class="text-xs font-bold text-on-surface">Intro Script</h3>
-          <p class="text-[11px] text-on-surface-variant mt-0.5 leading-tight">
-            Read / edit intro script
-          </p>
+        <div class="flex justify-between border-b border-outline/5 pb-2">
+          <span class="text-on-surface-variant">Room:</span>
+          <span class="text-on-surface">Main Hall (Floor 1)</span>
+        </div>
+        <div class="flex justify-between border-b border-outline/5 pb-2">
+          <span class="text-on-surface-variant">SSID:</span>
+          <span class="text-primary font-bold">TechHub_Guest</span>
+        </div>
+        <div class="flex justify-between border-b border-outline/5 pb-2">
+          <span class="text-on-surface-variant">Wifi Pass:</span>
+          <span class="text-primary font-bold">GDGOrlando2025</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-on-surface-variant">Technical Lead:</span>
+          <span class="text-on-surface font-semibold">(407) 555-0199</span>
         </div>
       </div>
-
-      <!-- 3. Outro Script -->
-      <div
-        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200 rounded-2xl"
+      <button
+        data-modal-close
+        class="btn btn-filled w-full py-2.5 text-xs font-bold cursor-pointer mt-1"
       >
-        <div
-          class="w-8 h-8 rounded-lg bg-secondary/10 text-secondary flex items-center justify-center shrink-0"
-        >
-          <Icon name="notes" size={16} />
-        </div>
-        <div>
-          <h3 class="text-xs font-bold text-on-surface">Outro Script</h3>
-          <p class="text-[11px] text-on-surface-variant mt-0.5 leading-tight">
-            Read / edit outro script
-          </p>
-        </div>
+        Close
+      </button>
+    </div>
+  </div>
+
+  <!-- 5. Notes Modal -->
+  <div
+    id="modal-notes"
+    class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div
+      class="bg-surface rounded-[28px] max-w-[340px] w-full p-6 flex flex-col gap-4 border border-outline/10 shadow-elevation-5 transform scale-95 transition-transform duration-200"
+    >
+      <div class="flex flex-col gap-1">
+        <h3 class="text-base font-extrabold text-on-surface">
+          Organizer Notes
+        </h3>
+        <p class="text-[10px] text-on-surface-variant/80 font-medium">
+          Quick notes (saved locally)
+        </p>
       </div>
-
-      <!-- 4. QR Center -->
-      <a
-        href="/qr"
-        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200 rounded-2xl"
+      <textarea
+        id="scratchpad-area"
+        class="w-full h-36 p-3.5 border border-outline/25 rounded-2xl bg-surface-variant/20 text-xs text-on-surface font-medium focus:outline-none focus:border-primary leading-normal"
+        placeholder="Type setup notes, checklist details, or reminders here..."
+      ></textarea>
+      <button
+        data-modal-close
+        class="btn btn-filled w-full py-2.5 text-xs font-bold cursor-pointer mt-1"
       >
-        <div
-          class="w-8 h-8 rounded-lg bg-tertiary/10 text-tertiary flex items-center justify-center shrink-0"
-        >
-          <Icon name="qr" size={16} />
-        </div>
-        <div>
-          <h3 class="text-xs font-bold text-on-surface">QR Center</h3>
-          <p class="text-[11px] text-on-surface-variant mt-0.5 leading-tight">
-            Show QR codes
-          </p>
-        </div>
-      </a>
+        Save & Close
+      </button>
+    </div>
+  </div>
 
-      <!-- 5. Speaker -->
-      <div
-        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200 rounded-2xl"
-      >
-        <div
-          class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0"
-        >
-          <Icon name="speaker" size={16} />
-        </div>
-        <div>
-          <h3 class="text-xs font-bold text-on-surface">Speaker</h3>
-          <p class="text-[11px] text-on-surface-variant mt-0.5 leading-tight">
-            Speaker info & links
-          </p>
-        </div>
+  <!-- 6. Checklist Modal -->
+  <div
+    id="modal-checklist"
+    class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div
+      class="bg-surface rounded-[28px] max-w-[340px] w-full p-6 flex flex-col gap-4 border border-outline/10 shadow-elevation-5 transform scale-95 transition-transform duration-200"
+    >
+      <div class="flex flex-col gap-1">
+        <h3 class="text-base font-extrabold text-on-surface">
+          Event Checklist
+        </h3>
+        <p class="text-[10px] text-on-surface-variant/80 font-medium">
+          Check off completed steps
+        </p>
       </div>
-
-      <!-- 6. Venue -->
-      <div
-        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200 rounded-2xl"
-      >
-        <div
-          class="w-8 h-8 rounded-lg bg-secondary/10 text-secondary flex items-center justify-center shrink-0"
-        >
-          <Icon name="venue" size={16} />
-        </div>
-        <div>
-          <h3 class="text-xs font-bold text-on-surface">Venue</h3>
-          <p class="text-[11px] text-on-surface-variant mt-0.5 leading-tight">
-            Venue details
-          </p>
-        </div>
+      <div class="flex flex-col gap-3 max-h-[220px] overflow-y-auto pr-1">
+        {
+          [
+            'Verify AV and HDMI feeds',
+            'Test presenter lapel microphone',
+            'Mount stand banners at front door',
+            'Check in speaker & test slides',
+            'Display check-in QR on projector',
+            'Provide water for the speaker',
+            'Verify catering setup is in hall',
+          ].map((item, idx) => (
+            <label class="flex items-start gap-3 text-xs text-on-surface font-medium cursor-pointer select-none">
+              <input
+                type="checkbox"
+                data-checklist-idx={idx}
+                class="w-4.5 h-4.5 rounded border-outline/35 text-primary focus:ring-primary/20 mt-0.5 cursor-pointer"
+              />
+              <span class="leading-tight mt-0.5">{item}</span>
+            </label>
+          ))
+        }
       </div>
-
-      <!-- 7. Notes -->
-      <div
-        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200 rounded-2xl"
+      <button
+        data-modal-close
+        class="btn btn-filled w-full py-2.5 text-xs font-bold cursor-pointer mt-1"
       >
-        <div
-          class="w-8 h-8 rounded-lg bg-tertiary/10 text-tertiary flex items-center justify-center shrink-0"
-        >
-          <Icon name="notes" size={16} />
-        </div>
-        <div>
-          <h3 class="text-xs font-bold text-on-surface">Notes</h3>
-          <p class="text-[11px] text-on-surface-variant mt-0.5 leading-tight">
-            Organizer notes
-          </p>
-        </div>
-      </div>
-
-      <!-- 8. Event Checklist -->
-      <div
-        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200 rounded-2xl"
-      >
-        <div
-          class="w-8 h-8 rounded-lg bg-error/10 text-error flex items-center justify-center shrink-0"
-        >
-          <Icon name="checklist" size={16} />
-        </div>
-        <div>
-          <h3 class="text-xs font-bold text-on-surface">Event Checklist</h3>
-          <p class="text-[11px] text-on-surface-variant mt-0.5 leading-tight">
-            Event checklist
-          </p>
-        </div>
-      </div>
+        Done
+      </button>
     </div>
   </div>
 </BaseLayout>
@@ -180,11 +327,12 @@ import Icon from '../../components/Icon.astro';
 <script>
   import { isUnlocked, lock } from '../../lib/organizer-auth';
 
-  // Client-side guard: if locked, redirect to unlock route index
+  // Client-side guard: if locked, redirect to unlock portal index
   if (!isUnlocked()) {
     window.location.replace('/organizer');
   }
 
+  // Lock action handler
   const lockBtn = document.getElementById('lock-btn');
   if (lockBtn) {
     lockBtn.addEventListener('click', () => {
@@ -192,4 +340,103 @@ import Icon from '../../components/Icon.astro';
       window.location.replace('/organizer');
     });
   }
+
+  // Generic modal open triggers
+  const cards = document.querySelectorAll('[data-modal-id]');
+  cards.forEach((card) => {
+    card.addEventListener('click', () => {
+      const modalId = card.getAttribute('data-modal-id');
+      const modal = document.getElementById(`modal-${modalId}`);
+      if (modal) {
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        modal.firstElementChild?.classList.remove('scale-95');
+        modal.firstElementChild?.classList.add('scale-100');
+      }
+    });
+  });
+
+  // Generic modal close triggers
+  const closeBtns = document.querySelectorAll('[data-modal-close]');
+  closeBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const modal = btn.closest('[role="dialog"]');
+      if (modal) {
+        modal.classList.add('opacity-0', 'pointer-events-none');
+        modal.firstElementChild?.classList.remove('scale-100');
+        modal.firstElementChild?.classList.add('scale-95');
+      }
+    });
+  });
+
+  // Notes scratchpad synchronization
+  const scratchpad = document.getElementById(
+    'scratchpad-area'
+  ) as HTMLTextAreaElement | null;
+  if (scratchpad) {
+    scratchpad.value = localStorage.getItem('gdg-organizer-notes') || '';
+    scratchpad.addEventListener('input', () => {
+      localStorage.setItem('gdg-organizer-notes', scratchpad.value);
+    });
+  }
+
+  // Checklist items synchronization
+  const checkboxes = document.querySelectorAll(
+    'input[data-checklist-idx]'
+  ) as NodeListOf<HTMLInputElement>;
+  const loadChecklist = () => {
+    try {
+      const data = localStorage.getItem('gdg-organizer-checklist');
+      if (data) {
+        const states = JSON.parse(data);
+        checkboxes.forEach((cb) => {
+          const idx = cb.getAttribute('data-checklist-idx');
+          if (idx !== null && states[idx] !== undefined) {
+            cb.checked = states[idx];
+          }
+        });
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const saveChecklist = () => {
+    const states: Record<string, boolean> = {};
+    checkboxes.forEach((cb) => {
+      const idx = cb.getAttribute('data-checklist-idx');
+      if (idx !== null) {
+        states[idx] = cb.checked;
+      }
+    });
+    localStorage.setItem('gdg-organizer-checklist', JSON.stringify(states));
+  };
+
+  checkboxes.forEach((cb) => {
+    cb.addEventListener('change', saveChecklist);
+  });
+
+  loadChecklist();
+
+  // Clipboard copy handlers
+  const copyBtns = document.querySelectorAll('[data-copy-target]');
+  copyBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const targetId = btn.getAttribute('data-copy-target');
+      if (targetId) {
+        const textElement = document.getElementById(targetId);
+        if (textElement) {
+          const text = textElement.textContent?.trim() || '';
+          navigator.clipboard.writeText(text).then(() => {
+            const originalText = btn.textContent;
+            btn.textContent = 'Copied!';
+            btn.classList.add('text-success', 'border-success/30');
+            setTimeout(() => {
+              btn.textContent = originalText;
+              btn.classList.remove('text-success', 'border-success/30');
+            }, 2000);
+          });
+        }
+      }
+    });
+  });
 </script>
