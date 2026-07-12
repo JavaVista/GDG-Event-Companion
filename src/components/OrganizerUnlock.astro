@@ -1,0 +1,189 @@
+---
+import Icon from './Icon.astro';
+---
+
+<div
+  id="unlock-container"
+  class="absolute inset-x-0 top-[68px] bottom-[80px] flex flex-col justify-between items-center text-center transition-opacity duration-300 overflow-hidden bg-gradient-to-b from-primary/5 via-background to-background z-10"
+>
+  <!-- Top Banner: Clouds & GDG brackets logo -->
+  <div class="w-full h-36 relative flex items-center justify-center shrink-0">
+    <!-- Confetti & Floating Clouds Background -->
+    <div class="absolute inset-0 opacity-90 pointer-events-none">
+      <svg
+        viewBox="0 0 400 160"
+        class="w-full h-full"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        preserveAspectRatio="xMidYMid slice"
+      >
+        <!-- Sky Gradient -->
+        <rect width="400" height="160" fill="url(#sky-grad)"></rect>
+
+        <defs>
+          <linearGradient id="sky-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#4285F4" stop-opacity="0.12"></stop>
+            <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"></stop>
+          </linearGradient>
+        </defs>
+
+        <!-- Soft background clouds of different shapes (still) -->
+        <!-- 1. Left background small cloud -->
+        <path
+          d="M20 60 a8 8 0 0 1 8 -8 a12 12 0 0 1 20 -2 a8 8 0 0 1 6 10 z"
+          fill="white"
+          opacity="0.35"></path>
+        <!-- 2. Top-left cloud -->
+        <path
+          d="M70 45 a10 10 0 0 1 10 -10 a15 15 0 0 1 27 -3 a10 10 0 0 1 7 13 z"
+          fill="white"
+          opacity="0.4"></path>
+        <!-- 3. Top center wide flat cloud -->
+        <path
+          d="M165 30 a8 8 0 0 1 8 -8 h24 a8 8 0 0 1 8 8 a6 6 0 0 1 -6 6 h-28 a6 6 0 0 1 -6 -6 Z"
+          fill="white"
+          opacity="0.5"></path>
+        <!-- 4. Right-center low cloud -->
+        <path
+          d="M260 75 a8 8 0 0 1 8 -8 h20 a8 8 0 0 1 8 8 a6 6 0 0 1 -6 6 h-26 a6 6 0 0 1 -6 -6 Z"
+          fill="white"
+          opacity="0.45"></path>
+        <!-- 5. Right side medium cloud -->
+        <path
+          d="M330 50 a14 14 0 0 1 14 -14 a20 20 0 0 1 35 -2 a14 14 0 0 1 8 16 z"
+          fill="white"
+          opacity="0.6"></path>
+
+        <!-- Large empty cloud on the right to balance layout -->
+        <path
+          d="M230 105 a22 22 0 0 1 22 -22 a32 32 0 0 1 60 -12 a22 22 0 0 1 32 12 a22 22 0 0 1 10 22 a15 15 0 0 1 -15 15 h-94 a15 15 0 0 1 -15 -15 z"
+          fill="white"
+          filter="drop-shadow(0px 3px 6px rgba(0,0,0,0.03))"
+          stroke="#E0E0E0"
+          stroke-width="0.5"></path>
+
+        <!-- Confetti shapes -->
+        <rect
+          x="180"
+          y="20"
+          width="8"
+          height="4"
+          transform="rotate(30 180 20)"
+          fill="#34A853"
+          opacity="0.8"></rect>
+        <circle cx="210" cy="35" r="3" fill="#FBBC05" opacity="0.8"></circle>
+        <polygon points="90,40 94,46 88,46" fill="#EA4335" opacity="0.8"
+        ></polygon>
+        <rect
+          x="330"
+          y="35"
+          width="4"
+          height="8"
+          transform="rotate(-15 330 35)"
+          fill="#4285F4"
+          opacity="0.8"></rect>
+
+        <!-- Floating Cloud containing the Logo (Left-Center Cloud) -->
+        <g class="float-cloud-logo">
+          <!-- White Cloud Shape (Left-Center, with drop shadow and outline) -->
+          <path
+            d="M40 115 a20 20 0 0 1 20 -20 a30 30 0 0 1 55 -10 a20 20 0 0 1 30 10 a20 20 0 0 1 10 20 a15 15 0 0 1 -15 15 h-90 a15 15 0 0 1 -10 -15 z"
+            fill="white"
+            filter="drop-shadow(0px 4px 8px rgba(0,0,0,0.06))"
+            stroke="#E0E0E0"
+            stroke-width="0.5"></path>
+
+          <!-- GDG Brackets Logo inside the cloud (Correct Colors: Left Red/Blue, Right Green/Yellow) -->
+          <g transform="translate(68, 85)">
+            <!-- Left Bracket -->
+            <polygon points="18,9 6,19.5 9.375,22.5 21.375,12" fill="#EA4335"
+            ></polygon>
+            <polygon points="18,30 6,19.5 9.375,16.5 21.375,27" fill="#4285F4"
+            ></polygon>
+            <!-- Right Bracket -->
+            <polygon points="27,9 39,19.5 35.625,22.5 23.625,12" fill="#34A853"
+            ></polygon>
+            <polygon points="27,30 39,19.5 35.625,16.5 23.625,27" fill="#FBBC05"
+            ></polygon>
+          </g>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Center Content Block -->
+  <div class="flex flex-col items-center gap-4 px-4 w-full z-10">
+    <div class="flex flex-col items-center gap-1.5">
+      <h2 class="text-xl font-bold text-on-surface">Unlock Organizer Mode</h2>
+      <p class="text-xs text-on-surface-variant max-w-xs leading-relaxed">
+        Organizer utilities and presenter scripts here. Unlocked with your team
+        credentials.
+      </p>
+    </div>
+
+    <!-- Code Input Card -->
+    <div
+      class="card card-elevated p-6 flex flex-col items-stretch gap-4 bg-surface max-w-[280px] w-full border border-outline/10 shadow-elevation-2 rounded-[24px]"
+    >
+      <div class="flex flex-col gap-1 text-left">
+        <label
+          for="organizer-code"
+          class="text-[12px] text-on-surface-variant font-bold uppercase tracking-wider"
+        >
+          Enter Organizer Code
+        </label>
+        <input
+          type="text"
+          id="organizer-code"
+          placeholder="Enter code here"
+          class="w-full bg-surface-variant text-on-surface text-sm font-semibold py-2.5 px-4 rounded-xl border border-outline focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all duration-200"
+        />
+      </div>
+
+      <button
+        id="unlock-btn"
+        class="btn btn-filled text-xs py-2.5 shadow-elevation-1 w-full cursor-pointer"
+      >
+        <Icon name="lock" size={16} />
+        Unlock Dashboard
+      </button>
+
+      <span id="error-msg" class="text-[12px] text-error font-semibold hidden">
+        ❌ Incorrect code!
+      </span>
+    </div>
+
+    <p class="text-[12px] text-on-surface-variant/70 font-medium">
+      Not an organizer? <a
+        href="/"
+        class="text-primary hover:underline font-semibold">Enjoy the event!</a
+      >
+    </p>
+  </div>
+
+  <!-- Bottom Artwork: Orlando Skyline (zoomed and fully visible above BottomNav) -->
+  <div
+    class="w-full select-none pointer-events-none mt-auto shrink-0 leading-none"
+  >
+    <img
+      src="/images/orlando-skyline.png"
+      alt="Orlando Skyline"
+      class="w-full h-28 object-cover object-center opacity-95"
+    />
+  </div>
+</div>
+
+<style is:global>
+  @keyframes float-gentle {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+  .float-cloud-logo {
+    animation: float-gentle 5s ease-in-out infinite;
+  }
+</style>

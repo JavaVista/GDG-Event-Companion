@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import OrganizerUnlock from '../../components/OrganizerUnlock.astro';
+---
+
+<BaseLayout
+  title="Organizer Unlock | GDG Event Companion"
+  description="Unlock community organizer tools and scripting dashboard"
+>
+  <OrganizerUnlock />
+</BaseLayout>
+
+<script>
+  import { isUnlocked, unlock } from '../../lib/organizer-auth';
+
+  // Client-side guard: if already unlocked, redirect straight to dashboard
+  if (isUnlocked()) {
+    window.location.replace('/organizer/dashboard');
+  }
+
+  const codeInput = document.getElementById(
+    'organizer-code'
+  ) as HTMLInputElement;
+  const unlockBtn = document.getElementById('unlock-btn');
+  const errorMsg = document.getElementById('error-msg');
+
+  if (unlockBtn && codeInput && errorMsg) {
+    unlockBtn.addEventListener('click', () => {
+      const code = codeInput.value;
+      if (unlock(code)) {
+        errorMsg.classList.add('hidden');
+        codeInput.value = '';
+        window.location.replace('/organizer/dashboard');
+      } else {
+        errorMsg.classList.remove('hidden');
+      }
+    });
+
+    codeInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') unlockBtn.click();
+    });
+  }
+</script>

@@ -1,0 +1,195 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+---
+
+<BaseLayout
+  title="Organizer Dashboard | GDG Event Companion"
+  description="Quick access to scripts and event management tools"
+>
+  <div id="dashboard-container" class="flex flex-col gap-5 py-2">
+    <div class="flex flex-col gap-2">
+      <!-- Title & CTA Row -->
+      <div class="flex justify-between items-center gap-4 w-full">
+        <h2 class="text-xl font-bold text-on-surface">Organizer Dashboard</h2>
+        <button
+          id="lock-btn"
+          class="btn btn-text text-error text-[11px] py-1.5 px-3 border border-error/20 hover:bg-error/5 rounded-full shrink-0 cursor-pointer"
+        >
+          Lock Dashboard
+        </button>
+      </div>
+
+      <!-- Status Pill & Description -->
+      <div class="flex flex-col gap-1.5">
+        <div>
+          <span
+            class="inline-flex text-[10px] font-bold bg-secondary/15 text-secondary px-2.5 py-0.5 rounded-full border border-secondary/20 uppercase tracking-wide animate-pulse"
+          >
+            Unlocked
+          </span>
+        </div>
+        <p class="text-xs text-on-surface-variant">
+          Quick access to scripts and event management tools.
+        </p>
+      </div>
+    </div>
+
+    <!-- Dashboard Tools Grid -->
+    <div class="grid grid-cols-2 gap-3.5 mt-2">
+      <!-- 1. Current Event -->
+      <div
+        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200 rounded-2xl"
+      >
+        <div
+          class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 animate-pulse"
+        >
+          <Icon name="calendar" size={16} />
+        </div>
+        <div>
+          <h3 class="text-xs font-bold text-on-surface">Current Event</h3>
+          <p class="text-[11px] text-on-surface-variant mt-0.5 leading-tight">
+            View & edit event details
+          </p>
+        </div>
+      </div>
+
+      <!-- 2. Intro Script -->
+      <div
+        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200 rounded-2xl"
+      >
+        <div
+          class="w-8 h-8 rounded-lg bg-secondary/10 text-secondary flex items-center justify-center shrink-0"
+        >
+          <Icon name="notes" size={16} />
+        </div>
+        <div>
+          <h3 class="text-xs font-bold text-on-surface">Intro Script</h3>
+          <p class="text-[11px] text-on-surface-variant mt-0.5 leading-tight">
+            Read / edit intro script
+          </p>
+        </div>
+      </div>
+
+      <!-- 3. Outro Script -->
+      <div
+        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200 rounded-2xl"
+      >
+        <div
+          class="w-8 h-8 rounded-lg bg-secondary/10 text-secondary flex items-center justify-center shrink-0"
+        >
+          <Icon name="notes" size={16} />
+        </div>
+        <div>
+          <h3 class="text-xs font-bold text-on-surface">Outro Script</h3>
+          <p class="text-[11px] text-on-surface-variant mt-0.5 leading-tight">
+            Read / edit outro script
+          </p>
+        </div>
+      </div>
+
+      <!-- 4. QR Center -->
+      <a
+        href="/qr"
+        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200 rounded-2xl"
+      >
+        <div
+          class="w-8 h-8 rounded-lg bg-tertiary/10 text-tertiary flex items-center justify-center shrink-0"
+        >
+          <Icon name="qr" size={16} />
+        </div>
+        <div>
+          <h3 class="text-xs font-bold text-on-surface">QR Center</h3>
+          <p class="text-[11px] text-on-surface-variant mt-0.5 leading-tight">
+            Show QR codes
+          </p>
+        </div>
+      </a>
+
+      <!-- 5. Speaker -->
+      <div
+        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200 rounded-2xl"
+      >
+        <div
+          class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0"
+        >
+          <Icon name="speaker" size={16} />
+        </div>
+        <div>
+          <h3 class="text-xs font-bold text-on-surface">Speaker</h3>
+          <p class="text-[11px] text-on-surface-variant mt-0.5 leading-tight">
+            Speaker info & links
+          </p>
+        </div>
+      </div>
+
+      <!-- 6. Venue -->
+      <div
+        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200 rounded-2xl"
+      >
+        <div
+          class="w-8 h-8 rounded-lg bg-secondary/10 text-secondary flex items-center justify-center shrink-0"
+        >
+          <Icon name="venue" size={16} />
+        </div>
+        <div>
+          <h3 class="text-xs font-bold text-on-surface">Venue</h3>
+          <p class="text-[11px] text-on-surface-variant mt-0.5 leading-tight">
+            Venue details
+          </p>
+        </div>
+      </div>
+
+      <!-- 7. Notes -->
+      <div
+        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200 rounded-2xl"
+      >
+        <div
+          class="w-8 h-8 rounded-lg bg-tertiary/10 text-tertiary flex items-center justify-center shrink-0"
+        >
+          <Icon name="notes" size={16} />
+        </div>
+        <div>
+          <h3 class="text-xs font-bold text-on-surface">Notes</h3>
+          <p class="text-[11px] text-on-surface-variant mt-0.5 leading-tight">
+            Organizer notes
+          </p>
+        </div>
+      </div>
+
+      <!-- 8. Event Checklist -->
+      <div
+        class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 cursor-pointer group transition-colors duration-200 rounded-2xl"
+      >
+        <div
+          class="w-8 h-8 rounded-lg bg-error/10 text-error flex items-center justify-center shrink-0"
+        >
+          <Icon name="checklist" size={16} />
+        </div>
+        <div>
+          <h3 class="text-xs font-bold text-on-surface">Event Checklist</h3>
+          <p class="text-[11px] text-on-surface-variant mt-0.5 leading-tight">
+            Event checklist
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  import { isUnlocked, lock } from '../../lib/organizer-auth';
+
+  // Client-side guard: if locked, redirect to unlock route index
+  if (!isUnlocked()) {
+    window.location.replace('/organizer');
+  }
+
+  const lockBtn = document.getElementById('lock-btn');
+  if (lockBtn) {
+    lockBtn.addEventListener('click', () => {
+      lock();
+      window.location.replace('/organizer');
+    });
+  }
+</script>
