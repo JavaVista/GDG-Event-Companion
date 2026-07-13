@@ -1,7 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
-import { SCHEDULE_EVENTS } from '../config/events';
+import { fetchChapterEvents } from '../lib/bevy';
+
+const allEvents = await fetchChapterEvents(920);
 ---
 
 <BaseLayout
@@ -19,27 +21,57 @@ import { SCHEDULE_EVENTS } from '../config/events';
 
     <div class="flex flex-col gap-3.5 mt-2">
       {
-        SCHEDULE_EVENTS.map((event) => (
-          <div class="card card-outlined border-outline/25 p-4 flex justify-between items-center bg-surface/50 hover:border-primary/50 transition-colors duration-200">
-            <div class="flex flex-col gap-1 max-w-[70%]">
-              <span class="text-[12px] font-bold text-on-surface-variant">
-                {event.time}
-              </span>
-              <h3 class="text-sm font-bold text-on-surface truncate">
-                {event.title}
-              </h3>
-              <span class="text-[11px] text-on-surface/60 font-medium flex items-center gap-1">
-                <Icon name="venue" size={12} class="text-primary/70 shrink-0" />
-                {event.room}
-              </span>
-            </div>
-            <span
-              class={`text-[11px] font-bold px-2 py-0.5 rounded-full border ${event.tagColor}`}
-            >
-              {event.tag}
-            </span>
+        allEvents.length > 0 ? (
+          allEvents.map((event) => {
+            let tagColor = 'bg-primary/10 text-primary border-primary/20';
+            if (event.audienceType === 'VIRTUAL') {
+              tagColor = 'bg-tertiary/10 text-tertiary border-tertiary/20';
+            } else if (event.audienceType === 'HYBRID') {
+              tagColor = 'bg-secondary/10 text-secondary border-secondary/20';
+            }
+
+            return (
+              <div class="card card-outlined border-outline/25 p-4 flex justify-between items-center bg-surface/50 hover:border-primary/50 transition-colors duration-200">
+                <div class="flex flex-col gap-1 max-w-[70%]">
+                  <span class="text-[12px] font-bold text-on-surface-variant">
+                    {event.displayDate} • {event.displayTime}
+                  </span>
+                  <h3 class="text-sm font-bold text-on-surface truncate">
+                    {event.title}
+                  </h3>
+                  <span class="text-[11px] text-on-surface/60 font-medium flex items-center gap-1">
+                    <Icon
+                      name="venue"
+                      size={12}
+                      class="text-primary/70 shrink-0"
+                    />
+                    {event.displayLocation}
+                  </span>
+                </div>
+                <span
+                  class={`text-[11px] font-bold px-2 py-0.5 rounded-full border ${tagColor}`}
+                >
+                  {event.audienceType.replace('_', ' ')}
+                </span>
+              </div>
+            );
+          })
+        ) : (
+          <div class="card card-outlined border-outline/25 p-8 flex flex-col items-center text-center justify-center gap-2 bg-surface/30 rounded-2xl">
+            <Icon
+              name="calendar"
+              size={24}
+              class="text-on-surface-variant/60"
+            />
+            <h3 class="text-sm font-bold text-on-surface">
+              No Events Scheduled
+            </h3>
+            <p class="text-[12px] text-on-surface-variant/80 max-w-[80%] leading-relaxed">
+              We are working on bringing you exciting new community sessions.
+              Stay tuned for updates!
+            </p>
           </div>
-        ))
+        )
       }
     </div>
   </div>

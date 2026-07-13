@@ -2,7 +2,35 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
 import { PUBLIC_LINKS } from '../config/links';
-import { CURRENT_EVENT, UPCOMING_EVENTS } from '../config/events';
+import {
+  fetchChapterEvents,
+  getLiveOrNextEvent,
+  getUpcomingEvents,
+} from '../lib/bevy';
+
+const allEvents = await fetchChapterEvents(920);
+const currentEvent = getLiveOrNextEvent(allEvents);
+const upcomingEvents = getUpcomingEvents(allEvents);
+
+const getSpeakerDetails = (eventTitle: string) => {
+  if (eventTitle.includes('AI Honesty')) {
+    return {
+      name: 'Muntaser Syed',
+      avatar:
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120',
+    };
+  }
+  return {
+    name: 'GDG Speaker',
+    avatar: '/images/gdg-logo.png',
+  };
+};
+
+const calculateDaysRemaining = (startDateString: string) => {
+  const diffTime = new Date(startDateString).getTime() - new Date().getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return diffDays > 0 ? diffDays : 0;
+};
 
 const getColorClasses = (colorToken: string) => {
   switch (colorToken) {
@@ -32,7 +60,7 @@ const getColorClasses = (colorToken: string) => {
     <!-- Orlando Skyline absolute positioned in the background -->
     <div class="absolute inset-0 z-0 pointer-events-none select-none">
       <img
-        src={CURRENT_EVENT.bannerImage}
+        src="/images/orlando-skyline.png"
         alt="Orlando Skyline"
         class="w-full h-full object-cover object-center opacity-100 dark:opacity-40"
       />
@@ -57,69 +85,72 @@ const getColorClasses = (colorToken: string) => {
   </div>
 
   <!-- Hero Event Card -->
-  <div
-    class="card card-elevated p-0 overflow-hidden border border-outline/10 flex flex-col bg-surface shadow-elevation-2 rounded-[24px] transition-all duration-300 mt-[-32px] z-10 relative"
-  >
-    <!-- Simple card header bar (Calendar + Live Tag) -->
-    <div
-      class="px-4.5 pt-4 pb-2.5 flex justify-between items-center bg-surface border-b border-outline/5"
-    >
-      <div
-        class="flex items-center gap-1.5 text-primary font-bold text-[11px] tracking-wider uppercase"
-      >
-        <Icon name="calendar" size={16} class="text-primary" />
-        Current Event
-      </div>
-      <span
-        class="text-[10px] font-black bg-secondary text-white px-2.5 py-0.5 rounded-full border border-white/20 animate-pulse tracking-wider uppercase"
-      >
-        {CURRENT_EVENT.tag}
-      </span>
-    </div>
+  {
+    currentEvent ? (
+      <div class="card card-elevated p-0 overflow-hidden border border-outline/10 flex flex-col bg-surface shadow-elevation-2 rounded-[24px] transition-all duration-300 mt-[-32px] z-10 relative">
+        {/* Simple card header bar (Calendar + Live Tag) */}
+        <div class="px-4.5 pt-4 pb-2.5 flex justify-between items-center bg-surface border-b border-outline/5">
+          <div class="flex items-center gap-1.5 text-primary font-bold text-[11px] tracking-wider uppercase">
+            <Icon name="calendar" size={16} class="text-primary" />
+            {currentEvent.cardLabel}
+          </div>
+          <span class="text-[10px] font-black bg-secondary text-white px-2.5 py-0.5 rounded-full border border-white/20 animate-pulse tracking-wider uppercase">
+            {currentEvent.statusLabel}
+          </span>
+        </div>
 
-    <!-- Card Details Area -->
-    <div class="p-4.5 flex justify-between items-center gap-4 bg-surface">
-      <div class="flex flex-col gap-1.5 max-w-[72%]">
-        <h3 class="text-[15px] font-extrabold leading-tight text-on-surface">
-          {CURRENT_EVENT.title}
-        </h3>
-        <p
-          class="text-[12px] text-on-surface-variant font-medium leading-normal mt-0.5"
-        >
-          {CURRENT_EVENT.subtitle}
+        {/* Card Details Area */}
+        <div class="p-4.5 flex justify-between items-center gap-4 bg-surface">
+          <div class="flex flex-col gap-1.5 max-w-[72%]">
+            <h3 class="text-[15px] font-extrabold leading-tight text-on-surface">
+              {currentEvent.title}
+            </h3>
+            <p class="text-[12px] text-on-surface-variant font-medium leading-normal mt-0.5">
+              {currentEvent.descriptionShort}
+            </p>
+
+            {/* Details Grid */}
+            <div class="flex flex-col gap-1 border-t border-outline/5 pt-2.5 mt-1">
+              <div class="flex items-center gap-1.5 text-[11px] text-on-surface-variant/80 font-medium">
+                <span>📅 {currentEvent.displayDate}</span>
+                <span class="opacity-30">•</span>
+                <span>⏰ {currentEvent.displayTime}</span>
+              </div>
+              <div class="flex items-center gap-1 text-[11px] text-on-surface-variant font-semibold">
+                <span>📍 {currentEvent.displayLocation}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Speaker Avatar Circular Image on Right */}
+          {(() => {
+            const speaker = getSpeakerDetails(currentEvent.title);
+            return (
+              <div class="flex flex-col items-center shrink-0">
+                <div class="w-13 h-13 rounded-full border-2 border-primary/25 overflow-hidden shadow-elevation-1 bg-surface-variant">
+                  <img
+                    src={speaker.avatar}
+                    alt={speaker.name}
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+            );
+          })()}
+        </div>
+      </div>
+    ) : (
+      <div class="card card-elevated p-6 flex flex-col items-center text-center border border-outline/10 bg-surface shadow-elevation-2 rounded-[24px] transition-all duration-300 mt-[-32px] z-10 relative gap-2">
+        <div class="w-12 h-12 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant">
+          <Icon name="calendar" size={22} />
+        </div>
+        <h3 class="text-sm font-bold text-on-surface mt-1">No Active Event</h3>
+        <p class="text-[12px] text-on-surface-variant/80 font-medium px-4">
+          There are no sessions in progress right now. Check back later!
         </p>
-
-        <!-- Details Grid -->
-        <div class="flex flex-col gap-1 border-t border-outline/5 pt-2.5 mt-1">
-          <div
-            class="flex items-center gap-1.5 text-[11px] text-on-surface-variant/80 font-medium"
-          >
-            <span>📅 {CURRENT_EVENT.date}</span>
-            <span class="opacity-30">•</span>
-            <span>⏰ {CURRENT_EVENT.time}</span>
-          </div>
-          <div
-            class="flex items-center gap-1 text-[11px] text-on-surface-variant font-semibold"
-          >
-            <span>📍 {CURRENT_EVENT.location}</span>
-          </div>
-        </div>
       </div>
-
-      <!-- Speaker Avatar Circular Image on Right -->
-      <div class="flex flex-col items-center shrink-0">
-        <div
-          class="w-13 h-13 rounded-full border-2 border-primary/25 overflow-hidden shadow-elevation-1 bg-surface-variant"
-        >
-          <img
-            src={CURRENT_EVENT.speakerAvatar}
-            alt={CURRENT_EVENT.speakerName}
-            class="w-full h-full object-cover"
-          />
-        </div>
-      </div>
-    </div>
-  </div>
+    )
+  }
 
   <!-- Upcoming Events Section -->
   <div class="flex flex-col gap-2 mt-1">
@@ -136,56 +167,73 @@ const getColorClasses = (colorToken: string) => {
     </div>
 
     {
-      UPCOMING_EVENTS.map((event) => (
-        <a
-          href="/events"
-          class="card card-outlined border-outline/25 p-3 flex items-center justify-between gap-3 bg-surface/40 hover:border-primary/50 transition-colors duration-150 rounded-2xl"
-        >
-          <div class="flex items-center gap-3">
-            <div class="w-12 h-12 rounded-xl bg-primary text-on-primary flex flex-col items-center justify-center shrink-0 shadow-elevation-1">
-              <span class="text-[10px] font-black uppercase tracking-wide leading-none">
-                {event.date.split(' ')[0]}
-              </span>
-              <span class="text-[15px] font-black leading-none mt-0.5">
-                {event.date.split(' ')[1]}
-              </span>
-            </div>
-
-            <div class="flex flex-col gap-0.5 max-w-[170px]">
-              <h4 class="text-[13px] font-black text-on-surface truncate leading-tight">
-                {event.title}
-              </h4>
-              <span class="text-[11px] text-on-surface-variant font-semibold">
-                {event.tag}
-              </span>
-              <span class="text-[11px] text-on-surface-variant/80 font-medium flex items-center gap-0.5 mt-0.5">
-                📍 {event.location}
-              </span>
-            </div>
-          </div>
-
-          <div class="flex items-center gap-2 shrink-0">
-            <div class="flex flex-col items-end leading-none">
-              <span class="text-sm font-black text-primary">
-                {event.daysRemaining}
-              </span>
-              <span class="text-[9px] font-bold text-on-surface-variant uppercase mt-0.5">
-                Days
-              </span>
-            </div>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="w-3.5 h-3.5 text-on-surface-variant/60"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2.5"
+      upcomingEvents.length > 0 ? (
+        upcomingEvents.map((event) => {
+          const dateParts = event.displayDate.split(' ');
+          const month = dateParts[0] || 'Jun';
+          const day = dateParts[1]?.replace(',', '') || '27';
+          const daysRemaining = calculateDaysRemaining(event.startDate);
+          return (
+            <a
+              href="/events"
+              class="card card-outlined border-outline/25 p-3 flex items-center justify-between gap-3 bg-surface/40 hover:border-primary/50 transition-colors duration-150 rounded-2xl"
             >
-              <polyline points="9 18 15 12 9 6" />
-            </svg>
-          </div>
-        </a>
-      ))
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-xl bg-primary text-on-primary flex flex-col items-center justify-center shrink-0 shadow-elevation-1">
+                  <span class="text-[10px] font-black uppercase tracking-wide leading-none">
+                    {month}
+                  </span>
+                  <span class="text-[15px] font-black leading-none mt-0.5">
+                    {day}
+                  </span>
+                </div>
+
+                <div class="flex flex-col gap-0.5 max-w-[170px]">
+                  <h4 class="text-[13px] font-black text-on-surface truncate leading-tight">
+                    {event.title}
+                  </h4>
+                  <span class="text-[11px] text-on-surface-variant font-semibold">
+                    {event.audienceType.replace('_', ' ')}
+                  </span>
+                  <span class="text-[11px] text-on-surface-variant/80 font-medium flex items-center gap-0.5 mt-0.5">
+                    📍 {event.displayLocation}
+                  </span>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2 shrink-0">
+                <div class="flex flex-col items-end leading-none">
+                  <span class="text-sm font-black text-primary">
+                    {daysRemaining}
+                  </span>
+                  <span class="text-[9px] font-bold text-on-surface-variant uppercase mt-0.5">
+                    Days
+                  </span>
+                </div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-3.5 h-3.5 text-on-surface-variant/60"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                >
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </div>
+            </a>
+          );
+        })
+      ) : (
+        <div class="card card-outlined border-outline/25 p-5 flex flex-col items-center text-center justify-center gap-1.5 bg-surface/30 rounded-2xl">
+          <span class="text-[12px] font-bold text-on-surface">
+            No Upcoming Events
+          </span>
+          <span class="text-[11px] text-on-surface-variant/80 font-medium">
+            Check back later for new workshops and meetups!
+          </span>
+        </div>
+      )
     }
 
     <!-- Carousel Dot Indicators (Matching panel 1 prototype, shifted to upcoming events) -->
