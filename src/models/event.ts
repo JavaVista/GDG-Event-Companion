@@ -12,6 +12,8 @@ export interface Event {
   venueAddress?: string;
   virtualVenueName?: string;
   virtualVenueLink?: string;
+  croppedBannerUrl?: string;
+  croppedPictureUrl?: string;
   displayLocation: string;
   displayDate: string;
   displayTime: string;
@@ -83,6 +85,8 @@ export function mapBevyEventToEvent(bevyEvent: BevyEvent): Event {
     venueAddress: bevyEvent.venue_address,
     virtualVenueName: bevyEvent.virtual_venue_name,
     virtualVenueLink: bevyEvent.virtual_venue_link,
+    croppedBannerUrl: bevyEvent.cropped_banner_url,
+    croppedPictureUrl: bevyEvent.cropped_picture_url,
     displayLocation,
     displayDate,
     displayTime,

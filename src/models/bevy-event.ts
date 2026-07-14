@@ -10,4 +10,7 @@ export interface BevyEvent {
   venue_address?: string;
   virtual_venue_name?: string;
   virtual_venue_link?: string;
+  attendee_virtual_venue_link?: string;
+  cropped_banner_url?: string;
+  cropped_picture_url?: string;
 }
