@@ -11,6 +11,12 @@ const allEvents = rawEvents
     if (b.statusLabel === 'Live' && a.statusLabel !== 'Live') return 1;
     return new Date(a.startDate).getTime() - new Date(b.startDate).getTime();
   });
+
+const calculateDaysRemaining = (startDateString: string) => {
+  const diffTime = new Date(startDateString).getTime() - new Date().getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return diffDays > 0 ? diffDays : 0;
+};
 ---
 
 <BaseLayout
@@ -37,6 +43,8 @@ const allEvents = rawEvents
               tagColor = 'bg-secondary/10 text-secondary border-secondary/20';
             }
 
+            const daysRemaining = calculateDaysRemaining(event.startDate);
+
             return (
               <div
                 class={`relative card card-outlined p-4 flex justify-between items-center transition-all duration-200 rounded-2xl ${
@@ -45,10 +53,14 @@ const allEvents = rawEvents
                     : 'border-outline/25 bg-surface/50 hover:border-primary/50'
                 }`}
               >
-                {event.statusLabel === 'Live' && (
+                {event.statusLabel === 'Live' ? (
                   <span class="absolute -top-2.5 right-4 flex items-center gap-1 bg-error text-white text-[9px] font-black uppercase px-2 py-0.5 rounded-full tracking-wider shadow-sm animate-pulse border border-white/15 z-10">
                     <span class="w-1.5 h-1.5 rounded-full bg-white" />
                     LIVE
+                  </span>
+                ) : (
+                  <span class="absolute -top-2.5 right-4 flex items-center gap-1 bg-primary text-white text-[9px] font-black uppercase px-2.5 py-0.5 rounded-full tracking-wider shadow-sm border border-white/15 z-10">
+                    {daysRemaining} {daysRemaining === 1 ? 'Day' : 'Days'}
                   </span>
                 )}
 
