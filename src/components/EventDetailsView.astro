@@ -1,0 +1,189 @@
+---
+import type { Event } from '../models/event';
+import Icon from './Icon.astro';
+
+interface Props {
+  event: Event;
+}
+
+const { event } = Astro.props;
+
+const hasPhysical =
+  event.audienceType === 'IN_PERSON' || event.audienceType === 'HYBRID';
+const hasVirtual =
+  event.audienceType === 'VIRTUAL' || event.audienceType === 'HYBRID';
+
+// Construct full address
+const addressParts = [
+  event.venueAddress,
+  event.venueCity,
+  event.venueState,
+  event.venueZipCode,
+].filter(Boolean);
+const fullAddress = addressParts.join(', ');
+
+// Color classes based on audience type
+let tagColor = 'bg-primary/10 text-primary border-primary/20';
+if (event.audienceType === 'VIRTUAL') {
+  tagColor = 'bg-tertiary/10 text-tertiary border-tertiary/20';
+} else if (event.audienceType === 'HYBRID') {
+  tagColor = 'bg-secondary/10 text-secondary border-secondary/20';
+}
+---
+
+<div
+  class="bg-surface rounded-[28px] w-full overflow-hidden flex flex-col border border-outline/10 shadow-elevation-2"
+>
+  <!-- 1. Header/Banner -->
+  <div
+    class="w-full aspect-[4/1] relative bg-gradient-to-br from-primary/10 to-secondary/10 shrink-0"
+  >
+    <img
+      src={event.croppedBannerUrl ||
+        'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=600'}
+      alt="Event Banner"
+      class="w-full h-full object-cover"
+    />
+    <!-- Overlay Audience Type Pill -->
+    <span
+      class={`absolute top-4 left-4 text-[10px] font-bold px-2.5 py-0.5 rounded-full border bg-surface/90 shadow-sm ${tagColor}`}
+    >
+      {event.audienceType.replace('_', ' ')}
+    </span>
+  </div>
+
+  <!-- 2. Title & Status Section -->
+  <div class="px-6 pt-5 pb-4 flex flex-col gap-2">
+    <div class="flex justify-between items-start gap-4">
+      <h2 class="text-lg font-black text-on-surface leading-tight">
+        {event.title}
+      </h2>
+      <span
+        class={`text-[9px] font-black uppercase px-2.5 py-0.5 rounded-full tracking-wider shrink-0 shadow-sm border border-white/10 ${
+          event.statusLabel === 'Live'
+            ? 'bg-error text-white animate-pulse'
+            : 'bg-secondary/20 text-secondary border-secondary/30'
+        }`}
+      >
+        {event.statusLabel}
+      </span>
+    </div>
+  </div>
+
+  <!-- 3. Short Description Section -->
+  {
+    event.descriptionShort && (
+      <div class="px-6 py-2 border-t border-outline/5">
+        <p class="text-xs text-on-surface-variant leading-relaxed font-medium">
+          {event.descriptionShort}
+        </p>
+      </div>
+    )
+  }
+
+  <!-- Divider -->
+  <div class="border-t border-outline/10 my-1"></div>
+
+  <!-- 4. "When" Section -->
+  <div class="px-6 py-3 flex flex-col gap-2 bg-surface-variant/5">
+    <div class="flex items-center gap-1.5 text-on-surface-variant">
+      <Icon name="calendar" size={16} class="text-primary" />
+      <h4 class="text-[12px] font-black uppercase tracking-wider">When</h4>
+    </div>
+    <div class="flex justify-between items-start gap-4 ml-5">
+      <div class="flex flex-col gap-0.5">
+        <span class="text-xs text-on-surface font-semibold">
+          {event.displayDate}, {event.displayTime}
+          {event.timezoneAbbreviation ? `(${event.timezoneAbbreviation})` : ''}
+        </span>
+      </div>
+      {
+        event.totalAttendees !== undefined && (
+          <span class="text-[11px] font-bold text-on-surface-variant bg-on-surface/5 border border-outline/15 px-2.5 py-0.5 rounded-full shrink-0">
+            {event.totalAttendees}{' '}
+            {event.totalAttendees === 1 ? 'RSVP' : 'RSVPs'}
+          </span>
+        )
+      }
+    </div>
+  </div>
+
+  <!-- Divider -->
+  <div class="border-t border-outline/10 my-1"></div>
+
+  <!-- 5. "Where" Section -->
+  <div class="px-6 py-3 flex flex-col gap-2">
+    <div class="flex items-center gap-1.5 text-on-surface-variant">
+      <Icon name="venue" size={16} class="text-primary" />
+      <h4 class="text-[12px] font-black uppercase tracking-wider">Where</h4>
+    </div>
+
+    <div class="ml-5 flex flex-col gap-3">
+      <!-- Physical Location block -->
+      {
+        hasPhysical && (event.venueName || event.venueAddress) && (
+          <div class="flex flex-col gap-2">
+            <div class="flex flex-col gap-0.5">
+              <span class="text-xs text-on-surface font-bold">
+                {event.venueName || 'In-Person Venue'}
+              </span>
+              {fullAddress && (
+                <span class="text-[11px] text-on-surface-variant font-medium">
+                  {fullAddress}
+                </span>
+              )}
+            </div>
+            {event.mapsLink && (
+              <a
+                href={event.mapsLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-center justify-center gap-1.5 bg-secondary text-white text-xs font-bold py-2 px-4 rounded-xl shadow-sm hover:shadow transition-all duration-150 w-max border border-white/10 cursor-pointer select-none"
+              >
+                <Icon name="venue" size={14} />
+                Open in Google Maps
+              </a>
+            )}
+          </div>
+        )
+      }
+
+      <!-- Virtual Location block -->
+      {
+        hasVirtual && (
+          <div class="flex flex-col gap-2 border-t border-outline/5 pt-2.5 empty:border-0 empty:pt-0">
+            <div class="flex flex-col gap-0.5">
+              <span class="text-xs text-on-surface font-bold">
+                {event.virtualVenueName || 'Online (Virtual Meeting)'}
+              </span>
+            </div>
+            {event.virtualVenueLink && (
+              <a
+                href={event.virtualVenueLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex items-center justify-center gap-1.5 bg-primary text-white text-xs font-bold py-2 px-4 rounded-xl shadow-sm hover:shadow transition-all duration-150 w-max border border-white/10 cursor-pointer select-none"
+              >
+                <Icon name="calendar" size={14} />
+                Join Virtual Session
+              </a>
+            )}
+          </div>
+        )
+      }
+    </div>
+  </div>
+
+  <!-- 6. Footer Action CTA -->
+  <div class="px-6 py-4 border-t border-outline/10 bg-surface shrink-0">
+    <a
+      href="https://gdg.community.dev/gdg-central-florida/"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="btn btn-outlined w-full py-2.5 text-xs font-bold flex items-center justify-center gap-1.5 hover:bg-on-surface/5"
+    >
+      <Icon name="calendar" size={14} />
+      Edit on GDG Event Page
+    </a>
+  </div>
+</div>

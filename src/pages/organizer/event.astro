@@ -1,0 +1,78 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EventDetailsView from '../../components/EventDetailsView.astro';
+import EventOrganizerNotes from '../../components/EventOrganizerNotes.astro';
+import Icon from '../../components/Icon.astro';
+import { fetchBevyEvents } from '../../services/bevy-events-service';
+import { getLiveOrNextEvent } from '../../lib/bevy';
+
+const allEvents = await fetchBevyEvents().catch(() => []);
+const currentEvent = getLiveOrNextEvent(allEvents);
+---
+
+<BaseLayout
+  title="Current Event Manager | GDG Event Companion"
+  description="Manage active event details, links, and local organizer notes"
+>
+  <div id="event-page-container" class="flex flex-col gap-5 py-2">
+    <!-- Navigation Header Row -->
+    <div class="flex items-center justify-between gap-4 w-full">
+      <a
+        href="/organizer/dashboard"
+        class="flex items-center gap-1 text-xs font-black text-primary hover:underline cursor-pointer select-none"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-4 h-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        Dashboard
+      </a>
+      <h2
+        class="text-sm font-extrabold text-on-surface-variant uppercase tracking-wider"
+      >
+        Event Manager
+      </h2>
+    </div>
+
+    <!-- Main Content -->
+    {
+      currentEvent ? (
+        <div class="flex flex-col gap-6">
+          <EventDetailsView event={currentEvent} />
+          <div class="border-t border-outline/10 my-1" />
+          <EventOrganizerNotes eventId={currentEvent.id} />
+        </div>
+      ) : (
+        <div class="card card-outlined border-outline/25 p-8 flex flex-col items-center justify-center text-center gap-3.5 bg-surface/40 rounded-[28px]">
+          <div class="w-12 h-12 rounded-full bg-on-surface/5 flex items-center justify-center text-on-surface-variant/40">
+            <Icon name="offline" size={24} />
+          </div>
+          <div class="flex flex-col gap-1">
+            <h3 class="text-sm font-extrabold text-on-surface">
+              No Active Event Found
+            </h3>
+            <p class="text-xs text-on-surface-variant max-w-[280px] leading-relaxed">
+              We couldn't retrieve any active or upcoming events from the
+              chapter dashboard.
+            </p>
+          </div>
+        </div>
+      )
+    }
+  </div>
+</BaseLayout>
+
+<script>
+  import { isUnlocked } from '../../lib/organizer-auth';
+
+  // Client-side guard: if locked, redirect to unlock portal index
+  if (!isUnlocked()) {
+    window.location.replace('/organizer');
+  }
+</script>

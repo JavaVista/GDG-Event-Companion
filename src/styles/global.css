@@ -162,6 +162,10 @@
   --color-outline: var(--md-sys-color-outline);
   --color-outline-variant: var(--md-sys-color-outline-variant);
 
+  --color-success: var(--md-sys-color-success);
+  --color-warning: var(--md-sys-color-warning);
+  --color-danger: var(--md-sys-color-danger);
+
   /* Radius overrides matching Material Design 3 */
   --radius-xs: var(--md-shape-xs);
   --radius-sm: var(--md-shape-sm);

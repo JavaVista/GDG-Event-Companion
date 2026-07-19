@@ -1,0 +1,176 @@
+---
+import Icon from './Icon.astro';
+import type { SemanticIconName } from '../config/icons';
+
+interface Category {
+  key: string;
+  label: string;
+  icon: SemanticIconName;
+  placeholder: string;
+}
+
+interface Props {
+  eventId: string;
+}
+
+const { eventId } = Astro.props;
+
+const categories: Category[] = [
+  {
+    key: 'announcements',
+    label: 'Announcements',
+    icon: 'notes',
+    placeholder: 'Enter general announcements...',
+  },
+  {
+    key: 'sponsorShoutout',
+    label: 'Sponsor Shoutout',
+    icon: 'notes',
+    placeholder: 'Enter sponsor thank-yous and details...',
+  },
+  {
+    key: 'communityReminders',
+    label: 'Community Reminders',
+    icon: 'checklist',
+    placeholder: 'Enter community updates and reminders...',
+  },
+  {
+    key: 'specialInstructions',
+    label: 'Special Instructions',
+    icon: 'notes',
+    placeholder: 'Enter any other instructions...',
+  },
+];
+---
+
+<div class="flex flex-col gap-4 mt-2">
+  <div class="flex justify-between items-center">
+    <div class="flex items-center gap-1.5 text-on-surface">
+      <Icon name="notes" size={18} class="text-primary" />
+      <h3 class="text-sm font-extrabold uppercase tracking-wider">
+        Event Talking Points
+      </h3>
+    </div>
+    <span
+      id="save-status"
+      class="text-[10px] font-bold text-success opacity-0 transition-opacity duration-200"
+    >
+      Saved!
+    </span>
+  </div>
+
+  <form id="notes-form" class="flex flex-col gap-4" data-event-id={eventId}>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {
+        categories.map((cat) => (
+          <div class="card card-outlined border-outline/25 p-4 flex flex-col gap-2 bg-surface/30 rounded-2xl hover:border-outline/45 transition-colors duration-150">
+            <div class="flex items-center gap-1.5 text-on-surface-variant font-bold text-[11px] uppercase tracking-wider">
+              <Icon name={cat.icon} size={14} class="text-primary" />
+              <span>{cat.label}</span>
+            </div>
+            <textarea
+              name={cat.key}
+              placeholder={cat.placeholder}
+              rows="3"
+              class="w-full text-xs text-on-surface bg-surface border border-outline/15 rounded-xl p-3 focus:outline-none focus:border-primary/50 placeholder:text-on-surface-variant/40 resize-none font-medium leading-relaxed"
+            />
+          </div>
+        ))
+      }
+    </div>
+
+    <!-- Action Bar -->
+    <div class="flex items-center gap-3 mt-2 shrink-0">
+      <button
+        type="button"
+        id="cancel-notes-btn"
+        class="btn btn-outlined flex-1 py-3 text-xs font-bold hover:bg-on-surface/5 cursor-pointer"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        class="btn btn-filled flex-1 py-3 text-xs font-bold cursor-pointer"
+      >
+        Save Notes
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById(
+      'notes-form'
+    ) as HTMLFormElement | null;
+    const cancelBtn = document.getElementById('cancel-notes-btn');
+    const saveStatus = document.getElementById('save-status');
+
+    if (!form || !cancelBtn) return;
+
+    const eventId = form.getAttribute('data-event-id');
+    if (!eventId) return;
+
+    const storageKey = `gdg-event-notes-${eventId}`;
+
+    // Load saved notes
+    const loadNotes = () => {
+      try {
+        const savedData = localStorage.getItem(storageKey);
+        if (savedData) {
+          const notes = JSON.parse(savedData);
+          const textareas = form.querySelectorAll('textarea');
+          textareas.forEach((ta) => {
+            const name = ta.getAttribute('name');
+            if (name && notes[name] !== undefined) {
+              ta.value = notes[name];
+            }
+          });
+        }
+      } catch (e) {
+        console.error('Failed to load local organizer notes:', e);
+      }
+    };
+
+    // Save notes to localStorage
+    const saveNotes = () => {
+      try {
+        const notes: Record<string, string> = {};
+        const textareas = form.querySelectorAll('textarea');
+        textareas.forEach((ta) => {
+          const name = ta.getAttribute('name');
+          if (name) {
+            notes[name] = ta.value;
+          }
+        });
+        localStorage.setItem(storageKey, JSON.stringify(notes));
+
+        // Trigger success indicator badge
+        if (saveStatus) {
+          saveStatus.classList.remove('opacity-0');
+          saveStatus.classList.add('opacity-100');
+          setTimeout(() => {
+            saveStatus.classList.remove('opacity-100');
+            saveStatus.classList.add('opacity-0');
+          }, 2000);
+        }
+      } catch (e) {
+        console.error('Failed to save local organizer notes:', e);
+      }
+    };
+
+    // Event handlers
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      saveNotes();
+    });
+
+    cancelBtn.addEventListener('click', () => {
+      // Revert text edits back to last saved data from storage
+      loadNotes();
+    });
+
+    // Initial load
+    loadNotes();
+  });
+</script>
