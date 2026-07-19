@@ -1,0 +1,397 @@
+---
+import Icon from './Icon.astro';
+---
+
+<!-- Event Detail Modal Dialog Overlay -->
+<div
+  id="event-modal"
+  class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200"
+  role="dialog"
+  aria-modal="true"
+>
+  <div
+    class="bg-surface rounded-[28px] max-w-[480px] w-full max-h-[85vh] overflow-hidden flex flex-col border border-outline/10 shadow-elevation-5 transform scale-95 transition-transform duration-200"
+  >
+    <!-- Modal Scrollable Content -->
+    <div class="overflow-y-auto flex-grow">
+      <div
+        class="w-full aspect-[4/1] relative bg-gradient-to-br from-primary/10 to-secondary/10 shrink-0"
+      >
+        <img
+          id="modal-banner-img"
+          src=""
+          alt="Event Banner"
+          class="w-full h-full object-cover"
+        />
+        <!-- Overlay Audience Type Pill -->
+        <span
+          id="modal-audience-badge"
+          class="absolute top-4 left-4 text-[10px] font-bold px-2.5 py-0.5 rounded-full border bg-surface/90 shadow-sm border-outline/25"
+        >
+        </span>
+      </div>
+
+      <!-- 2. Title & Status Section -->
+      <div class="px-6 pt-5 pb-4 flex flex-col gap-2">
+        <div class="flex justify-between items-start gap-4">
+          <h2
+            id="modal-title"
+            class="text-lg font-black text-on-surface leading-tight"
+          >
+          </h2>
+          <!-- Status Pill -->
+          <span
+            id="modal-status-badge"
+            class="text-[9px] font-black uppercase px-2.5 py-0.5 rounded-full tracking-wider shrink-0 shadow-sm border border-white/10"
+          >
+          </span>
+        </div>
+      </div>
+
+      <!-- 3. Description Section (Full HTML) -->
+      <div class="px-6 py-2 border-t border-outline/5">
+        <div
+          id="modal-description"
+          class="text-xs text-on-surface-variant leading-relaxed py-2 overflow-y-auto max-h-48 prose prose-sm max-w-none prose-p:my-1.5 prose-a:text-primary hover:prose-a:underline font-medium"
+        >
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="border-t border-outline/10 my-1"></div>
+
+      <!-- 4. "When" Section -->
+      <div class="px-6 py-3 flex flex-col gap-2 bg-surface-variant/5">
+        <div class="flex items-center gap-1.5 text-on-surface-variant">
+          <Icon name="calendar" size={16} class="text-primary" />
+          <h4 class="text-[12px] font-black uppercase tracking-wider">When</h4>
+        </div>
+        <div class="flex justify-between items-start gap-4 ml-5">
+          <div class="flex flex-col gap-0.5">
+            <span
+              id="modal-date-time"
+              class="text-xs text-on-surface font-semibold"
+            >
+            </span>
+            <!-- Countdown Indicator / Live badge -->
+            <span
+              id="modal-countdown"
+              class="text-[11px] font-medium text-primary"
+            >
+            </span>
+            <span
+              id="modal-when-live-badge"
+              class="hidden items-center gap-1 bg-error text-white text-[9px] font-black uppercase px-2 py-0.5 rounded-full tracking-wider shadow-sm animate-pulse border border-white/15 w-max"
+            >
+              <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+              NOW
+            </span>
+          </div>
+          <!-- Attendees RSVP count badge -->
+          <span
+            id="modal-rsvp-badge"
+            class="text-[11px] font-bold text-on-surface-variant bg-on-surface/5 border border-outline/15 px-2.5 py-0.5 rounded-full shrink-0"
+          >
+          </span>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="border-t border-outline/10 my-1"></div>
+
+      <!-- 5. "Where" Section -->
+      <div class="px-6 py-3 flex flex-col gap-2">
+        <div class="flex items-center gap-1.5 text-on-surface-variant">
+          <Icon name="venue" size={16} class="text-primary" />
+          <h4 class="text-[12px] font-black uppercase tracking-wider">Where</h4>
+        </div>
+
+        <div class="ml-5 flex flex-col gap-3">
+          <!-- Physical Location block -->
+          <div id="modal-physical-block" class="flex flex-col gap-2">
+            <div class="flex flex-col gap-0.5">
+              <span
+                id="modal-venue-name"
+                class="text-xs text-on-surface font-bold"></span>
+              <span
+                id="modal-venue-address"
+                class="text-[11px] text-on-surface-variant font-medium"></span>
+            </div>
+            <a
+              id="modal-maps-btn"
+              href=""
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center justify-center gap-1.5 bg-secondary text-white text-xs font-bold py-2 px-4 rounded-xl shadow-sm hover:shadow transition-all duration-150 w-max border border-white/10 cursor-pointer select-none"
+            >
+              <Icon name="venue" size={14} />
+              Open in Google Maps
+            </a>
+          </div>
+
+          <!-- Virtual Location block -->
+          <div id="modal-virtual-block" class="flex flex-col gap-2">
+            <div class="flex flex-col gap-0.5">
+              <span
+                id="modal-virtual-name"
+                class="text-xs text-on-surface font-bold"></span>
+            </div>
+            <a
+              id="modal-virtual-btn"
+              href=""
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center justify-center gap-1.5 bg-primary text-white text-xs font-bold py-2 px-4 rounded-xl shadow-sm hover:shadow transition-all duration-150 w-max border border-white/10 cursor-pointer select-none"
+            >
+              <Icon name="calendar" size={14} />
+              Join Virtual Session
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Footer Close Action -->
+    <div class="px-6 py-4 border-t border-outline/10 bg-surface shrink-0">
+      <button
+        id="event-modal-close"
+        class="btn btn-outlined w-full py-2.5 text-xs font-bold cursor-pointer hover:bg-on-surface/5"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  import type { Event } from '../models/event';
+
+  // Dynamic client-side countdown calculations
+  function formatCountdown(startDateStr: string) {
+    const diffMs = new Date(startDateStr).getTime() - Date.now();
+    if (diffMs <= 0) return '';
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const diffHours = Math.floor(
+      (diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    );
+
+    if (diffDays > 0) {
+      return `Starts in ${diffDays} ${diffDays === 1 ? 'day' : 'days'}${diffHours > 0 ? `, ${diffHours} ${diffHours === 1 ? 'hour' : 'hours'}` : ''}`;
+    }
+    if (diffHours > 0) {
+      const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+      return `Starts in ${diffHours} ${diffHours === 1 ? 'hour' : 'hours'}${diffMinutes > 0 ? `, ${diffMinutes} ${diffMinutes === 1 ? 'minute' : 'minutes'}` : ''}`;
+    }
+    const diffMinutes = Math.floor(diffMs / (1000 * 60));
+    return `Starts in ${diffMinutes} ${diffMinutes === 1 ? 'minute' : 'minutes'}`;
+  }
+
+  // Set up click handlers on DOMContentLoaded
+  document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('event-modal');
+    const closeBtn = document.getElementById('event-modal-close');
+
+    if (!modal || !closeBtn) return;
+
+    // Elements inside modal
+    const bannerImg = document.getElementById(
+      'modal-banner-img'
+    ) as HTMLImageElement;
+    const audienceBadge = document.getElementById('modal-audience-badge');
+    const title = document.getElementById('modal-title');
+    const statusBadge = document.getElementById('modal-status-badge');
+    const description = document.getElementById('modal-description');
+    const dateTime = document.getElementById('modal-date-time');
+    const countdown = document.getElementById('modal-countdown');
+    const whenLiveBadge = document.getElementById('modal-when-live-badge');
+    const rsvpBadge = document.getElementById('modal-rsvp-badge');
+
+    // Location Blocks
+    const physicalBlock = document.getElementById('modal-physical-block');
+    const venueName = document.getElementById('modal-venue-name');
+    const venueAddress = document.getElementById('modal-venue-address');
+    const mapsBtn = document.getElementById(
+      'modal-maps-btn'
+    ) as HTMLAnchorElement;
+
+    const virtualBlock = document.getElementById('modal-virtual-block');
+    const virtualName = document.getElementById('modal-virtual-name');
+    const virtualBtn = document.getElementById(
+      'modal-virtual-btn'
+    ) as HTMLAnchorElement;
+
+    // Open Modal function
+    const openModal = (eventData: Event) => {
+      // 1. Banner & Audience Type
+      bannerImg.src =
+        eventData.croppedBannerUrl ||
+        'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=600';
+      if (audienceBadge) {
+        audienceBadge.innerText = (eventData.audienceType || '').replace(
+          '_',
+          ' '
+        );
+        // Set audience tag styling based on type
+        audienceBadge.className =
+          'absolute top-4 left-4 text-[10px] font-bold px-2.5 py-0.5 rounded-full border bg-surface/90 shadow-sm ';
+        if (eventData.audienceType === 'VIRTUAL') {
+          audienceBadge.classList.add(
+            'bg-tertiary/10',
+            'text-tertiary',
+            'border-tertiary/20'
+          );
+        } else if (eventData.audienceType === 'HYBRID') {
+          audienceBadge.classList.add(
+            'bg-secondary/10',
+            'text-secondary',
+            'border-secondary/20'
+          );
+        } else {
+          audienceBadge.classList.add(
+            'bg-primary/10',
+            'text-primary',
+            'border-primary/20'
+          );
+        }
+      }
+
+      // 2. Title & Status
+      if (title) title.innerText = eventData.title || '';
+      if (statusBadge) {
+        statusBadge.innerText = eventData.statusLabel || '';
+        statusBadge.className =
+          'text-[9px] font-black uppercase px-2.5 py-0.5 rounded-full tracking-wider shrink-0 shadow-sm border border-white/10 ';
+        if (eventData.statusLabel === 'Live') {
+          statusBadge.classList.add('bg-error', 'text-white', 'animate-pulse');
+        } else {
+          statusBadge.classList.add(
+            'bg-secondary/20',
+            'text-secondary',
+            'border-secondary/30'
+          );
+        }
+      }
+
+      // 3. Description HTML
+      if (description) {
+        description.innerHTML =
+          eventData.description ||
+          eventData.descriptionShort ||
+          '<p>No description details available.</p>';
+      }
+
+      // 4. "When" Details & RSVPs
+      if (dateTime) {
+        const tzAbbr = eventData.timezoneAbbreviation
+          ? ` (${eventData.timezoneAbbreviation})`
+          : '';
+        dateTime.innerText = `${eventData.displayDate}, ${eventData.displayTime}${tzAbbr}`;
+      }
+
+      if (eventData.statusLabel === 'Live') {
+        if (countdown) {
+          countdown.innerText = '';
+          countdown.classList.add('hidden');
+        }
+        if (whenLiveBadge) whenLiveBadge.classList.replace('hidden', 'flex');
+      } else {
+        if (whenLiveBadge) whenLiveBadge.classList.replace('flex', 'hidden');
+        if (countdown) {
+          countdown.innerText = formatCountdown(eventData.startDate);
+          countdown.classList.remove('hidden');
+        }
+      }
+
+      if (rsvpBadge) {
+        const rsvps =
+          eventData.totalAttendees !== undefined ? eventData.totalAttendees : 0;
+        rsvpBadge.innerText = `${rsvps} ${rsvps === 1 ? 'RSVP' : 'RSVPs'}`;
+      }
+
+      // 5. "Where" / Location Logic
+      const hasPhysical =
+        eventData.audienceType === 'IN_PERSON' ||
+        eventData.audienceType === 'HYBRID';
+      const hasVirtual =
+        eventData.audienceType === 'VIRTUAL' ||
+        eventData.audienceType === 'HYBRID';
+
+      // Physical Venue block configuration
+      if (hasPhysical && (eventData.venueName || eventData.venueAddress)) {
+        if (physicalBlock) physicalBlock.classList.remove('hidden');
+        if (venueName) venueName.innerText = eventData.venueName || '';
+        if (venueAddress) {
+          const parts = [
+            eventData.venueAddress,
+            eventData.venueCity,
+            eventData.venueState,
+            eventData.venueZipCode,
+          ].filter(Boolean);
+          venueAddress.innerText = parts.join(', ');
+        }
+        if (eventData.mapsLink) {
+          mapsBtn.href = eventData.mapsLink;
+          mapsBtn.classList.remove('hidden');
+        } else {
+          mapsBtn.classList.add('hidden');
+        }
+      } else {
+        if (physicalBlock) physicalBlock.classList.add('hidden');
+      }
+
+      // Virtual Meeting block configuration
+      const virtualLink = eventData.virtualVenueLink;
+      if (hasVirtual) {
+        if (virtualBlock) virtualBlock.classList.remove('hidden');
+        if (virtualName) {
+          virtualName.innerText =
+            eventData.virtualVenueName || 'Online (Virtual Meeting)';
+        }
+        if (virtualLink) {
+          virtualBtn.href = virtualLink;
+          virtualBtn.classList.remove('hidden');
+        } else {
+          virtualBtn.classList.add('hidden');
+        }
+      } else {
+        if (virtualBlock) virtualBlock.classList.add('hidden');
+      }
+
+      // Reveal Modal
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      modal.firstElementChild?.classList.remove('scale-95');
+      modal.firstElementChild?.classList.add('scale-100');
+    };
+
+    // Close Modal function
+    const closeModal = () => {
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      modal.firstElementChild?.classList.remove('scale-100');
+      modal.firstElementChild?.classList.add('scale-95');
+    };
+
+    // Register Click delegation for all cards with data-event attribute
+    document.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      // Traverse up to find a parent event card containing data-event attribute
+      const card = target.closest('[data-event]');
+      if (card) {
+        const rawData = card.getAttribute('data-event');
+        if (rawData) {
+          try {
+            const eventData = JSON.parse(rawData);
+            openModal(eventData);
+          } catch (err) {
+            console.error('Error parsing card event details JSON:', err);
+          }
+        }
+      }
+    });
+
+    // Close on Close button or backdrop clicks
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+  });
+</script>

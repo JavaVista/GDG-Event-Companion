@@ -87,7 +87,10 @@ const getColorClasses = (colorToken: string) => {
   <!-- Hero Event Card -->
   {
     currentEvent ? (
-      <div class="card card-elevated p-0 overflow-hidden border border-outline/10 flex flex-col bg-surface shadow-elevation-2 rounded-[24px] transition-all duration-300 mt-[-32px] z-10 relative">
+      <div
+        class="card card-elevated p-0 overflow-hidden border border-outline/10 flex flex-col bg-surface shadow-elevation-2 rounded-[24px] transition-all duration-300 mt-[-32px] z-10 relative cursor-pointer hover:shadow-elevation-4 hover:border-primary/30"
+        data-event={JSON.stringify(currentEvent)}
+      >
         {/* Simple card header bar (Calendar + Live Tag) */}
         <div class="px-4.5 pt-4 pb-2.5 flex justify-between items-center bg-surface border-b border-outline/5">
           <div class="flex items-center gap-1.5 text-primary font-bold text-[11px] tracking-wider uppercase">
@@ -187,9 +190,9 @@ const getColorClasses = (colorToken: string) => {
               const day = dateParts[1]?.replace(',', '') || '27';
               const daysRemaining = calculateDaysRemaining(event.startDate);
               return (
-                <a
-                  href="/events"
-                  class="card card-outlined border-outline/25 p-3 flex items-center justify-between gap-3 bg-surface/40 hover:border-primary/50 transition-colors duration-150 rounded-2xl w-full shrink-0 snap-start"
+                <div
+                  class="card card-outlined border-outline/25 p-3 flex items-center justify-between gap-3 bg-surface/40 hover:border-primary/50 transition-colors duration-150 rounded-2xl w-full shrink-0 snap-start cursor-pointer"
+                  data-event={JSON.stringify(event)}
                 >
                   <div class="flex items-center gap-3">
                     <div class="w-12 h-12 rounded-xl bg-primary text-on-primary flex flex-col items-center justify-center shrink-0 shadow-elevation-1">
@@ -234,7 +237,7 @@ const getColorClasses = (colorToken: string) => {
                       <polyline points="9 18 15 12 9 6" />
                     </svg>
                   </div>
-                </a>
+                </div>
               );
             })}
           </div>

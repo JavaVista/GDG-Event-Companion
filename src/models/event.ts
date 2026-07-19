@@ -4,12 +4,16 @@ export interface Event {
   id: string;
   title: string;
   descriptionShort: string;
+  description?: string;
   startDate: string;
   endDate: string;
   status: string;
   audienceType: 'IN_PERSON' | 'VIRTUAL' | 'HYBRID';
   venueName?: string;
   venueAddress?: string;
+  venueCity?: string;
+  venueState?: string;
+  venueZipCode?: string;
   virtualVenueName?: string;
   virtualVenueLink?: string;
   croppedBannerUrl?: string;
@@ -19,6 +23,9 @@ export interface Event {
   displayTime: string;
   cardLabel: 'Current Event' | 'Upcoming Event';
   statusLabel: 'Live' | 'Upcoming' | 'Ended';
+  totalAttendees?: number;
+  mapsLink?: string;
+  timezoneAbbreviation?: string;
 }
 
 export function mapBevyEventToEvent(bevyEvent: BevyEvent): Event {
@@ -73,16 +80,33 @@ export function mapBevyEventToEvent(bevyEvent: BevyEvent): Event {
 
   const cardLabel = statusLabel === 'Live' ? 'Current Event' : 'Upcoming Event';
 
+  const addressParts = [
+    bevyEvent.venue_address,
+    bevyEvent.venue_city,
+    bevyEvent.venue_state,
+    bevyEvent.venue_zip_code,
+  ].filter(Boolean);
+  const fallbackAddress = addressParts.join(', ');
+  const mapsLink =
+    bevyEvent.Maps_link ||
+    (fallbackAddress.trim()
+      ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fallbackAddress)}`
+      : undefined);
+
   return {
     id: bevyEvent.id,
     title: bevyEvent.title,
     descriptionShort: bevyEvent.description_short,
+    description: bevyEvent.description,
     startDate: bevyEvent.start_date,
     endDate: bevyEvent.end_date,
     status: bevyEvent.status,
     audienceType: bevyEvent.audience_type,
     venueName: bevyEvent.venue_name,
     venueAddress: bevyEvent.venue_address,
+    venueCity: bevyEvent.venue_city,
+    venueState: bevyEvent.venue_state,
+    venueZipCode: bevyEvent.venue_zip_code,
     virtualVenueName: bevyEvent.virtual_venue_name,
     virtualVenueLink: bevyEvent.virtual_venue_link,
     croppedBannerUrl: bevyEvent.cropped_banner_url,
@@ -92,5 +116,8 @@ export function mapBevyEventToEvent(bevyEvent: BevyEvent): Event {
     displayTime,
     cardLabel,
     statusLabel,
+    totalAttendees: bevyEvent.total_attendees,
+    mapsLink,
+    timezoneAbbreviation: bevyEvent.timezone_abbreviation,
   };
 }

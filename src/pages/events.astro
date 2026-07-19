@@ -47,16 +47,17 @@ const calculateDaysRemaining = (startDateString: string) => {
 
             return (
               <div
-                class={`relative card card-outlined p-4 flex justify-between items-center transition-all duration-200 rounded-2xl ${
+                class={`relative card card-outlined p-4 flex justify-between items-center transition-all duration-200 rounded-2xl cursor-pointer ${
                   event.statusLabel === 'Live'
                     ? 'border-error/40 bg-error/[0.02] shadow-sm hover:border-error/60'
                     : 'border-outline/25 bg-surface/50 hover:border-primary/50'
                 }`}
+                data-event={JSON.stringify(event)}
               >
                 {event.statusLabel === 'Live' ? (
                   <span class="absolute -top-2.5 right-4 flex items-center gap-1 bg-error text-white text-[9px] font-black uppercase px-2 py-0.5 rounded-full tracking-wider shadow-sm animate-pulse border border-white/15 z-10">
                     <span class="w-1.5 h-1.5 rounded-full bg-white" />
-                    LIVE
+                    NOW
                   </span>
                 ) : (
                   <span class="absolute -top-2.5 right-4 flex items-center gap-1 bg-primary text-white text-[9px] font-black uppercase px-2.5 py-0.5 rounded-full tracking-wider shadow-sm border border-white/15 z-10">
