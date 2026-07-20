@@ -6,7 +6,8 @@ export const MOCK_BEVY_EVENTS: BevyEvent[] = [
   {
     id: 'current-event',
     status: 'live',
-    title: 'Making AI Honesty Machine-Readable',
+    title:
+      'Making AI Honesty Machine-Readable: A Hands-On Workshop with Muntaser Syed',
     description_short: 'A Hands-On Workshop with Muntaser Syed',
     description:
       '<p>🚀 Ready to dive into AI alignment? Join us for an in-person, hands-on workshop where we explore the frontiers of machine readability in AI systems. We will demonstrate techniques to extract honesty signals from large language models, build robust evaluation benchmarks, and prototype real-time alignment detectors.</p><p>This session is perfect for developers, data scientists, and anyone curious about the mechanics of modern AI safety and software development.</p>',
@@ -24,6 +25,8 @@ export const MOCK_BEVY_EVENTS: BevyEvent[] = [
       'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120',
     total_attendees: 34,
     timezone_abbreviation: 'EDT',
+    google_maps_link:
+      'https://www.google.com/maps/search/?api=1&query=36+West+Pine+Street,+Orlando,+FL,+32801',
   },
   {
     id: 'upcoming-gemini',
@@ -44,12 +47,15 @@ export const MOCK_BEVY_EVENTS: BevyEvent[] = [
     venue_zip_code: '32801',
     virtual_venue_name: 'Online (Google Meet)',
     virtual_venue_link: 'https://meet.google.com/xyz-qtrs-jkl',
+    attendee_virtual_venue_link: 'https://meet.google.com/xyz-qtrs-jkl',
     cropped_banner_url:
       'https://images.unsplash.com/photo-1633356122544-f134324a6cee?auto=format&fit=crop&q=80&w=600',
     cropped_picture_url:
       'https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/events/blob_Zeu2kK0',
     total_attendees: 58,
     timezone_abbreviation: 'EDT',
+    google_maps_link:
+      'https://www.google.com/maps/search/?api=1&query=36+West+Pine+Street,+Orlando,+FL,+32801',
   },
   {
     id: 'flutter-web',
@@ -68,8 +74,14 @@ export const MOCK_BEVY_EVENTS: BevyEvent[] = [
     venue_city: 'Orlando',
     venue_state: 'FL',
     venue_zip_code: '32801',
+    cropped_banner_url:
+      'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=600',
+    cropped_picture_url:
+      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=120',
     total_attendees: 42,
     timezone_abbreviation: 'EDT',
+    google_maps_link:
+      'https://www.google.com/maps/search/?api=1&query=101+E+Central+Blvd,+Orlando,+FL,+32801',
   },
   {
     id: 'cloud-run',
@@ -85,6 +97,11 @@ export const MOCK_BEVY_EVENTS: BevyEvent[] = [
     audience_type: 'VIRTUAL',
     virtual_venue_name: 'Online (Google Meet)',
     virtual_venue_link: 'https://meet.google.com/abc-defg-hij',
+    attendee_virtual_venue_link: 'https://meet.google.com/abc-defg-hij',
+    cropped_banner_url:
+      'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=600',
+    cropped_picture_url:
+      'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=120',
     total_attendees: 87,
     timezone_abbreviation: 'EDT',
   },
@@ -105,8 +122,14 @@ export const MOCK_BEVY_EVENTS: BevyEvent[] = [
     venue_city: 'Winter Park',
     venue_state: 'FL',
     venue_zip_code: '32789',
+    cropped_banner_url:
+      'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&q=80&w=600',
+    cropped_picture_url:
+      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=120',
     total_attendees: 120,
     timezone_abbreviation: 'EDT',
+    google_maps_link:
+      'https://www.google.com/maps/search/?api=1&query=1000+Holt+Ave,+Winter+Park,+FL,+32789',
   },
 ];
 
@@ -190,7 +213,7 @@ export async function fetchBevyEvents(chapterId?: number): Promise<Event[]> {
             'cropped_banner_url',
             'cropped_picture_url',
             'total_attendees',
-            'Maps_link',
+            'google_maps_link',
             'timezone_abbreviation',
           ].join(',');
           const detailUrl = `${BEVY_CONFIG.apiBaseUrl}${BEVY_CONFIG.eventDetailPath}${e.id}/?fields=${detailFields}`;
@@ -250,7 +273,7 @@ export async function fetchBevyEvents(chapterId?: number): Promise<Event[]> {
           pictureUrl ||
           '',
         total_attendees: detailed?.total_attendees,
-        Maps_link: detailed?.Maps_link,
+        google_maps_link: detailed?.google_maps_link,
         timezone_abbreviation: detailed?.timezone_abbreviation,
       };
 

@@ -13,7 +13,8 @@ export interface EventData {
 }
 
 export const CURRENT_EVENT: EventData = {
-  title: 'Making AI Honesty Machine-Readable',
+  title:
+    'Making AI Honesty Machine-Readable: A Hands-On Workshop with Muntaser Syed',
   subtitle: 'A Hands-On Workshop with Muntaser Syed',
   date: 'May 31, 2025',
   time: '9:30 AM - 12:00 PM',

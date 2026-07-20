@@ -18,6 +18,6 @@ export interface BevyEvent {
   cropped_banner_url?: string;
   cropped_picture_url?: string;
   total_attendees?: number;
-  Maps_link?: string;
+  google_maps_link?: string;
   timezone_abbreviation?: string;
 }

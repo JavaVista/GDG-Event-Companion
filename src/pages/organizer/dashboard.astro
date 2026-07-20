@@ -1,13 +1,31 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import OrganizerDashboardGrid from '../../components/OrganizerDashboardGrid.astro';
+import { fetchBevyEvents } from '../../services/bevy-events-service';
+import { getLiveOrNextEvent } from '../../lib/bevy';
+
+const allEvents = await fetchBevyEvents().catch(() => []);
+const currentEvent = getLiveOrNextEvent(allEvents);
+
+const currentIndex = currentEvent
+  ? allEvents.findIndex((e) => e.id === currentEvent.id)
+  : -1;
+const nextEvent =
+  currentIndex !== -1 && currentIndex + 1 < allEvents.length
+    ? allEvents[currentIndex + 1]
+    : undefined;
 ---
 
 <BaseLayout
   title="Organizer Dashboard | GDG Event Companion"
   description="Quick access to scripts and event management tools"
 >
-  <div id="dashboard-container" class="flex flex-col gap-5 py-2">
+  <div
+    id="dashboard-container"
+    class="flex flex-col gap-5 py-2"
+    data-current-event={JSON.stringify(currentEvent)}
+    data-next-event={JSON.stringify(nextEvent)}
+  >
     <div class="flex flex-col gap-2">
       <!-- Title & CTA Row -->
       <div class="flex justify-between items-center gap-4 w-full">
@@ -326,10 +344,62 @@ import OrganizerDashboardGrid from '../../components/OrganizerDashboardGrid.astr
 
 <script>
   import { isUnlocked, lock } from '../../lib/organizer-auth';
+  import {
+    generateIntroScript,
+    generateOutroScript,
+  } from '../../lib/script-generator';
 
   // Client-side guard: if locked, redirect to unlock portal index
   if (!isUnlocked()) {
     window.location.replace('/organizer');
+  }
+
+  // Load events and run dynamic script generation
+  const container = document.getElementById('dashboard-container');
+  const currentEvent = container?.dataset.currentEvent
+    ? JSON.parse(container.dataset.currentEvent)
+    : null;
+  const nextEvent = container?.dataset.nextEvent
+    ? JSON.parse(container.dataset.nextEvent)
+    : null;
+
+  if (currentEvent) {
+    const storageKey = `gdg-event-notes-${currentEvent.id}`;
+    let talkingPoints = {};
+    try {
+      const savedData = localStorage.getItem(storageKey);
+      if (savedData) {
+        talkingPoints = JSON.parse(savedData);
+      }
+    } catch (e) {
+      console.error('Failed to load event notes for scripts:', e);
+    }
+
+    const introText = generateIntroScript(currentEvent, {
+      talkingPoints,
+      nextEvent,
+    });
+    const outroText = generateOutroScript(currentEvent, {
+      talkingPoints,
+      nextEvent,
+    });
+
+    const introEl = document.getElementById('intro-text');
+    const outroEl = document.getElementById('outro-text');
+    if (introEl) introEl.textContent = introText;
+    if (outroEl) outroEl.textContent = outroText;
+  } else {
+    // Basic fallback if no active event is returned
+    const introEl = document.getElementById('intro-text');
+    const outroEl = document.getElementById('outro-text');
+    if (introEl) {
+      introEl.textContent =
+        "Welcome everyone to today's Google Developer Groups event! We are thrilled to have you here in Orlando. Remember to join our Discord community, scan the check-in QR codes, and review the Code of Conduct. Let's get started!";
+    }
+    if (outroEl) {
+      outroEl.textContent =
+        "Thank you all for joining us today! Please take a moment to join our Discord if you haven't yet, enjoy the networking session, grab some refreshments, and have a safe trip home!";
+    }
   }
 
   // Lock action handler

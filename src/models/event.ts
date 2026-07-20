@@ -88,7 +88,7 @@ export function mapBevyEventToEvent(bevyEvent: BevyEvent): Event {
   ].filter(Boolean);
   const fallbackAddress = addressParts.join(', ');
   const mapsLink =
-    bevyEvent.Maps_link ||
+    bevyEvent.google_maps_link ||
     (fallbackAddress.trim()
       ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fallbackAddress)}`
       : undefined);
