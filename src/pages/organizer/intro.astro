@@ -1,0 +1,532 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ScriptReader from '../../components/ScriptReader.astro';
+import ScriptSectionEditor from '../../components/ScriptSectionEditor.astro';
+import { fetchBevyEvents } from '../../services/bevy-events-service';
+import { getLiveOrNextEvent } from '../../lib/bevy';
+import { generateIntroSections } from '../../lib/script-generator';
+
+const allEvents = await fetchBevyEvents().catch(() => []);
+const currentEvent = getLiveOrNextEvent(allEvents);
+
+const currentIndex = currentEvent
+  ? allEvents.findIndex((e) => e.id === currentEvent.id)
+  : -1;
+const nextEvent =
+  currentIndex !== -1 && currentIndex + 1 < allEvents.length
+    ? allEvents[currentIndex + 1]
+    : undefined;
+
+const defaultSections = currentEvent
+  ? generateIntroSections(currentEvent, { nextEvent })
+  : [];
+---
+
+<BaseLayout
+  title="Intro Script | GDG Event Companion"
+  description="Read and edit presenter intro script sections"
+>
+  <div
+    id="intro-page-container"
+    class="flex flex-col gap-4 py-2"
+    data-event-id={currentEvent?.id || 'default'}
+    data-default-sections={JSON.stringify(defaultSections)}
+  >
+    <!-- Top Header & Navigation -->
+    <div class="flex justify-between items-center gap-4 w-full">
+      <a
+        href="/organizer/dashboard"
+        class="flex items-center gap-1 text-xs font-black text-primary hover:underline cursor-pointer select-none"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-4 h-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2.5"
+        >
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        Dashboard
+      </a>
+      <h2
+        class="text-xs font-extrabold text-on-surface-variant uppercase tracking-wider"
+      >
+        Intro Script
+      </h2>
+    </div>
+
+    <!-- Navigation Tabs (Read / Edit) -->
+    <div
+      class="flex bg-surface-variant/40 border border-outline/10 p-1 rounded-2xl w-full mt-1"
+    >
+      <button
+        id="tab-read"
+        type="button"
+        class="flex-1 py-2 text-center text-xs font-bold bg-surface text-success rounded-xl shadow-xs transition-all cursor-pointer"
+      >
+        Read
+      </button>
+      <button
+        id="tab-edit"
+        type="button"
+        class="flex-1 py-2 text-center text-xs font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-pointer"
+      >
+        Edit
+      </button>
+    </div>
+
+    <!-- Read Mode View -->
+    <div id="view-read" class="w-full">
+      <ScriptReader eventId={currentEvent?.id || 'default'} />
+    </div>
+
+    <!-- Edit Mode View -->
+    <div id="view-edit" class="w-full hidden">
+      <ScriptSectionEditor eventId={currentEvent?.id || 'default'} />
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  import { isUnlocked } from '../../lib/organizer-auth';
+
+  // Client-side guard: if locked, redirect to unlock portal index
+  if (!isUnlocked()) {
+    window.location.replace('/organizer');
+  }
+
+  const container = document.getElementById('intro-page-container');
+  const eventId = container?.dataset.eventId || 'default';
+  const defaultSections = container?.dataset.defaultSections
+    ? JSON.parse(container.dataset.defaultSections)
+    : [];
+
+  const storageKey = `gdg-intro-sections-${eventId}`;
+  const fallbackKey = 'gdg-intro-sections';
+
+  let currentSections: Array<{ id: number; title: string; text: string }> = [];
+
+  function loadSections() {
+    try {
+      const saved =
+        localStorage.getItem(storageKey) || localStorage.getItem(fallbackKey);
+      if (saved) {
+        currentSections = JSON.parse(saved);
+      } else {
+        currentSections = JSON.parse(JSON.stringify(defaultSections));
+      }
+    } catch (e) {
+      console.error('Failed to load sections from localStorage:', e);
+      currentSections = JSON.parse(JSON.stringify(defaultSections));
+    }
+  }
+
+  function saveSectionsToStorage() {
+    try {
+      const serialized = JSON.stringify(currentSections);
+      localStorage.setItem(storageKey, serialized);
+      localStorage.setItem(fallbackKey, serialized);
+    } catch (e) {
+      console.error('Failed to save sections to localStorage:', e);
+    }
+  }
+
+  function parseMarkdown(text: string): string {
+    if (!text) return '';
+    let html = text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+    html = html.replace(
+      /(\*\*|__)(.*?)\1/g,
+      '<strong class="font-extrabold text-on-surface">$2</strong>'
+    );
+    html = html.replace(/(\*|_)(.*?)\1/g, '<em class="italic">$2</em>');
+    html = html.replace(
+      /\[([^\]]+)\]\(([^)]+)\)/g,
+      (_: string, linkText: string, url: string) => {
+        let href = url.trim();
+        if (
+          !/^https?:\/\//i.test(href) &&
+          !href.startsWith('/') &&
+          !href.startsWith('mailto:')
+        ) {
+          href = `https://${href}`;
+        }
+        return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="text-primary font-bold underline hover:opacity-80">${linkText}</a>`;
+      }
+    );
+    html = html.replace(
+      /^(?:[-*•])\s+(.+)$/gm,
+      '<span class="flex items-start gap-2 py-0.5"><span class="text-primary font-bold shrink-0 select-none">•</span><span>$1</span></span>'
+    );
+    html = html.replace(/(<\/span>)\n+/g, '$1');
+    return html;
+  }
+
+  // Render Read Mode View
+  function renderReadView() {
+    const paragraphsContainer = document.getElementById(
+      'script-reader-paragraphs'
+    );
+    if (!paragraphsContainer) return;
+
+    paragraphsContainer.innerHTML = '';
+    currentSections.forEach((section) => {
+      if (!section.text.trim()) return;
+
+      const p = document.createElement('p');
+      p.className =
+        'text-xs md:text-sm leading-relaxed text-on-surface font-medium whitespace-pre-line';
+      p.innerHTML = parseMarkdown(section.text);
+      paragraphsContainer.appendChild(p);
+    });
+  }
+
+  // Render Edit Mode View
+  let draggedIndex: number | null = null;
+  let lastDeletedSection: {
+    section: { id: number; title: string; text: string };
+    index: number;
+  } | null = null;
+
+  function showInlineUndoBanner(title: string) {
+    const banner = document.getElementById('inline-undo-banner');
+    const textEl = document.getElementById('inline-undo-text');
+    if (!banner || !textEl) return;
+
+    textEl.textContent = `"${title}" deleted`;
+    banner.classList.remove('hidden');
+  }
+
+  function hideInlineUndoBanner() {
+    const banner = document.getElementById('inline-undo-banner');
+    if (banner) banner.classList.add('hidden');
+  }
+
+  const btnInlineUndo = document.getElementById('btn-inline-undo');
+  btnInlineUndo?.addEventListener('click', () => {
+    if (lastDeletedSection) {
+      currentSections.splice(
+        lastDeletedSection.index,
+        0,
+        lastDeletedSection.section
+      );
+      currentSections.forEach((sec, i) => {
+        sec.id = i + 1;
+      });
+      lastDeletedSection = null;
+      hideInlineUndoBanner();
+      renderEditView();
+    }
+  });
+
+  // Reset Confirmation Modal (Material 3)
+  const resetModal = document.getElementById('modal-reset-confirm');
+  const btnResetDefaults = document.getElementById('btn-reset-defaults');
+  const btnCancelReset = document.getElementById('btn-cancel-reset');
+  const btnConfirmReset = document.getElementById('btn-confirm-reset');
+
+  function openResetModal() {
+    if (!resetModal) return;
+    resetModal.classList.remove('opacity-0', 'pointer-events-none');
+    resetModal.classList.add('opacity-100', 'pointer-events-auto');
+    const dialogCard = resetModal.querySelector('div');
+    if (dialogCard) {
+      dialogCard.classList.remove('scale-95');
+      dialogCard.classList.add('scale-100');
+    }
+  }
+
+  function closeResetModal() {
+    if (!resetModal) return;
+    resetModal.classList.remove('opacity-100', 'pointer-events-auto');
+    resetModal.classList.add('opacity-0', 'pointer-events-none');
+    const dialogCard = resetModal.querySelector('div');
+    if (dialogCard) {
+      dialogCard.classList.remove('scale-100');
+      dialogCard.classList.add('scale-95');
+    }
+  }
+
+  btnResetDefaults?.addEventListener('click', () => {
+    openResetModal();
+  });
+
+  btnCancelReset?.addEventListener('click', () => {
+    closeResetModal();
+  });
+
+  btnConfirmReset?.addEventListener('click', () => {
+    currentSections = JSON.parse(JSON.stringify(defaultSections));
+    lastDeletedSection = null;
+    hideInlineUndoBanner();
+    renderEditView();
+    closeResetModal();
+  });
+
+  // Markdown Guide Modal (Material 3)
+  const markdownGuideModal = document.getElementById('modal-markdown-guide');
+  const btnMarkdownHint = document.getElementById('btn-markdown-hint');
+  const btnCloseMarkdownGuide = document.getElementById(
+    'btn-close-markdown-guide'
+  );
+
+  btnMarkdownHint?.addEventListener('click', () => {
+    if (!markdownGuideModal) return;
+    markdownGuideModal.classList.remove('opacity-0', 'pointer-events-none');
+    markdownGuideModal.classList.add('opacity-100', 'pointer-events-auto');
+    const card = markdownGuideModal.querySelector('div');
+    if (card) {
+      card.classList.remove('scale-95');
+      card.classList.add('scale-100');
+    }
+  });
+
+  btnCloseMarkdownGuide?.addEventListener('click', () => {
+    if (!markdownGuideModal) return;
+    markdownGuideModal.classList.remove('opacity-100', 'pointer-events-auto');
+    markdownGuideModal.classList.add('opacity-0', 'pointer-events-none');
+    const card = markdownGuideModal.querySelector('div');
+    if (card) {
+      card.classList.remove('scale-100');
+      card.classList.add('scale-95');
+    }
+  });
+
+  function renderEditView() {
+    const listContainer = document.getElementById('sections-list');
+    if (!listContainer) return;
+
+    listContainer.innerHTML = '';
+
+    currentSections.forEach((section, index) => {
+      const card = document.createElement('div');
+      card.className =
+        'bg-surface-variant/30 border border-outline/15 rounded-2xl p-3 flex flex-col gap-3 transition-all cursor-grab active:cursor-grabbing';
+      card.setAttribute('draggable', 'true');
+
+      // Drag & Drop Handlers
+      card.addEventListener('dragstart', (e) => {
+        draggedIndex = index;
+        if (e.dataTransfer) {
+          e.dataTransfer.effectAllowed = 'move';
+          e.dataTransfer.setData('text/plain', String(index));
+        }
+        card.classList.add('opacity-40', 'border-primary/50');
+      });
+
+      card.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        if (e.dataTransfer) {
+          e.dataTransfer.dropEffect = 'move';
+        }
+        card.classList.add('border-success/60', 'bg-success/5');
+      });
+
+      card.addEventListener('dragleave', () => {
+        card.classList.remove('border-success/60', 'bg-success/5');
+      });
+
+      card.addEventListener('drop', (e) => {
+        e.preventDefault();
+        card.classList.remove('border-success/60', 'bg-success/5');
+        if (draggedIndex !== null && draggedIndex !== index) {
+          const item = currentSections.splice(draggedIndex, 1)[0];
+          currentSections.splice(index, 0, item);
+          currentSections.forEach((sec, i) => {
+            sec.id = i + 1;
+          });
+          renderEditView();
+        }
+      });
+
+      card.addEventListener('dragend', () => {
+        card.classList.remove('opacity-40', 'border-primary/50');
+        draggedIndex = null;
+      });
+
+      // Header Row
+      const headerRow = document.createElement('div');
+      headerRow.className =
+        'flex items-center justify-between gap-2 select-none';
+
+      headerRow.innerHTML = `
+        <div class="flex items-center gap-2 overflow-hidden flex-1 cursor-pointer toggle-accordion" title="Click to expand/collapse">
+          <span class="text-on-surface-variant/60 hover:text-on-surface font-mono text-xs shrink-0 p-0.5">≡</span>
+          <span class="text-xs font-bold text-on-surface truncate">${index + 1} ${section.title}</span>
+        </div>
+        <div class="flex items-center gap-1 shrink-0">
+          <button type="button" class="btn-move-up text-[10px] font-bold w-6 h-6 rounded-lg bg-surface-variant/50 hover:bg-surface-variant text-on-surface-variant flex items-center justify-center cursor-pointer ${index === 0 ? 'opacity-30 pointer-events-none' : ''}" title="Move Up">↑</button>
+          <button type="button" class="btn-move-down text-[10px] font-bold w-6 h-6 rounded-lg bg-surface-variant/50 hover:bg-surface-variant text-on-surface-variant flex items-center justify-center cursor-pointer ${index === currentSections.length - 1 ? 'opacity-30 pointer-events-none' : ''}" title="Move Down">↓</button>
+          <button type="button" class="btn-delete-section text-xs font-bold w-6 h-6 rounded-lg bg-error/10 hover:bg-error/20 text-error flex items-center justify-center cursor-pointer ml-1" title="Delete Section">✕</button>
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-on-surface-variant hover:text-on-surface ml-1.5 cursor-pointer toggle-accordion chevron-icon transform transition-transform duration-200 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+      `;
+
+      // Textarea Container
+      const editorArea = document.createElement('div');
+      editorArea.className =
+        'flex flex-col gap-2 pt-1 border-t border-outline/10 hidden';
+
+      const textarea = document.createElement('textarea');
+      textarea.className =
+        'w-full bg-surface border border-outline/20 rounded-xl p-3 text-xs text-on-surface focus:outline-none focus:border-success/50 transition-colors resize-y min-h-[100px] leading-relaxed';
+      textarea.value = section.text;
+      textarea.placeholder = 'Type section content...';
+
+      textarea.addEventListener('input', (e) => {
+        section.text = (e.target as HTMLTextAreaElement).value;
+      });
+
+      editorArea.appendChild(textarea);
+
+      // Event Listeners for Controls
+      const toggleElements = headerRow.querySelectorAll('.toggle-accordion');
+      toggleElements.forEach((el) => {
+        el.addEventListener('click', () => {
+          const isHidden = editorArea.classList.contains('hidden');
+          editorArea.classList.toggle('hidden');
+          const chevron = headerRow.querySelector('.chevron-icon');
+          if (chevron) {
+            chevron.classList.toggle('rotate-180', isHidden);
+          }
+        });
+      });
+
+      // Move Up
+      const btnMoveUp = headerRow.querySelector('.btn-move-up');
+      btnMoveUp?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (index > 0) {
+          const item = currentSections.splice(index, 1)[0];
+          currentSections.splice(index - 1, 0, item);
+          currentSections.forEach((sec, i) => {
+            sec.id = i + 1;
+          });
+          renderEditView();
+        }
+      });
+
+      // Move Down
+      const btnMoveDown = headerRow.querySelector('.btn-move-down');
+      btnMoveDown?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (index < currentSections.length - 1) {
+          const item = currentSections.splice(index, 1)[0];
+          currentSections.splice(index + 1, 0, item);
+          currentSections.forEach((sec, i) => {
+            sec.id = i + 1;
+          });
+          renderEditView();
+        }
+      });
+
+      // Delete Section
+      const btnDelete = headerRow.querySelector('.btn-delete-section');
+      btnDelete?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const removed = currentSections.splice(index, 1)[0];
+        if (removed) {
+          lastDeletedSection = { section: removed, index };
+          currentSections.forEach((sec, i) => {
+            sec.id = i + 1;
+          });
+          showInlineUndoBanner(removed.title);
+          renderEditView();
+        }
+      });
+
+      card.appendChild(headerRow);
+      card.appendChild(editorArea);
+      listContainer.appendChild(card);
+    });
+  }
+
+  // Switch Mode
+  const tabRead = document.getElementById('tab-read');
+  const tabEdit = document.getElementById('tab-edit');
+  const viewRead = document.getElementById('view-read');
+  const viewEdit = document.getElementById('view-edit');
+
+  const activeTabClass =
+    'flex-1 py-2 text-center text-xs font-bold bg-surface text-success rounded-xl shadow-xs transition-all cursor-pointer';
+  const inactiveTabClass =
+    'flex-1 py-2 text-center text-xs font-medium text-on-surface-variant hover:text-on-surface transition-all cursor-pointer';
+
+  function setMode(mode: 'read' | 'edit') {
+    if (mode === 'read') {
+      if (tabRead) tabRead.className = activeTabClass;
+      if (tabEdit) tabEdit.className = inactiveTabClass;
+
+      viewRead?.classList.remove('hidden');
+      viewEdit?.classList.add('hidden');
+
+      renderReadView();
+    } else {
+      if (tabEdit) tabEdit.className = activeTabClass;
+      if (tabRead) tabRead.className = inactiveTabClass;
+
+      viewEdit?.classList.remove('hidden');
+      viewRead?.classList.add('hidden');
+
+      renderEditView();
+    }
+  }
+
+  // Event Listeners
+  tabRead?.addEventListener('click', () => setMode('read'));
+  tabEdit?.addEventListener('click', () => setMode('edit'));
+
+  window.addEventListener('script-mode-change', (e: Event) => {
+    const customEv = e as CustomEvent;
+    if (customEv.detail?.mode) {
+      setMode(customEv.detail.mode);
+    }
+  });
+
+  // Save Action
+  const btnSave = document.getElementById('btn-save-edit');
+  btnSave?.addEventListener('click', () => {
+    saveSectionsToStorage();
+
+    const savedMsg = document.getElementById('editor-saved-msg');
+    if (savedMsg) {
+      savedMsg.classList.remove('opacity-0');
+      setTimeout(() => {
+        savedMsg.classList.add('opacity-0');
+      }, 1500);
+    }
+
+    setTimeout(() => {
+      setMode('read');
+    }, 400);
+  });
+
+  // Cancel Action
+  const btnCancel = document.getElementById('btn-cancel-edit');
+  btnCancel?.addEventListener('click', () => {
+    loadSections(); // Discard unsaved changes
+    setMode('read');
+  });
+
+  // Add Section Action
+  const btnAdd = document.getElementById('btn-add-section');
+  btnAdd?.addEventListener('click', () => {
+    const nextId = currentSections.length + 1;
+    currentSections.push({
+      id: nextId,
+      title: `Custom Section ${nextId}`,
+      text: '',
+    });
+    renderEditView();
+  });
+
+  // Initialize
+  loadSections();
+  renderReadView();
+</script>

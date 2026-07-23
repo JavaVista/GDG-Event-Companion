@@ -1,0 +1,44 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  eventId: string;
+}
+
+const { eventId } = Astro.props;
+---
+
+<div id="script-reader-container" class="flex flex-col gap-5 relative pb-20">
+  <!-- Script Content Paragraphs Container -->
+  <div
+    id="script-reader-paragraphs"
+    class="flex flex-col gap-4 text-on-surface"
+  >
+    <!-- Populated by Client Script -->
+  </div>
+
+  <!-- Bottom Fixed/Floating Edit CTA -->
+  <div
+    class="fixed bottom-6 left-0 right-0 z-20 flex justify-center px-4 pointer-events-none"
+  >
+    <button
+      id="btn-edit-script"
+      type="button"
+      class="pointer-events-auto bg-success/15 text-success hover:bg-success/25 border border-success/30 font-bold text-xs px-6 py-2.5 rounded-full flex items-center justify-center gap-2 shadow-sm transition-all duration-200 active:scale-95 cursor-pointer"
+    >
+      <Icon name="notes" size={14} />
+      <span>Edit</span>
+    </button>
+  </div>
+</div>
+
+<script data-event-id={eventId}>
+  const editBtn = document.getElementById('btn-edit-script');
+  if (editBtn) {
+    editBtn.addEventListener('click', () => {
+      window.dispatchEvent(
+        new CustomEvent('script-mode-change', { detail: { mode: 'edit' } })
+      );
+    });
+  }
+</script>

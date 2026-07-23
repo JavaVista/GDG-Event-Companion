@@ -10,6 +10,12 @@ export interface ScriptOptions {
   nextEvent?: Event;
 }
 
+export interface ScriptSection {
+  id: number;
+  title: string;
+  text: string;
+}
+
 export interface SpeakerInfo {
   names: string;
   hasSpeaker: boolean;
@@ -222,19 +228,58 @@ export function getSpeakerInfo(event: Event): SpeakerInfo {
 }
 
 /**
- * Legacy support: returns string name of the speaker.
+ * Safely parses basic Markdown formatting (**bold**, *italic*, [link](url)) into clean HTML.
  */
-export function getSpeakerName(event: Event): string {
-  return getSpeakerInfo(event).names;
+export function parseMarkdown(text: string): string {
+  if (!text) return '';
+
+  // 1. Escape HTML special characters to prevent XSS
+  let html = text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+
+  // 2. Bold: **text** or __text__
+  html = html.replace(
+    /(\*\*|__)(.*?)\1/g,
+    '<strong class="font-extrabold text-on-surface">$2</strong>'
+  );
+
+  // 3. Italic: *text* or _text_
+  html = html.replace(/(\*|_)(.*?)\1/g, '<em class="italic">$2</em>');
+
+  // 4. Links: [text](url)
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, linkText, url) => {
+    let href = url.trim();
+    if (
+      !/^https?:\/\//i.test(href) &&
+      !href.startsWith('/') &&
+      !href.startsWith('mailto:')
+    ) {
+      href = `https://${href}`;
+    }
+    return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="text-primary font-bold underline hover:opacity-80">${linkText}</a>`;
+  });
+
+  // 5. Bullet Points: Lines starting with "- ", "* ", or "• "
+  html = html.replace(
+    /^(?:[-*•])\s+(.+)$/gm,
+    '<span class="flex items-start gap-2 py-0.5"><span class="text-primary font-bold shrink-0 select-none">•</span><span>$1</span></span>'
+  );
+
+  // Clean up trailing newlines immediately following bullet spans to prevent double-spacing
+  html = html.replace(/(<\/span>)\n+/g, '$1');
+
+  return html;
 }
 
 /**
- * Generates the dynamic presenter intro script.
+ * Generates the 7 structured sections of the presenter intro script.
  */
-export function generateIntroScript(
+export function generateIntroSections(
   event: Event,
   options: ScriptOptions = {}
-): string {
+): ScriptSection[] {
   const speakerInfo = getSpeakerInfo(event);
   const startDate = new Date(event.startDate);
 
@@ -244,28 +289,26 @@ export function generateIntroScript(
   const timeOfDay =
     hours < 12 ? 'morning' : hours < 18 ? 'afternoon' : 'evening';
 
-  const greeting = `Good ${timeOfDay}, everyone! 👋 Welcome to GDG Central Florida, and thank you all for spending part of your ${dayOfWeek} with us. Whether this is your first meetup or you've been coming for years, we're really glad you're here.`;
+  const greetingText = `Good ${timeOfDay}, everyone! 👋\n\nWelcome to **GDG Central Florida**, and thank you all for spending part of your ${dayOfWeek} with us. Whether this is your first meetup or you've been coming for years, we're really glad you're here.`;
 
   // Announcements block
   const userAnnouncements = options.talkingPoints?.announcements?.trim();
-  const announcementsHeading = `Before we get started, I want to share a few quick announcements.`;
-  const announcementsBody = userAnnouncements
-    ? `\n\n${announcementsHeading}\n• ${userAnnouncements.split('\n').join('\n• ')}`
-    : `\n\n${announcementsHeading}\n• First, we'd love for you to join our GDG Central Florida Discord. It's where our community stays connected between meetups, shares projects, asks questions, and learns from one another.\n• Second, a quick reminder that all of our events follow Google's Community Code of Conduct. We want everyone to feel welcome, respected, and safe.`;
+  const announcementsText = userAnnouncements
+    ? `Before we get started, I want to share a few quick announcements.\n\n• ${userAnnouncements.split('\n').join('\n• ')}`
+    : `Before we get started, I want to share a few quick announcements.`;
 
-  // Community reminders block
-  const communityReminders = options.talkingPoints?.communityReminders?.trim();
-  const communityBlock = communityReminders
-    ? `\n\nAlso, a quick community reminder:\n${communityReminders}`
-    : '';
+  // Community & Discord
+  const communityDiscordText = `First, we'd love for you to join our **GDG Central Florida Discord**. It's where our community stays connected between meetups, shares projects, asks questions, and learns from one another. If you haven't joined yet, please do—we'd love to keep the conversation going after today's event.`;
 
-  // Next event block
-  let upcomingBlock = '';
-  if (options.nextEvent) {
-    upcomingBlock = `\n\nWe have some fantastic upcoming events scheduled. Make sure to RSVP for our next session: "${options.nextEvent.title}" on ${options.nextEvent.displayDate}.`;
-  }
+  // Code of Conduct
+  const codeOfConductText = `Second, a quick reminder that all of our events follow **Google's Community Code of Conduct**. We want everyone to feel welcome, respected, and safe.`;
 
-  // Speaker Intro or Community Kickoff
+  // Upcoming Events
+  const upcomingText = options.nextEvent
+    ? `We have some fantastic upcoming events scheduled. Make sure to RSVP for our next session: "**${options.nextEvent.title}**" on **${options.nextEvent.displayDate}**.`
+    : `We have some fantastic upcoming events scheduled. Check our community page at gdg.community.dev to RSVP for our next session!`;
+
+  // Event Overview & Intro
   const cleanDescription = event.descriptionShort
     ? event.descriptionShort.replace(/<[^>]*>/g, '')
     : 'a great learning session';
@@ -275,19 +318,35 @@ export function generateIntroScript(
       ? 'our speakers, '
       : '';
 
-  const speakerIntro = speakerInfo.hasSpeaker
-    ? `\n\nToday, we are thrilled to welcome ${introPrefix}${speakerInfo.names}, who will be presenting "${event.title}". Here is a quick overview of what we'll cover:\n\n"${cleanDescription}"\n\nLet's give a warm welcome to ${speakerInfo.names} and get started!`
-    : `\n\nToday, we are gathered for our community event, "${event.title}". Here is a quick overview of what's in store:\n\n"${cleanDescription}"\n\nLet's get started with today's activities!`;
+  const eventOverviewText = speakerInfo.hasSpeaker
+    ? `Today, we are thrilled to welcome ${introPrefix}**${speakerInfo.names}**, who will be presenting "**${event.title}**". Here is a quick overview of what we'll cover:\n\n"${cleanDescription}"`
+    : `Today, we are gathered for our community event, "**${event.title}**". Here is a quick overview of what's in store:\n\n"${cleanDescription}"`;
+
+  // Closing / Welcome Speaker
+  const closingText = speakerInfo.hasSpeaker
+    ? `Let's give a warm welcome to **${speakerInfo.names}** and get started!`
+    : `Let's get started with today's activities!`;
 
   return [
-    greeting,
-    announcementsBody,
-    communityBlock,
-    upcomingBlock,
-    speakerIntro,
-  ]
-    .filter(Boolean)
-    .join('');
+    { id: 1, title: 'Welcome & Thank You', text: greetingText },
+    { id: 2, title: 'Announcements', text: announcementsText },
+    { id: 3, title: 'Community & Discord', text: communityDiscordText },
+    { id: 4, title: 'Code of Conduct', text: codeOfConductText },
+    { id: 5, title: 'Upcoming Events', text: upcomingText },
+    { id: 6, title: 'Event Overview & Intro', text: eventOverviewText },
+    { id: 7, title: 'Kickoff & Welcome', text: closingText },
+  ];
+}
+
+/**
+ * Generates the dynamic presenter intro script.
+ */
+export function generateIntroScript(
+  event: Event,
+  options: ScriptOptions = {}
+): string {
+  const sections = generateIntroSections(event, options);
+  return sections.map((s) => s.text).join('\n\n');
 }
 
 /**
