@@ -1,0 +1,135 @@
+---
+import { THEMES } from '../config/themes';
+import Icon from './Icon.astro';
+---
+
+<div class="flex flex-col gap-4 w-full">
+  <div
+    id="theme-selector-grid"
+    class="grid grid-cols-1 md:grid-cols-2 gap-3.5 w-full"
+  >
+    {
+      THEMES.map((theme) => (
+        <div
+          data-theme-card-id={theme.id}
+          class="theme-card relative card card-outlined border-outline/25 p-4 flex flex-col justify-between gap-4 bg-surface/50 hover:border-primary/50 hover:scale-[1.01] active:scale-[0.99] cursor-pointer transition-all duration-200 rounded-2xl select-none"
+        >
+          {/* Active Badge */}
+          <span
+            data-active-badge
+            class="hidden absolute top-3 right-3 flex items-center gap-1 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-primary text-on-primary shadow-xs tracking-wider"
+          >
+            ✓ Active
+          </span>
+
+          <div class="flex flex-col gap-2 pr-16">
+            <div class="flex items-center gap-2">
+              <div
+                class="w-6 h-6 rounded-md flex items-center justify-center shrink-0"
+                style={`background-color: ${theme.colors.primary}20; color: ${theme.colors.primary};`}
+              >
+                <Icon name="theme" size={14} />
+              </div>
+              <h3 class="text-sm font-extrabold text-on-surface leading-tight">
+                {theme.name}
+              </h3>
+            </div>
+            <p class="text-xs text-on-surface-variant leading-relaxed font-medium">
+              {theme.description}
+            </p>
+          </div>
+
+          {/* Palette Swatches & Icon Preview */}
+          <div class="flex justify-between items-center pt-2 border-t border-outline/10 mt-1">
+            <div class="flex items-center gap-1.5">
+              <span
+                class="w-5 h-5 rounded-full border border-black/10 shadow-2xs"
+                style={`background-color: ${theme.colors.primary};`}
+                title={`Primary: ${theme.colors.primary}`}
+              />
+              <span
+                class="w-5 h-5 rounded-full border border-black/10 shadow-2xs"
+                style={`background-color: ${theme.colors.secondary};`}
+                title={`Secondary: ${theme.colors.secondary}`}
+              />
+              <span
+                class="w-5 h-5 rounded-full border border-black/10 shadow-2xs"
+                style={`background-color: ${theme.colors.accent};`}
+                title={`Accent: ${theme.colors.accent}`}
+              />
+              <span
+                class="w-5 h-5 rounded-full border border-black/10 shadow-2xs"
+                style={`background-color: ${theme.colors.background};`}
+                title={`Background: ${theme.colors.background}`}
+              />
+            </div>
+
+            <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">
+              {theme.colors.background === '#ffffff' ||
+              theme.colors.background === '#faf8f5'
+                ? 'Light Theme'
+                : 'Dark Theme'}
+            </span>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  import { getActiveTheme, setActiveThemeId } from '../config/themes';
+
+  function updateThemeSelectorUI() {
+    const active = getActiveTheme();
+    const cards = document.querySelectorAll('[data-theme-card-id]');
+
+    cards.forEach((card) => {
+      const themeId = card.getAttribute('data-theme-card-id');
+      const activeBadge = card.querySelector('[data-active-badge]');
+      const isCurrent = themeId === active.id;
+
+      if (isCurrent) {
+        card.classList.add(
+          'border-primary',
+          'ring-2',
+          'ring-primary/20',
+          'bg-primary/5'
+        );
+        card.classList.remove('border-outline/25', 'bg-surface/50');
+        if (activeBadge) activeBadge.classList.remove('hidden');
+      } else {
+        card.classList.remove(
+          'border-primary',
+          'ring-2',
+          'ring-primary/20',
+          'bg-primary/5'
+        );
+        card.classList.add('border-outline/25', 'bg-surface/50');
+        if (activeBadge) activeBadge.classList.add('hidden');
+      }
+    });
+  }
+
+  // Bind click handlers to theme cards
+  const cards = document.querySelectorAll('[data-theme-card-id]');
+  cards.forEach((card) => {
+    card.addEventListener('click', () => {
+      const themeId = card.getAttribute('data-theme-card-id');
+      if (themeId) {
+        setActiveThemeId(themeId);
+        updateThemeSelectorUI();
+      }
+    });
+  });
+
+  // Listen to storage events to sync across tabs
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'gdg-active-theme-config-id') {
+      updateThemeSelectorUI();
+    }
+  });
+
+  // Initial update
+  updateThemeSelectorUI();
+</script>

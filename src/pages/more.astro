@@ -78,7 +78,7 @@ import { THEMES } from '../config/themes';
               >App Active Theme</span
             >
             <span class="text-[11px] text-on-surface-variant">
-              Switch event visual styles instantly
+              Switch visual styles instantly
             </span>
           </div>
         </div>
@@ -90,13 +90,7 @@ import { THEMES } from '../config/themes';
         >
           {
             THEMES.map((theme) => (
-              <option value={theme.id}>
-                {theme.id === 'gdg-default'
-                  ? 'Default'
-                  : theme.id === 'gdg-devfest'
-                    ? 'DevFest'
-                    : 'Holiday'}
-              </option>
+              <option value={theme.id}>{theme.name}</option>
             ))
           }
         </select>

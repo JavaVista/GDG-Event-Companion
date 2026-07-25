@@ -29,7 +29,7 @@ export interface ThemeConfig {
 export const THEMES: ThemeConfig[] = [
   {
     id: 'gdg-default',
-    name: 'Google Developer Groups (Default)',
+    name: 'GDG (Default)',
     description:
       'Clean light-mode theme based on Google Developer Groups brand guidelines.',
     colors: {
@@ -54,7 +54,7 @@ export const THEMES: ThemeConfig[] = [
   },
   {
     id: 'gdg-devfest',
-    name: 'GDG DevFest 2026',
+    name: 'GDG DevFest',
     description:
       'Vibrant dark-mode theme inspired by the retro-futuristic DevFest community events.',
     colors: {
@@ -122,6 +122,60 @@ export const THEMES: ThemeConfig[] = [
         'radial-gradient(circle at 90% 10%, rgba(224, 176, 52, 0.1) 0%, transparent 35%)',
     },
   },
+  {
+    id: 'build-with-ai',
+    name: 'Build with AI',
+    description:
+      'Futuristic dark theme tailored for Build with AI workshops, hackathons, and GenAI labs.',
+    colors: {
+      primary: '#00e5ff', // Cyber Cyan
+      secondary: '#7c4dff', // Deep Violet
+      accent: '#ff4081', // Neon Pink
+      background: '#0b0f19', // Deep space dark background
+      surface: '#151c2e', // Surface container
+      text: '#f1f5f9', // Bright crisp text
+      mutedText: '#94a3b8',
+      success: '#10b981',
+      warning: '#f59e0b',
+      danger: '#ef4444',
+    },
+    iconOverrides: {
+      calendar:
+        "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'></polygon></svg>",
+      speaker:
+        "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='4' y='4' width='16' height='16' rx='2'></rect><rect x='9' y='9' width='6' height='6'></rect><line x1='9' y1='1' x2='9' y2='4'></line><line x1='15' y1='1' x2='15' y2='4'></line><line x1='9' y1='20' x2='9' y2='23'></line><line x1='15' y1='20' x2='15' y2='23'></line><line x1='20' y1='9' x2='23' y2='9'></line><line x1='20' y1='15' x2='23' y2='15'></line><line x1='1' y1='9' x2='4' y2='9'></line><line x1='1' y1='15' x2='4' y2='15'></line></svg>",
+    },
+    heroStyle: {
+      gradientStart: 'rgba(0, 229, 255, 0.15)',
+      gradientEnd: 'rgba(124, 77, 255, 0.08)',
+      pattern:
+        'radial-gradient(circle at 50% 0%, rgba(0, 229, 255, 0.2) 0%, transparent 60%)',
+    },
+  },
+  {
+    id: 'io-extended',
+    name: 'Google I/O Extended',
+    description:
+      'Sleek dark theme inspired by Google I/O Extended developer announcements and keynotes.',
+    colors: {
+      primary: '#3ddc84', // Android / Google Green
+      secondary: '#4285f4', // Google Blue
+      accent: '#f9ab00', // Google Yellow
+      background: '#121212', // Pure dark background
+      surface: '#1e1e1e', // Dark surface
+      text: '#f5f5f5', // Off-white crisp text
+      mutedText: '#aaaaaa',
+      success: '#3ddc84',
+      warning: '#f9ab00',
+      danger: '#ea4335',
+    },
+    heroStyle: {
+      gradientStart: 'rgba(61, 220, 132, 0.15)',
+      gradientEnd: 'rgba(66, 133, 244, 0.08)',
+      pattern:
+        'linear-gradient(135deg, rgba(61, 220, 132, 0.1) 0%, transparent 40%)',
+    },
+  },
 ];
 
 export const STORAGE_KEY = 'gdg-active-theme-config-id';
@@ -146,7 +200,15 @@ export function applyTheme(theme: ThemeConfig) {
   root.style.setProperty('--md-sys-color-warning', theme.colors.warning);
   root.style.setProperty('--md-sys-color-danger', theme.colors.danger);
 
-  // Set all 17 custom semantic icon properties
+  // Set explicitly mapped text and variant tokens
+  root.style.setProperty('--md-sys-color-on-background', theme.colors.text);
+  root.style.setProperty('--md-sys-color-on-surface', theme.colors.text);
+  root.style.setProperty(
+    '--md-sys-color-on-surface-variant',
+    theme.colors.mutedText
+  );
+
+  // Set all custom semantic icon properties
   Object.keys(DEFAULT_ICONS).forEach((key) => {
     const iconName = key as SemanticIconName;
     const iconUrl = theme.iconOverrides?.[iconName] || DEFAULT_ICONS[iconName];
