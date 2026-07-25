@@ -350,65 +350,60 @@ export function generateIntroScript(
 }
 
 /**
- * Generates the dynamic presenter outro script.
+ * Generates the 7 structured sections of the presenter outro script.
  */
-export function generateOutroScript(
+export function generateOutroSections(
   event: Event,
   options: ScriptOptions = {}
-): string {
+): ScriptSection[] {
   const speakerInfo = getSpeakerInfo(event);
 
-  const closingThanks = `Before everyone heads out, I'd like to say a huge thank you for joining us today. Most importantly, thank all of you for being here. Whether you're a student, a seasoned developer, or just getting started with tech, you're what makes this community special.`;
+  const thankYouText = `Before everyone heads out, I'd like to say a huge thank you for joining us today.`;
 
   const outroPrefix =
     speakerInfo.isPlural && !speakerInfo.names.startsWith('our ')
       ? 'our speakers, '
       : '';
 
-  const speakerApplause = speakerInfo.hasSpeaker
-    ? `\n\nFirst, let's give another round of applause to ${outroPrefix}${speakerInfo.names} for sharing their time, knowledge, and this fantastic session. 👏`
-    : `\n\nFirst, let's give a round of applause to everyone who shared, presented, or participated in today's activities! 👏`;
+  const appreciationText = speakerInfo.hasSpeaker
+    ? `First, let's give another round of applause to ${outroPrefix}**${speakerInfo.names}** for sharing their time, knowledge, and this fantastic session. 👏`
+    : `First, let's give a round of applause to everyone who shared, presented, or participated in today's activities! 👏`;
 
-  // Venue thanks (IN_PERSON or HYBRID)
-  let venueThanks = '';
-  if (event.audienceType !== 'VIRTUAL' && event.venueName) {
-    venueThanks = `\n\nI'd also like to thank ${event.venueName} for hosting us and making today's meetup possible.`;
-  }
+  const venueThanksText =
+    event.audienceType !== 'VIRTUAL' && event.venueName
+      ? `I'd also like to thank **${event.venueName}** for hosting us and making today's meetup possible.\n\nI also want to give a special shout-out to our **volunteers** for their hard work in making everything run smoothly today.`
+      : `I'd also like to thank our hosts and community partners for supporting today's event.\n\nI also want to give a special shout-out to our **volunteers** for their hard work in making everything run smoothly today.`;
 
-  // Sponsor shoutout
-  const sponsorShoutout = options.talkingPoints?.sponsorShoutout?.trim();
-  const sponsorBlock = sponsorShoutout
-    ? `\n\nA special shoutout to our sponsors for supporting today's event:\n${sponsorShoutout}`
-    : '';
+  const communityThanksText = `Most importantly, thank all of you for being here. Whether you're a student, a seasoned developer, or just getting started with tech, you're what makes this community special. Every conversation, question, and connection helps make **GDG Central Florida** stronger.`;
 
-  // Discord reminder
-  const discordBlock = `\n\nIf you haven't already, please join our GDG Central Florida Discord. It's where we continue the conversations, share resources, announce future events, and help each other grow.`;
+  const discordReminderText = `If you haven't already, please join our **GDG Central Florida Discord**. It's where we continue the conversations, share resources, announce future events, and help each other grow.`;
 
-  // Next event reminder
-  let nextEventBlock = '';
-  if (options.nextEvent) {
-    nextEventBlock = `\n\nIf you enjoyed today's meetup, we'd really appreciate it if you RSVP for our next event, "${options.nextEvent.title}" on ${options.nextEvent.displayDate}, and invite a friend along!`;
-  }
+  const upcomingEventsText = options.nextEvent
+    ? `If you enjoyed today's meetup, we'd really appreciate it if you RSVP for our next session, "**${options.nextEvent.title}**" on **${options.nextEvent.displayDate}**, and invite a friend or coworker next time!`
+    : `If you enjoyed today's meetup, we'd really appreciate it if you RSVP for one of our upcoming events at **gdg.community.dev** and invite a friend or coworker next time. The more people we bring together, the stronger our community becomes.`;
 
-  // Special instructions & networking
-  const specialInstructions =
-    options.talkingPoints?.specialInstructions?.trim();
-  const specialBlock = specialInstructions
-    ? `\n\nAlso, a quick note before we close:\n${specialInstructions}`
-    : '';
-
-  const networking = `\n\nWe have a networking session set up now, so please stick around, grab some refreshments, chat with each other, and have a safe trip home!`;
+  const networkingClosingText = speakerInfo.hasSpeaker
+    ? `Feel free to stick around for a bit, network, ask **${speakerInfo.names}** questions, and meet someone new before you leave.\n\nThank you again for spending part of your day with us. Have a safe trip home, and we hope to see you at our next GDG Central Florida event! 🚀`
+    : `Feel free to stick around for a bit, network, chat with each other, and meet someone new before you leave.\n\nThank you again for spending part of your day with us. Have a safe trip home, and we hope to see you at our next GDG Central Florida event! 🚀`;
 
   return [
-    closingThanks,
-    speakerApplause,
-    venueThanks,
-    sponsorBlock,
-    discordBlock,
-    nextEventBlock,
-    specialBlock,
-    networking,
-  ]
-    .filter(Boolean)
-    .join('');
+    { id: 1, title: 'Thank You', text: thankYouText },
+    { id: 2, title: 'Appreciation', text: appreciationText },
+    { id: 3, title: 'Venue & Volunteers', text: venueThanksText },
+    { id: 4, title: 'Community Thanks', text: communityThanksText },
+    { id: 5, title: 'Discord Reminder', text: discordReminderText },
+    { id: 6, title: 'Upcoming Events', text: upcomingEventsText },
+    { id: 7, title: 'Networking / Closing', text: networkingClosingText },
+  ];
+}
+
+/**
+ * Generates the dynamic presenter outro script.
+ */
+export function generateOutroScript(
+  event: Event,
+  options: ScriptOptions = {}
+): string {
+  const sections = generateOutroSections(event, options);
+  return sections.map((s) => s.text).join('\n\n');
 }
