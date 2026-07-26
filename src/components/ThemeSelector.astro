@@ -1,135 +1,567 @@
 ---
-import { THEMES } from '../config/themes';
 import Icon from './Icon.astro';
 ---
 
 <div class="flex flex-col gap-4 w-full">
-  <div
-    id="theme-selector-grid"
-    class="grid grid-cols-1 md:grid-cols-2 gap-3.5 w-full"
-  >
-    {
-      THEMES.map((theme) => (
-        <div
-          data-theme-card-id={theme.id}
-          class="theme-card relative card card-outlined border-outline/25 p-4 flex flex-col justify-between gap-4 bg-surface/50 hover:border-primary/50 hover:scale-[1.01] active:scale-[0.99] cursor-pointer transition-all duration-200 rounded-2xl select-none"
-        >
-          {/* Active Badge */}
-          <span
-            data-active-badge
-            class="hidden absolute top-3 right-3 flex items-center gap-1 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-primary text-on-primary shadow-xs tracking-wider"
-          >
-            ✓ Active
-          </span>
+  <!-- Action Bar: Section Title + Create Custom Theme Button -->
+  <div class="flex justify-between items-center w-full">
+    <span
+      class="text-xs font-extrabold text-on-surface-variant uppercase tracking-wider"
+    >
+      Available Themes
+    </span>
+    <button
+      id="btn-open-custom-theme-modal"
+      type="button"
+      class="btn btn-filled text-xs py-1.5 px-3.5 flex items-center gap-1.5 cursor-pointer shadow-xs"
+    >
+      <Icon name="plus" size={14} />
+      <span>Create Custom Theme</span>
+    </button>
+  </div>
 
-          <div class="flex flex-col gap-2 pr-16">
-            <div class="flex items-center gap-2">
-              <div
-                class="w-6 h-6 rounded-md flex items-center justify-center shrink-0"
-                style={`background-color: ${theme.colors.primary}20; color: ${theme.colors.primary};`}
-              >
-                <Icon name="theme" size={14} />
-              </div>
-              <h3 class="text-sm font-extrabold text-on-surface leading-tight">
-                {theme.name}
-              </h3>
-            </div>
-            <p class="text-xs text-on-surface-variant leading-relaxed font-medium">
-              {theme.description}
+  <!-- 2-Column Responsive Card Grid -->
+  <div id="theme-selector-list" class="grid grid-cols-2 gap-3 w-full">
+    <!-- Populated dynamically via client JS to include built-in + custom user themes -->
+  </div>
+
+  <!-- Custom Theme Creator Modal (Material Design 3 Dialog) -->
+  <div
+    id="modal-custom-theme"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs opacity-0 pointer-events-none transition-opacity duration-200 p-4"
+  >
+    <div
+      class="bg-surface border border-outline/20 rounded-[28px] p-6 max-w-md w-full flex flex-col gap-5 shadow-elevation-5 transform scale-95 transition-transform duration-200 overflow-hidden"
+    >
+      <!-- Modal Header -->
+      <div
+        class="flex items-center justify-between gap-2 border-b border-outline/10 pb-3"
+      >
+        <div class="flex items-center gap-2">
+          <div
+            class="w-8 h-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0"
+          >
+            <Icon name="theme" size={18} />
+          </div>
+          <div>
+            <h3 class="text-base font-extrabold text-on-surface leading-tight">
+              Create Custom Theme
+            </h3>
+            <p class="text-xs text-on-surface-variant">
+              Customize colors for your special community event
             </p>
           </div>
+        </div>
+        <button
+          id="btn-close-custom-modal"
+          type="button"
+          class="text-on-surface-variant hover:text-on-surface p-1 rounded-lg text-lg font-bold cursor-pointer"
+        >
+          ✕
+        </button>
+      </div>
 
-          {/* Palette Swatches & Icon Preview */}
-          <div class="flex justify-between items-center pt-2 border-t border-outline/10 mt-1">
-            <div class="flex items-center gap-1.5">
-              <span
-                class="w-5 h-5 rounded-full border border-black/10 shadow-2xs"
-                style={`background-color: ${theme.colors.primary};`}
-                title={`Primary: ${theme.colors.primary}`}
-              />
-              <span
-                class="w-5 h-5 rounded-full border border-black/10 shadow-2xs"
-                style={`background-color: ${theme.colors.secondary};`}
-                title={`Secondary: ${theme.colors.secondary}`}
-              />
-              <span
-                class="w-5 h-5 rounded-full border border-black/10 shadow-2xs"
-                style={`background-color: ${theme.colors.accent};`}
-                title={`Accent: ${theme.colors.accent}`}
-              />
-              <span
-                class="w-5 h-5 rounded-full border border-black/10 shadow-2xs"
-                style={`background-color: ${theme.colors.background};`}
-                title={`Background: ${theme.colors.background}`}
-              />
-            </div>
+      <!-- Custom Theme Form -->
+      <div class="flex flex-col gap-4">
+        <!-- Theme Name -->
+        <div class="flex flex-col gap-1.5">
+          <label
+            for="custom-theme-name"
+            class="text-xs font-extrabold text-on-surface"
+          >
+            Theme Name
+          </label>
+          <input
+            id="custom-theme-name"
+            type="text"
+            placeholder="e.g. Orlando Tech Week"
+            class="w-full bg-surface-variant/40 border border-outline/20 rounded-xl px-3.5 py-2.5 text-xs text-on-surface focus:outline-none focus:border-primary transition-colors"
+          />
+        </div>
 
-            <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">
-              {theme.colors.background === '#ffffff' ||
-              theme.colors.background === '#faf8f5'
-                ? 'Light Theme'
-                : 'Dark Theme'}
-            </span>
+        <!-- Base Mode Switcher -->
+        <div class="flex flex-col gap-1.5">
+          <span class="text-xs font-extrabold text-on-surface"
+            >Base Appearance</span
+          >
+          <div
+            class="flex bg-surface-variant/40 border border-outline/10 p-1 rounded-xl w-full"
+          >
+            <button
+              id="btn-mode-light"
+              type="button"
+              class="flex-1 py-1.5 flex items-center justify-center gap-1.5 text-xs font-bold bg-surface text-primary rounded-lg shadow-2xs transition-all cursor-pointer"
+            >
+              <span
+                class="w-3.5 h-3.5 rounded-full bg-white border border-outline/40 shrink-0 shadow-2xs"
+              ></span>
+              <span>Light Mode</span>
+            </button>
+            <button
+              id="btn-mode-dark"
+              type="button"
+              class="flex-1 py-1.5 flex items-center justify-center gap-1.5 text-xs font-medium text-on-surface-variant transition-all cursor-pointer"
+            >
+              <span
+                class="w-3.5 h-3.5 rounded-full bg-slate-900 border border-slate-700 shrink-0 shadow-2xs"
+              ></span>
+              <span>Dark Mode</span>
+            </button>
           </div>
         </div>
-      ))
-    }
+
+        <!-- Primary Color Picker -->
+        <div class="flex flex-col gap-1.5">
+          <label
+            class="text-xs font-extrabold text-on-surface flex justify-between items-center"
+          >
+            <span>Primary Brand Color</span>
+            <span
+              id="label-color-primary"
+              class="font-mono text-[10px] font-bold"
+              style="color: #4285f4;">#4285F4</span
+            >
+          </label>
+          <div class="flex items-center gap-2">
+            <input
+              id="custom-color-primary"
+              type="color"
+              value="#4285f4"
+              class="w-10 h-10 rounded-full border border-outline/20 p-0.5 bg-surface cursor-pointer shrink-0 shadow-2xs"
+            />
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <button
+                type="button"
+                class="preset-primary w-6 h-6 rounded-full bg-[#4285f4] border border-black/10 cursor-pointer hover:scale-110 transition-transform"
+                data-color="#4285f4"></button>
+              <button
+                type="button"
+                class="preset-primary w-6 h-6 rounded-full bg-[#ea4335] border border-black/10 cursor-pointer hover:scale-110 transition-transform"
+                data-color="#ea4335"></button>
+              <button
+                type="button"
+                class="preset-primary w-6 h-6 rounded-full bg-[#34a853] border border-black/10 cursor-pointer hover:scale-110 transition-transform"
+                data-color="#34a853"></button>
+              <button
+                type="button"
+                class="preset-primary w-6 h-6 rounded-full bg-[#f9ab00] border border-black/10 cursor-pointer hover:scale-110 transition-transform"
+                data-color="#f9ab00"></button>
+              <button
+                type="button"
+                class="preset-primary w-6 h-6 rounded-full bg-[#00e5ff] border border-black/10 cursor-pointer hover:scale-110 transition-transform"
+                data-color="#00e5ff"></button>
+              <button
+                type="button"
+                class="preset-primary w-6 h-6 rounded-full bg-[#7c4dff] border border-black/10 cursor-pointer hover:scale-110 transition-transform"
+                data-color="#7c4dff"></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Secondary Color Picker -->
+        <div class="flex flex-col gap-1.5">
+          <label
+            class="text-xs font-extrabold text-on-surface flex justify-between items-center"
+          >
+            <span>Secondary Color</span>
+            <span
+              id="label-color-secondary"
+              class="font-mono text-[10px] font-bold"
+              style="color: #34a853;">#34A853</span
+            >
+          </label>
+          <div class="flex items-center gap-2">
+            <input
+              id="custom-color-secondary"
+              type="color"
+              value="#34a853"
+              class="w-10 h-10 rounded-full border border-outline/20 p-0.5 bg-surface cursor-pointer shrink-0 shadow-2xs"
+            />
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <button
+                type="button"
+                class="preset-secondary w-6 h-6 rounded-full bg-[#34a853] border border-black/10 cursor-pointer hover:scale-110 transition-transform"
+                data-color="#34a853"></button>
+              <button
+                type="button"
+                class="preset-secondary w-6 h-6 rounded-full bg-[#4285f4] border border-black/10 cursor-pointer hover:scale-110 transition-transform"
+                data-color="#4285f4"></button>
+              <button
+                type="button"
+                class="preset-secondary w-6 h-6 rounded-full bg-[#f9ab00] border border-black/10 cursor-pointer hover:scale-110 transition-transform"
+                data-color="#f9ab00"></button>
+              <button
+                type="button"
+                class="preset-secondary w-6 h-6 rounded-full bg-[#ff4081] border border-black/10 cursor-pointer hover:scale-110 transition-transform"
+                data-color="#ff4081"></button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accent Color Picker -->
+        <div class="flex flex-col gap-1.5">
+          <label
+            class="text-xs font-extrabold text-on-surface flex justify-between items-center"
+          >
+            <span>Accent Highlight Color</span>
+            <span
+              id="label-color-accent"
+              class="font-mono text-[10px] font-bold"
+              style="color: #f9ab00;">#F9AB00</span
+            >
+          </label>
+          <div class="flex items-center gap-2">
+            <input
+              id="custom-color-accent"
+              type="color"
+              value="#f9ab00"
+              class="w-10 h-10 rounded-full border border-outline/20 p-0.5 bg-surface cursor-pointer shrink-0 shadow-2xs"
+            />
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <button
+                type="button"
+                class="preset-accent w-6 h-6 rounded-full bg-[#f9ab00] border border-black/10 cursor-pointer hover:scale-110 transition-transform"
+                data-color="#f9ab00"></button>
+              <button
+                type="button"
+                class="preset-accent w-6 h-6 rounded-full bg-[#ea4335] border border-black/10 cursor-pointer hover:scale-110 transition-transform"
+                data-color="#ea4335"></button>
+              <button
+                type="button"
+                class="preset-accent w-6 h-6 rounded-full bg-[#00e5ff] border border-black/10 cursor-pointer hover:scale-110 transition-transform"
+                data-color="#00e5ff"></button>
+              <button
+                type="button"
+                class="preset-accent w-6 h-6 rounded-full bg-[#ff4081] border border-black/10 cursor-pointer hover:scale-110 transition-transform"
+                data-color="#ff4081"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div
+        class="flex justify-end items-center gap-2 pt-2 border-t border-outline/10"
+      >
+        <button
+          id="btn-cancel-custom-modal"
+          type="button"
+          class="btn btn-outlined text-xs py-2 px-4 cursor-pointer"
+        >
+          Cancel
+        </button>
+        <button
+          id="btn-save-custom-theme"
+          type="button"
+          class="btn btn-filled text-xs py-2 px-4 cursor-pointer shadow-xs"
+        >
+          Save & Apply Theme
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 
 <script>
-  import { getActiveTheme, setActiveThemeId } from '../config/themes';
+  import {
+    getAllThemes,
+    getActiveTheme,
+    setActiveThemeId,
+    saveCustomTheme,
+    deleteCustomTheme,
+    type ThemeConfig,
+  } from '../config/themes';
 
-  function updateThemeSelectorUI() {
-    const active = getActiveTheme();
-    const cards = document.querySelectorAll('[data-theme-card-id]');
+  const themeListContainer = document.getElementById('theme-selector-list');
+  const customModal = document.getElementById('modal-custom-theme');
+  const btnOpenModal = document.getElementById('btn-open-custom-theme-modal');
+  const btnCloseModal = document.getElementById('btn-close-custom-modal');
+  const btnCancelModal = document.getElementById('btn-cancel-custom-modal');
+  const btnSaveCustomTheme = document.getElementById('btn-save-custom-theme');
 
-    cards.forEach((card) => {
-      const themeId = card.getAttribute('data-theme-card-id');
-      const activeBadge = card.querySelector('[data-active-badge]');
-      const isCurrent = themeId === active.id;
+  const inputThemeName = document.getElementById(
+    'custom-theme-name'
+  ) as HTMLInputElement;
+  const inputPrimary = document.getElementById(
+    'custom-color-primary'
+  ) as HTMLInputElement;
+  const inputSecondary = document.getElementById(
+    'custom-color-secondary'
+  ) as HTMLInputElement;
+  const inputAccent = document.getElementById(
+    'custom-color-accent'
+  ) as HTMLInputElement;
 
-      if (isCurrent) {
-        card.classList.add(
-          'border-primary',
-          'ring-2',
-          'ring-primary/20',
-          'bg-primary/5'
-        );
-        card.classList.remove('border-outline/25', 'bg-surface/50');
-        if (activeBadge) activeBadge.classList.remove('hidden');
-      } else {
-        card.classList.remove(
-          'border-primary',
-          'ring-2',
-          'ring-primary/20',
-          'bg-primary/5'
-        );
-        card.classList.add('border-outline/25', 'bg-surface/50');
-        if (activeBadge) activeBadge.classList.add('hidden');
-      }
-    });
-  }
+  const labelPrimary = document.getElementById('label-color-primary');
+  const labelSecondary = document.getElementById('label-color-secondary');
+  const labelAccent = document.getElementById('label-color-accent');
 
-  // Bind click handlers to theme cards
-  const cards = document.querySelectorAll('[data-theme-card-id]');
-  cards.forEach((card) => {
-    card.addEventListener('click', () => {
-      const themeId = card.getAttribute('data-theme-card-id');
-      if (themeId) {
-        setActiveThemeId(themeId);
-        updateThemeSelectorUI();
-      }
-    });
-  });
+  const btnModeLight = document.getElementById('btn-mode-light');
+  const btnModeDark = document.getElementById('btn-mode-dark');
+  let selectedMode: 'light' | 'dark' = 'light';
 
-  // Listen to storage events to sync across tabs
-  window.addEventListener('storage', (e) => {
-    if (e.key === 'gdg-active-theme-config-id') {
-      updateThemeSelectorUI();
+  // Mode switcher handler
+  btnModeLight?.addEventListener('click', () => {
+    selectedMode = 'light';
+    btnModeLight.className =
+      'flex-1 py-1.5 flex items-center justify-center gap-1.5 text-xs font-bold bg-surface text-primary rounded-lg shadow-2xs transition-all cursor-pointer';
+    if (btnModeDark) {
+      btnModeDark.className =
+        'flex-1 py-1.5 flex items-center justify-center gap-1.5 text-xs font-medium text-on-surface-variant transition-all cursor-pointer';
     }
   });
 
-  // Initial update
-  updateThemeSelectorUI();
+  btnModeDark?.addEventListener('click', () => {
+    selectedMode = 'dark';
+    btnModeDark.className =
+      'flex-1 py-1.5 flex items-center justify-center gap-1.5 text-xs font-bold bg-surface text-primary rounded-lg shadow-2xs transition-all cursor-pointer';
+    if (btnModeLight) {
+      btnModeLight.className =
+        'flex-1 py-1.5 flex items-center justify-center gap-1.5 text-xs font-medium text-on-surface-variant transition-all cursor-pointer';
+    }
+  });
+
+  // Color label sync helper
+  function updateColorLabel(labelEl: HTMLElement | null, color: string) {
+    if (!labelEl) return;
+    const hex = color.toUpperCase();
+    labelEl.textContent = hex;
+    labelEl.style.color = hex;
+  }
+
+  // Color picker sync
+  inputPrimary?.addEventListener('input', (e) => {
+    const val = (e.target as HTMLInputElement).value;
+    updateColorLabel(labelPrimary, val);
+  });
+  inputSecondary?.addEventListener('input', (e) => {
+    const val = (e.target as HTMLInputElement).value;
+    updateColorLabel(labelSecondary, val);
+  });
+  inputAccent?.addEventListener('input', (e) => {
+    const val = (e.target as HTMLInputElement).value;
+    updateColorLabel(labelAccent, val);
+  });
+
+  // Preset color buttons
+  document.querySelectorAll('.preset-primary').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const color = btn.getAttribute('data-color');
+      if (color && inputPrimary) {
+        inputPrimary.value = color;
+        updateColorLabel(labelPrimary, color);
+      }
+    });
+  });
+
+  document.querySelectorAll('.preset-secondary').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const color = btn.getAttribute('data-color');
+      if (color && inputSecondary) {
+        inputSecondary.value = color;
+        updateColorLabel(labelSecondary, color);
+      }
+    });
+  });
+
+  document.querySelectorAll('.preset-accent').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const color = btn.getAttribute('data-color');
+      if (color && inputAccent) {
+        inputAccent.value = color;
+        updateColorLabel(labelAccent, color);
+      }
+    });
+  });
+
+  // Render All Theme Cards (Built-in + Custom User Themes)
+  function renderThemeSelector() {
+    if (!themeListContainer) return;
+    const allThemes = getAllThemes();
+    const active = getActiveTheme();
+
+    themeListContainer.innerHTML = '';
+
+    allThemes.forEach((theme) => {
+      const isCurrent = theme.id === active.id;
+      const isLight =
+        theme.colors.background === '#ffffff' ||
+        theme.colors.background === '#faf8f5';
+      const isCustom = theme.id.startsWith('custom-');
+
+      const card = document.createElement('div');
+      card.className = `card card-outlined p-3 flex flex-col justify-between gap-2.5 transition-all duration-200 rounded-2xl select-none cursor-pointer ${
+        isCurrent
+          ? 'border-primary ring-2 ring-primary/25 bg-primary/[0.04] shadow-xs'
+          : 'border-outline/25 bg-surface/50 hover:border-primary/50 hover:bg-surface/80'
+      }`;
+
+      card.setAttribute('data-theme-id', theme.id);
+
+      card.innerHTML = `
+        <!-- Top Bar: Icon + Mode Tag (Left) & Active Pill / Delete (Right) -->
+        <div class="flex items-center justify-between gap-1 w-full min-h-[22px]">
+          <div class="flex items-center gap-1.5 min-w-0">
+            <div
+              class="w-6 h-6 rounded-lg flex items-center justify-center shrink-0 shadow-2xs"
+              style="background-color: ${theme.colors.primary}20; color: ${theme.colors.primary};"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path d="M12 22C17.5228 22 22 17.5228 22 12C22 11.5 21.5 11 21 11H18.5C17.6716 11 17 10.3284 17 9.5C17 9.10217 17.158 8.72064 17.4393 8.43934C17.791 8.0877 18 7.61014 18 7.08579C18 5.9338 17.0662 5 15.9142 5H14C8.47715 5 4 9.47715 4 15C4 18.866 7.13401 22 11 22H12Z"></path>
+                <circle cx="7.5" cy="10.5" r="1.5"></circle>
+                <circle cx="11.5" cy="7.5" r="1.5"></circle>
+                <circle cx="16.5" cy="11.5" r="1.5"></circle>
+              </svg>
+            </div>
+            <span class="text-[10px] font-extrabold uppercase tracking-wider text-on-surface-variant/80 truncate">
+              ${isLight ? 'Light' : 'Dark'}
+            </span>
+          </div>
+
+          <div class="flex items-center gap-1 shrink-0">
+            ${
+              isCustom
+                ? `<button type="button" class="btn-delete-custom-theme text-xs text-error/80 hover:text-error hover:bg-error/10 p-1 rounded-md transition-colors" title="Delete custom theme">✕</button>`
+                : ''
+            }
+            ${
+              isCurrent
+                ? `<span class="flex items-center gap-0.5 text-[8px] font-black uppercase px-2 py-0.5 rounded-full bg-primary text-on-primary shadow-2xs tracking-wider shrink-0">✓ Active</span>`
+                : ''
+            }
+          </div>
+        </div>
+
+        <!-- Middle Content: Title & Description -->
+        <div class="flex flex-col gap-1 w-full min-w-0">
+          <div class="flex items-center gap-1">
+            <h3 class="text-xs font-extrabold text-on-surface leading-tight truncate">${theme.name}</h3>
+            ${
+              isCustom
+                ? `<span class="text-[8px] font-bold uppercase px-1.5 py-0.2 rounded-full bg-secondary/15 text-secondary border border-secondary/20 shrink-0">Custom</span>`
+                : ''
+            }
+          </div>
+          <p class="text-[11px] text-on-surface-variant leading-snug font-medium line-clamp-3">
+            ${theme.description}
+          </p>
+        </div>
+
+        <!-- Bottom Swatch Bar -->
+        <div class="flex items-center justify-between pt-2 border-t border-outline/10 w-full mt-auto">
+          <div class="flex items-center gap-1.5">
+            <span class="w-4 h-4 rounded-full border border-black/10 shadow-2xs" style="background-color: ${theme.colors.primary};" title="Primary: ${theme.colors.primary}"></span>
+            <span class="w-4 h-4 rounded-full border border-black/10 shadow-2xs" style="background-color: ${theme.colors.secondary};" title="Secondary: ${theme.colors.secondary}"></span>
+            <span class="w-4 h-4 rounded-full border border-black/10 shadow-2xs" style="background-color: ${theme.colors.accent};" title="Accent: ${theme.colors.accent}"></span>
+            <span class="w-4 h-4 rounded-full border border-black/10 shadow-2xs" style="background-color: ${theme.colors.background};" title="Background: ${theme.colors.background}"></span>
+          </div>
+        </div>
+      `;
+
+      // Select theme on card click
+      card.addEventListener('click', (e) => {
+        const target = e.target as HTMLElement;
+        if (target.closest('.btn-delete-custom-theme')) return; // Ignore delete click
+
+        setActiveThemeId(theme.id);
+        renderThemeSelector();
+      });
+
+      // Delete custom theme handler
+      const btnDelete = card.querySelector('.btn-delete-custom-theme');
+      btnDelete?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        deleteCustomTheme(theme.id);
+        renderThemeSelector();
+      });
+
+      themeListContainer.appendChild(card);
+    });
+  }
+
+  // Modal Open / Close Logic
+  function openCustomModal() {
+    if (!customModal) return;
+    customModal.classList.remove('opacity-0', 'pointer-events-none');
+    customModal.classList.add('opacity-100', 'pointer-events-auto');
+    const card = customModal.querySelector('div');
+    if (card) {
+      card.classList.remove('scale-95');
+      card.classList.add('scale-100');
+    }
+  }
+
+  function closeCustomModal() {
+    if (!customModal) return;
+    customModal.classList.remove('opacity-100', 'pointer-events-auto');
+    customModal.classList.add('opacity-0', 'pointer-events-none');
+    const card = customModal.querySelector('div');
+    if (card) {
+      card.classList.remove('scale-100');
+      card.classList.add('scale-95');
+    }
+  }
+
+  btnOpenModal?.addEventListener('click', openCustomModal);
+  btnCloseModal?.addEventListener('click', closeCustomModal);
+  btnCancelModal?.addEventListener('click', closeCustomModal);
+
+  // Save Custom Theme Logic
+  btnSaveCustomTheme?.addEventListener('click', () => {
+    const name = inputThemeName?.value.trim() || 'Custom Organizer Theme';
+    const primary = inputPrimary?.value || '#4285f4';
+    const secondary = inputSecondary?.value || '#34a853';
+    const accent = inputAccent?.value || '#f9ab00';
+
+    const isLight = selectedMode === 'light';
+    const background = isLight ? '#ffffff' : '#0f172a';
+    const surface = isLight ? '#ffffff' : '#1e293b';
+    const text = isLight ? '#1e1e1e' : '#f8fafc';
+    const mutedText = isLight ? '#5f6368' : '#94a3b8';
+
+    const customTheme: ThemeConfig = {
+      id: `custom-${Date.now()}`,
+      name,
+      description: `Custom ${isLight ? 'light' : 'dark'} theme created for community events.`,
+      colors: {
+        primary,
+        secondary,
+        accent,
+        background,
+        surface,
+        text,
+        mutedText,
+        success: '#34a853',
+        warning: '#f9ab00',
+        danger: '#ea4335',
+      },
+      heroStyle: {
+        gradientStart: `${primary}25`,
+        gradientEnd: `${secondary}15`,
+        pattern:
+          'radial-gradient(circle at 50% 0%, rgba(66, 133, 244, 0.15) 0%, transparent 60%)',
+      },
+    };
+
+    saveCustomTheme(customTheme);
+    setActiveThemeId(customTheme.id);
+    closeCustomModal();
+    renderThemeSelector();
+
+    // Clear input
+    if (inputThemeName) inputThemeName.value = '';
+  });
+
+  // Storage listener across tabs
+  window.addEventListener('storage', (e) => {
+    if (
+      e.key === 'gdg-active-theme-config-id' ||
+      e.key === 'gdg-custom-user-themes'
+    ) {
+      renderThemeSelector();
+    }
+  });
+
+  // Initial render
+  renderThemeSelector();
 </script>

@@ -100,7 +100,11 @@ import { THEMES } from '../config/themes';
 </BaseLayout>
 
 <script>
-  import { getActiveTheme, setActiveThemeId } from '../config/themes';
+  import {
+    getAllThemes,
+    getActiveTheme,
+    setActiveThemeId,
+  } from '../config/themes';
   import { isUnlocked, lock } from '../lib/organizer-auth';
 
   const statusDesc = document.getElementById('organizer-status-desc');
@@ -138,9 +142,27 @@ import { THEMES } from '../config/themes';
     });
   }
 
-  // 2. Settings Theme Selector logic
+  // 2. Settings Theme Selector logic with Custom Theme support
+  const populateThemeDropdown = () => {
+    if (!themeSelect) return;
+    const all = getAllThemes();
+    const active = getActiveTheme();
+
+    themeSelect.innerHTML = '';
+    all.forEach((theme) => {
+      const opt = document.createElement('option');
+      opt.value = theme.id;
+      opt.textContent = theme.name;
+      if (theme.id === active.id) {
+        opt.selected = true;
+      }
+      themeSelect.appendChild(opt);
+    });
+    themeSelect.value = active.id;
+  };
+
   if (themeSelect) {
-    themeSelect.value = getActiveTheme().id;
+    populateThemeDropdown();
 
     themeSelect.addEventListener('change', (e) => {
       const selectedId = (e.target as HTMLSelectElement).value;
@@ -148,8 +170,11 @@ import { THEMES } from '../config/themes';
     });
 
     window.addEventListener('storage', (e) => {
-      if (e.key === 'gdg-active-theme-config-id') {
-        themeSelect.value = getActiveTheme().id;
+      if (
+        e.key === 'gdg-active-theme-config-id' ||
+        e.key === 'gdg-custom-user-themes'
+      ) {
+        populateThemeDropdown();
       }
       if (e.key === 'gdg-organizer-unlocked') {
         updateOrganizerUI();

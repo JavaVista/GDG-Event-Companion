@@ -179,6 +179,64 @@ export const THEMES: ThemeConfig[] = [
 ];
 
 export const STORAGE_KEY = 'gdg-active-theme-config-id';
+export const CUSTOM_THEMES_KEY = 'gdg-custom-user-themes';
+
+/**
+ * Get all custom themes created by user from localStorage
+ */
+export function getCustomThemes(): ThemeConfig[] {
+  if (typeof localStorage === 'undefined') return [];
+  try {
+    const raw = localStorage.getItem(CUSTOM_THEMES_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    console.error('Failed to load custom user themes:', e);
+    return [];
+  }
+}
+
+/**
+ * Get built-in themes combined with any custom user themes
+ */
+export function getAllThemes(): ThemeConfig[] {
+  const custom = getCustomThemes();
+  return [...THEMES, ...custom];
+}
+
+/**
+ * Save a new custom user theme
+ */
+export function saveCustomTheme(theme: ThemeConfig): ThemeConfig {
+  if (typeof localStorage === 'undefined') return theme;
+  try {
+    const existing = getCustomThemes();
+    const filtered = existing.filter((t) => t.id !== theme.id);
+    filtered.push(theme);
+    localStorage.setItem(CUSTOM_THEMES_KEY, JSON.stringify(filtered));
+  } catch (e) {
+    console.error('Failed to save custom theme:', e);
+  }
+  return theme;
+}
+
+/**
+ * Delete a custom user theme by ID
+ */
+export function deleteCustomTheme(themeId: string): void {
+  if (typeof localStorage === 'undefined') return;
+  try {
+    const existing = getCustomThemes();
+    const updated = existing.filter((t) => t.id !== themeId);
+    localStorage.setItem(CUSTOM_THEMES_KEY, JSON.stringify(updated));
+
+    // If deleted theme was active, fall back to default
+    if (localStorage.getItem(STORAGE_KEY) === themeId) {
+      setActiveThemeId(THEMES[0].id);
+    }
+  } catch (e) {
+    console.error('Failed to delete custom theme:', e);
+  }
+}
 
 /**
  * Apply the theme config variables to the document element
@@ -216,12 +274,16 @@ export function applyTheme(theme: ThemeConfig) {
   });
 
   // Hero custom styling
+  const gradStart =
+    theme.heroStyle?.gradientStart || `${theme.colors.primary}25`;
+  const gradEnd = theme.heroStyle?.gradientEnd || `${theme.colors.secondary}15`;
+  root.style.setProperty('--hero-gradient-start', gradStart);
+  root.style.setProperty('--hero-gradient-end', gradEnd);
   root.style.setProperty(
-    '--hero-gradient-start',
-    theme.heroStyle.gradientStart
+    '--hero-pattern',
+    theme.heroStyle?.pattern ||
+      'radial-gradient(circle at 50% 0%, rgba(66, 133, 244, 0.1) 0%, transparent 60%)'
   );
-  root.style.setProperty('--hero-gradient-end', theme.heroStyle.gradientEnd);
-  root.style.setProperty('--hero-pattern', theme.heroStyle.pattern || 'none');
 
   // Attribute selector for any CSS overrides
   root.setAttribute('data-theme', theme.id);
@@ -235,7 +297,8 @@ export function getActiveTheme(): ThemeConfig {
     return THEMES[0];
   }
   const id = localStorage.getItem(STORAGE_KEY);
-  const found = THEMES.find((t) => t.id === id);
+  const all = getAllThemes();
+  const found = all.find((t) => t.id === id);
   return found || THEMES[0];
 }
 
@@ -243,7 +306,8 @@ export function getActiveTheme(): ThemeConfig {
  * Set active theme and persist in localStorage
  */
 export function setActiveThemeId(themeId: string): ThemeConfig {
-  const found = THEMES.find((t) => t.id === themeId) || THEMES[0];
+  const all = getAllThemes();
+  const found = all.find((t) => t.id === themeId) || THEMES[0];
   if (typeof localStorage !== 'undefined') {
     localStorage.setItem(STORAGE_KEY, found.id);
   }
