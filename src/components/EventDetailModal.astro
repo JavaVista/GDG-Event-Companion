@@ -38,6 +38,7 @@ import Icon from './Icon.astro';
             id="modal-title"
             class="text-lg font-black text-on-surface leading-tight"
           >
+            Event Details
           </h2>
           <!-- Status Pill -->
           <span
@@ -100,13 +101,21 @@ import Icon from './Icon.astro';
       <div class="border-t border-outline/10 my-1"></div>
 
       <!-- 5. "Where" Section -->
-      <div class="px-6 py-3 flex flex-col gap-2">
-        <div class="flex items-center gap-1.5 text-on-surface-variant">
-          <Icon name="venue" size={16} class="text-primary" />
-          <h4 class="text-[12px] font-black uppercase tracking-wider">Where</h4>
-        </div>
+      <!-- 3. Scrollable Modal Body -->
+      <div class="px-6 pb-6 flex flex-col gap-5 text-left">
+        <!-- Date & Location Badges -->
+        <div class="flex flex-col gap-2.5">
+          <!-- Date & Time -->
+          <div class="flex items-center gap-2.5">
+            <div
+              class="w-7 h-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0"
+            >
+              <Icon name="calendar" size={14} />
+            </div>
+            <span id="modal-datetime" class="text-xs text-on-surface font-bold"
+            ></span>
+          </div>
 
-        <div class="ml-5 flex flex-col gap-3">
           <!-- Physical Location block -->
           <div id="modal-physical-block" class="flex flex-col gap-2">
             <div class="flex flex-col gap-0.5">
@@ -119,7 +128,7 @@ import Icon from './Icon.astro';
             </div>
             <a
               id="modal-maps-btn"
-              href=""
+              href="#"
               target="_blank"
               rel="noopener noreferrer"
               class="flex items-center justify-center gap-1.5 bg-secondary text-white text-xs font-bold py-2 px-4 rounded-xl shadow-sm hover:shadow transition-all duration-150 w-max border border-white/10 cursor-pointer select-none"
@@ -138,7 +147,7 @@ import Icon from './Icon.astro';
             </div>
             <a
               id="modal-virtual-btn"
-              href=""
+              href="#"
               target="_blank"
               rel="noopener noreferrer"
               class="flex items-center justify-center gap-1.5 bg-primary text-white text-xs font-bold py-2 px-4 rounded-xl shadow-sm hover:shadow transition-all duration-150 w-max border border-white/10 cursor-pointer select-none"

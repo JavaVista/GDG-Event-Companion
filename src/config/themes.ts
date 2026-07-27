@@ -287,6 +287,17 @@ export function applyTheme(theme: ThemeConfig) {
 
   // Attribute selector for any CSS overrides
   root.setAttribute('data-theme', theme.id);
+
+  // Dynamic PWA theme color update
+  const metaThemeColor = document.getElementById('meta-theme-color');
+  if (metaThemeColor) {
+    const themeColorValue =
+      theme.colors.background === '#ffffff' ||
+      theme.colors.background === '#faf8f5'
+        ? theme.colors.primary
+        : theme.colors.background;
+    metaThemeColor.setAttribute('content', themeColorValue);
+  }
 }
 
 /**

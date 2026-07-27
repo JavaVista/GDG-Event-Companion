@@ -1,0 +1,120 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Offline Mode | GDG Event Companion"
+  description="You are currently offline. Access cached GDG event schedules and saved organizer tools."
+>
+  <div
+    class="flex flex-col items-center justify-center min-h-[70vh] py-8 text-center px-4"
+  >
+    <!-- Offline Card -->
+    <div
+      class="card card-outlined border-outline/25 bg-surface/80 p-6 md:p-8 rounded-[28px] max-w-md w-full flex flex-col items-center gap-5 shadow-sm"
+    >
+      <!-- Offline Icon Container -->
+      <div
+        class="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center shadow-inner"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-8 h-8"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829M12 12a1 1 0 100-2 1 1 0 000 2zM3 3l18 18"
+          ></path>
+        </svg>
+      </div>
+
+      <!-- Title & Paragraph -->
+      <div class="flex flex-col gap-2">
+        <h1 class="text-xl font-black text-on-surface">You're Offline</h1>
+        <p class="text-xs text-on-surface-variant leading-relaxed font-medium">
+          No active internet connection was detected. Don't worry! You can still
+          access cached pages, saved event schedules, and presenter tools.
+        </p>
+      </div>
+
+      <!-- Offline Feature Badges -->
+      <div
+        class="w-full bg-surface-variant/40 border border-outline/15 rounded-2xl p-3.5 flex flex-col gap-2 text-left"
+      >
+        <span
+          class="text-[10px] font-extrabold uppercase tracking-wider text-primary"
+        >
+          Available Offline:
+        </span>
+        <ul
+          class="text-xs text-on-surface-variant flex flex-col gap-1.5 font-medium"
+        >
+          <li class="flex items-center gap-2">
+            <span class="text-secondary font-bold">✓</span>
+            <span>Cached GDG Event Schedules & Talks</span>
+          </li>
+          <li class="flex items-center gap-2">
+            <span class="text-secondary font-bold">✓</span>
+            <span>Presenter Intro & Outro Scripts</span>
+          </li>
+          <li class="flex items-center gap-2">
+            <span class="text-secondary font-bold">✓</span>
+            <span>Organizer Notes & Saved Theme Settings</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-col gap-2 w-full pt-1">
+        <button
+          id="btn-retry-connection"
+          type="button"
+          class="btn btn-filled text-xs py-2.5 w-full flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-4 h-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2.5"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+            ></path>
+          </svg>
+          <span>Retry Connection</span>
+        </button>
+
+        <div class="grid grid-cols-2 gap-2 w-full">
+          <a
+            href="/"
+            class="btn btn-outlined text-xs py-2 text-center select-none"
+          >
+            Home Page
+          </a>
+          <a
+            href="/events"
+            class="btn btn-outlined text-xs py-2 text-center select-none"
+          >
+            Saved Events
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  const btnRetry = document.getElementById('btn-retry-connection');
+  btnRetry?.addEventListener('click', () => {
+    window.location.reload();
+  });
+</script>

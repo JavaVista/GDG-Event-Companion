@@ -18,6 +18,12 @@ export default tseslint.config(
 
   // General settings & ignore patterns
   {
-    ignores: ['dist/', '.astro/', 'node_modules/', 'package-lock.json'],
+    ignores: [
+      'dist/',
+      '.astro/',
+      'node_modules/',
+      'public/sw.js',
+      'package-lock.json',
+    ],
   }
 );

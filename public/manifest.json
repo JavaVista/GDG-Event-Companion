@@ -1,0 +1,83 @@
+{
+  "name": "GDG Event Companion",
+  "short_name": "GDG Companion",
+  "description": "Interactive companion web application for Google Developer Groups community events, schedules, scripts, and QR tools.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f172a",
+  "theme_color": "#4285f4",
+  "id": "gdg-event-companion-pwa",
+  "categories": ["events", "utilities", "productivity"],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/desktop.png",
+      "sizes": "1024x730",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "GDG Event Companion Desktop Dashboard"
+    },
+    {
+      "src": "screenshots/mobile.png",
+      "sizes": "461x1024",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "GDG Event Companion Mobile Home"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Upcoming Events",
+      "short_name": "Events",
+      "description": "View GDG community schedule and talks",
+      "url": "./events",
+      "icons": [
+        {
+          "src": "screenshots/shortcut-events.png",
+          "sizes": "461x1024",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Organizer Dashboard",
+      "short_name": "Organizer",
+      "description": "Access presenter scripts, intro/outro, and theme settings",
+      "url": "./organizer/dashboard",
+      "icons": [
+        {
+          "src": "screenshots/shortcut-organizer.png",
+          "sizes": "461x1024",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
+}
