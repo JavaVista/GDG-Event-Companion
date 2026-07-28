@@ -1,26 +1,18 @@
-const CACHE_NAME = 'gdg-companion-pwa-v1';
-const DYNAMIC_CACHE_NAME = 'gdg-companion-dynamic-v1';
+const CACHE_NAME = 'gdg-companion-pwa-v2';
+const DYNAMIC_CACHE_NAME = 'gdg-companion-dynamic-v2';
 
 // Static assets to precache during install
 const PRECACHE_ASSETS = [
   './',
   './index.html',
-  './events',
-  './events/index.html',
-  './more',
-  './more/index.html',
-  './organizer/dashboard',
-  './organizer/dashboard/index.html',
-  './organizer/intro',
-  './organizer/intro/index.html',
-  './organizer/outro',
-  './organizer/outro/index.html',
-  './organizer/theme',
-  './organizer/theme/index.html',
-  './qr',
-  './qr/index.html',
-  './offline',
-  './offline/index.html',
+  './events/',
+  './more/',
+  './organizer/dashboard/',
+  './organizer/intro/',
+  './organizer/outro/',
+  './organizer/theme/',
+  './qr/',
+  './offline/',
   './site.webmanifest',
   './manifest.json',
   './favicon.png',
@@ -29,22 +21,27 @@ const PRECACHE_ASSETS = [
   './icons/apple-touch-icon.png',
   './icons/icon-maskable-512.png',
   './images/gdg-logo.png',
+  './images/orlando-skyline.png',
   './screenshots/desktop.png',
   './screenshots/mobile.png',
   './screenshots/shortcut-events.png',
   './screenshots/shortcut-organizer.png',
 ];
 
-// Install Event - Precache App Shell
+// Install Event - Precache App Shell resiliently
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches
       .open(CACHE_NAME)
-      .then((cache) => {
+      .then(async (cache) => {
         console.log('[Service Worker] Precaching app shell assets');
-        return cache.addAll(PRECACHE_ASSETS).catch((err) => {
-          console.warn('[Service Worker] Precaching partial failure:', err);
-        });
+        await Promise.allSettled(
+          PRECACHE_ASSETS.map((asset) =>
+            cache.add(asset).catch((err) => {
+              console.warn('[Service Worker] Failed to cache:', asset, err);
+            })
+          )
+        );
       })
       .then(() => self.skipWaiting())
   );
@@ -97,9 +94,9 @@ self.addEventListener('fetch', (event) => {
 
           // Try exact match or offline page fallback
           const offlinePage =
+            (await caches.match('./offline/')) ||
             (await caches.match('./offline')) ||
-            (await caches.match('./offline/index.html')) ||
-            (await caches.match('/offline/index.html'));
+            (await caches.match('./offline/index.html'));
           return (
             offlinePage ||
             new Response('Offline', { status: 503, statusText: 'Offline' })
@@ -149,7 +146,7 @@ self.addEventListener('fetch', (event) => {
           return networkResponse;
         })
         .catch(() => {
-          // Return null for missing images gracefully
+          // Return empty response for missing images gracefully
           return new Response('', { status: 404, statusText: 'Not Found' });
         });
     })

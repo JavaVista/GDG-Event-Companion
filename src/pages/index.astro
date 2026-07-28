@@ -174,7 +174,7 @@ const getColorClasses = (colorToken: string) => {
         Upcoming Events
       </h3>
       <a
-        href="/events"
+        href={`${import.meta.env.BASE_URL}events`}
         class="text-[12px] font-bold text-primary hover:underline">View all</a
       >
     </div>
@@ -284,7 +284,7 @@ const getColorClasses = (colorToken: string) => {
         Quick Links
       </h3>
       <a
-        href="/qr"
+        href={`${import.meta.env.BASE_URL}qr`}
         class="text-[12px] font-bold text-primary cursor-pointer hover:underline"
       >
         QR Codes
@@ -311,7 +311,7 @@ const getColorClasses = (colorToken: string) => {
 
   <!-- Organizer Tools Gate -->
   <a
-    href="/more"
+    href={`${import.meta.env.BASE_URL}more`}
     class="card card-outlined border-outline/25 p-3.5 flex items-center justify-between hover:bg-surface-variant/10 cursor-pointer transition-colors duration-150 mt-1 rounded-2xl"
   >
     <div class="flex items-center gap-3">

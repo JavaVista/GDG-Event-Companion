@@ -155,7 +155,7 @@ import Icon from './Icon.astro';
 
     <p class="text-[12px] text-on-surface-variant/70 font-medium">
       Not an organizer? <a
-        href="/"
+        href={import.meta.env.BASE_URL}
         class="text-primary hover:underline font-semibold">Enjoy the event!</a
       >
     </p>
@@ -166,7 +166,7 @@ import Icon from './Icon.astro';
     class="w-full select-none pointer-events-none mt-auto shrink-0 leading-none"
   >
     <img
-      src="/images/orlando-skyline.png"
+      src={`${import.meta.env.BASE_URL}images/orlando-skyline.png`}
       alt="Orlando Skyline"
       class="w-full h-28 object-cover object-center opacity-50 dark:opacity-40"
     />
