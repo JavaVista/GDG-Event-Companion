@@ -13,9 +13,13 @@ import OrganizerUnlock from '../../components/OrganizerUnlock.astro';
 <script>
   import { isUnlocked, unlock } from '../../lib/organizer-auth';
 
+  const baseUrl = import.meta.env.BASE_URL.endsWith('/')
+    ? import.meta.env.BASE_URL.slice(0, -1)
+    : import.meta.env.BASE_URL;
+
   // Client-side guard: if already unlocked, redirect straight to dashboard
   if (isUnlocked()) {
-    window.location.replace('/organizer/dashboard');
+    window.location.replace(`${baseUrl}/organizer/dashboard`);
   }
 
   const codeInput = document.getElementById(
@@ -30,7 +34,7 @@ import OrganizerUnlock from '../../components/OrganizerUnlock.astro';
       if (unlock(code)) {
         errorMsg.classList.add('hidden');
         codeInput.value = '';
-        window.location.replace('/organizer/dashboard');
+        window.location.replace(`${baseUrl}/organizer/dashboard`);
       } else {
         errorMsg.classList.remove('hidden');
       }

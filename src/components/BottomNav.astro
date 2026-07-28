@@ -2,21 +2,33 @@
 import Icon from './Icon.astro';
 import type { SemanticIconName } from '../config/icons';
 
+const baseUrl = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL.slice(0, -1)
+  : import.meta.env.BASE_URL;
+
 const pathname = Astro.url.pathname;
 const normalizePath = (path: string) => path.replace(/\/$/, '') || '/';
 const activePath = normalizePath(pathname);
 
+const getUrl = (path: string) =>
+  path === '/' ? `${baseUrl}/` : `${baseUrl}${path}`;
+
 const navItems = [
-  { label: 'Home', icon: 'home' as SemanticIconName, href: '/' },
-  { label: 'QR Center', icon: 'qr' as SemanticIconName, href: '/qr' },
-  { label: 'Events', icon: 'calendar' as SemanticIconName, href: '/events' },
-  { label: 'More', icon: 'more' as SemanticIconName, href: '/more' },
+  { label: 'Home', icon: 'home' as SemanticIconName, href: getUrl('/') },
+  { label: 'QR Center', icon: 'qr' as SemanticIconName, href: getUrl('/qr') },
+  {
+    label: 'Events',
+    icon: 'calendar' as SemanticIconName,
+    href: getUrl('/events'),
+  },
+  { label: 'More', icon: 'more' as SemanticIconName, href: getUrl('/more') },
 ];
 
 const isActive = (href: string) => {
   const normalizedHref = normalizePath(href);
-  if (normalizedHref === '/') {
-    return activePath === '/';
+  const normalizedBase = normalizePath(baseUrl);
+  if (normalizedHref === normalizedBase || normalizedHref === '/') {
+    return activePath === normalizedBase || activePath === '/';
   }
   return activePath.startsWith(normalizedHref);
 };

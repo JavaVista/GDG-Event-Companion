@@ -53,7 +53,7 @@ import { THEMES } from '../config/themes';
           </button>
           <a
             id="organizer-action-btn"
-            href="/organizer"
+            href={`${import.meta.env.BASE_URL}organizer`}
             class="btn btn-filled text-xs py-1.5 px-4 cursor-pointer"
           >
             Unlock
@@ -116,6 +116,10 @@ import { THEMES } from '../config/themes';
     'shell-theme-select-more'
   ) as HTMLSelectElement;
 
+  const baseUrl = import.meta.env.BASE_URL.endsWith('/')
+    ? import.meta.env.BASE_URL.slice(0, -1)
+    : import.meta.env.BASE_URL;
+
   // 1. Live status checks
   const updateOrganizerUI = () => {
     if (!statusDesc || !actionBtn || !lockBtn) return;
@@ -123,12 +127,12 @@ import { THEMES } from '../config/themes';
     if (isUnlocked()) {
       statusDesc.textContent = 'Access scripts and presenter tools';
       actionBtn.textContent = 'Dashboard';
-      actionBtn.setAttribute('href', '/organizer/dashboard');
+      actionBtn.setAttribute('href', `${baseUrl}/organizer/dashboard`);
       lockBtn.style.display = 'inline-flex';
     } else {
       statusDesc.textContent = 'Access locked for community organizers only';
       actionBtn.textContent = 'Unlock';
-      actionBtn.setAttribute('href', '/organizer');
+      actionBtn.setAttribute('href', `${baseUrl}/organizer`);
       lockBtn.style.display = 'none';
     }
   };

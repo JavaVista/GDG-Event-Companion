@@ -2,6 +2,13 @@
 import Icon from './Icon.astro';
 import type { SemanticIconName } from '../config/icons';
 
+const baseUrl = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL.slice(0, -1)
+  : import.meta.env.BASE_URL;
+
+const getUrl = (path?: string) =>
+  path ? (path === '/' ? `${baseUrl}/` : `${baseUrl}${path}`) : undefined;
+
 interface CardItem {
   id: string;
   title: string;
@@ -72,15 +79,15 @@ const cards: CardItem[] = [
     title: 'Event Checklist',
     description: 'Track setup tasks',
     icon: 'checklist',
-    colorClass: 'bg-error/10 text-error',
+    colorClass: 'bg-accent/10 text-accent',
   },
   {
     id: 'theme-settings',
     title: 'Theme Settings',
-    description: 'Change app theme',
+    description: 'Customize app theme',
     icon: 'theme',
     href: '/organizer/theme',
-    colorClass: 'bg-primary/10 text-primary',
+    colorClass: 'bg-purple/10 text-purple',
   },
 ];
 ---
@@ -91,7 +98,7 @@ const cards: CardItem[] = [
       const Element = card.href ? 'a' : 'div';
       return (
         <Element
-          href={card.href}
+          href={getUrl(card.href)}
           data-modal-id={!card.href ? card.id : undefined}
           class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 hover:scale-[1.01] active:scale-[0.99] cursor-pointer group transition-all duration-200 rounded-2xl select-none"
         >

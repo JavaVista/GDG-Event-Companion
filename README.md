@@ -99,6 +99,21 @@ All commands are run from the root of the project:
 
 ---
 
+## 🌐 GitHub Pages Deployment
+
+This application includes a standard GitHub Actions workflow located at [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) that automatically builds and deploys the Astro site to GitHub Pages on every push to `main`.
+
+### Setup Instructions
+
+1. Push your code to your repository: `GDG-Event-Companion`.
+2. Go to your repository on GitHub -> **Settings** -> **Pages**.
+3. Under **Build and deployment** -> **Source**, select **GitHub Actions**.
+4. Trigger the workflow by pushing to `main` or manually running **Actions** -> **Deploy to GitHub Pages**.
+
+The site will automatically deploy to `https://JavaVista.github.io/GDG-Event-Companion/`.
+
+---
+
 ## Contact & Social Media
 
 - Bluesky – [@code-vista.bsky.social](https://bsky.app/profile/code-vista.bsky.social)
