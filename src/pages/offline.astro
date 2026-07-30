@@ -95,13 +95,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
         <div class="grid grid-cols-2 gap-2 w-full">
           <a
-            href="/"
+            href={import.meta.env.BASE_URL}
             class="btn btn-outlined text-xs py-2 text-center select-none"
           >
             Home Page
           </a>
           <a
-            href="/events"
+            href={`${import.meta.env.BASE_URL}events`}
             class="btn btn-outlined text-xs py-2 text-center select-none"
           >
             Saved Events

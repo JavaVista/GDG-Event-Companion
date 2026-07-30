@@ -1,11 +1,15 @@
 # GDG Event Companion
 
+[![Live Demo](https://img.shields.io/badge/Live_App-https%3A%2F%2Fjavavista.github.io%2FGDG--Event--Companion%2F-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)](https://javavista.github.io/GDG-Event-Companion/)
+
 ![PWA Ready](https://img.shields.io/badge/PWA-Ready-4285F4?logo=pwa&logoColor=white)
 ![Astro v7](https://img.shields.io/badge/Astro-v7.0.3-ff5d01?logo=astro&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Strict-3178C6?logo=typescript&logoColor=white)
 ![License MIT](https://img.shields.io/badge/License-MIT-green)
 
 A modern, high-performance Progressive Web Application (PWA) built with [Astro](https://astro.build) and TypeScript to serve as an event companion for **Google Developer Groups (GDG)** community events, presenter scripts, schedules, and QR code tools.
+
+🌐 **Live Application URL**: [https://javavista.github.io/GDG-Event-Companion/](https://javavista.github.io/GDG-Event-Companion/)
 
 ---
 
