@@ -44,7 +44,7 @@ const isActive = (href: string) => {
       return (
         <a
           href={item.href}
-          class="flex flex-col items-center justify-center flex-1 h-full group focus:outline-none relative"
+          class="flex flex-col items-center justify-center flex-1 h-full min-h-[48px] py-1 group focus:outline-none relative select-none active:scale-95 transition-transform duration-150"
           aria-current={active ? 'page' : undefined}
         >
           {/* Active indicator container (Pill) */}

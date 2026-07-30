@@ -46,7 +46,7 @@ import { THEMES } from '../config/themes';
         <div class="flex gap-2 items-center shrink-0">
           <button
             id="more-lock-btn"
-            class="btn btn-text text-error text-[11px] py-1.5 px-3 border border-error/20 hover:bg-error/5 rounded-full shrink-0 cursor-pointer"
+            class="btn btn-text text-error text-[11px] font-bold py-2 px-3.5 min-h-[38px] border border-error/20 hover:bg-error/10 rounded-full shrink-0 cursor-pointer active:scale-95 transition-all"
             style="display: none;"
           >
             Lock
@@ -54,7 +54,7 @@ import { THEMES } from '../config/themes';
           <a
             id="organizer-action-btn"
             href={`${import.meta.env.BASE_URL}organizer`}
-            class="btn btn-filled text-xs py-1.5 px-4 cursor-pointer"
+            class="btn btn-filled text-xs font-extrabold py-2 px-4 min-h-[38px] rounded-full flex items-center justify-center cursor-pointer active:scale-95 transition-all"
           >
             Unlock
           </a>
@@ -85,7 +85,7 @@ import { THEMES } from '../config/themes';
 
         <select
           id="shell-theme-select-more"
-          class="select-theme bg-surface-variant text-on-surface-variant text-xs font-semibold py-1.5 px-3 pr-7 rounded-full border border-outline hover:border-primary transition-all duration-200 cursor-pointer focus:outline-none appearance-none shrink-0"
+          class="select-theme bg-surface-variant text-on-surface-variant text-xs font-semibold py-2 px-3.5 pr-8 min-h-[38px] rounded-full border border-outline hover:border-primary transition-all duration-200 cursor-pointer focus:outline-none appearance-none shrink-0"
           aria-label="Select Theme"
         >
           {

@@ -100,7 +100,7 @@ const cards: CardItem[] = [
         <Element
           href={getUrl(card.href)}
           data-modal-id={!card.href ? card.id : undefined}
-          class="card card-outlined border-outline/25 p-3 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 hover:scale-[1.01] active:scale-[0.99] cursor-pointer group transition-all duration-200 rounded-2xl select-none"
+          class="card card-outlined border-outline/25 p-3.5 flex flex-col justify-between gap-4 bg-surface/40 hover:border-primary/50 active:scale-[0.98] cursor-pointer group transition-all duration-200 rounded-2xl select-none min-h-[104px]"
         >
           <div
             class={`w-8 h-8 rounded-lg ${card.colorClass} flex items-center justify-center shrink-0 ${card.pulse ? 'animate-pulse' : ''}`}

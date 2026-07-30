@@ -8,37 +8,91 @@ interface Props {
 const { eventId } = Astro.props;
 ---
 
-<div id="script-reader-container" class="flex flex-col gap-5 relative pb-20">
-  <!-- Script Content Paragraphs Container -->
+<div id="script-reader-container" class="flex flex-col gap-4 relative pb-6">
+  <!-- Teleprompter Reader Control Bar (Standing Organizer Controls) -->
   <div
-    id="script-reader-paragraphs"
-    class="flex flex-col gap-4 text-on-surface"
+    class="flex items-center justify-between gap-2 p-2 bg-surface-variant/30 border border-outline/15 rounded-2xl w-full text-xs font-semibold text-on-surface-variant"
   >
-    <!-- Populated by Client Script -->
-  </div>
+    <div class="flex items-center gap-1">
+      <span
+        class="text-[11px] font-bold uppercase tracking-wider px-2 text-on-surface-variant/80"
+        >Text Size</span
+      >
+      <button
+        id="btn-font-decrease"
+        type="button"
+        class="w-10 h-10 min-w-[40px] min-h-[40px] rounded-xl bg-surface border border-outline/15 text-on-surface font-bold text-sm flex items-center justify-center hover:bg-surface-variant/50 active:scale-95 transition-all cursor-pointer select-none"
+        aria-label="Decrease text size"
+      >
+        A-
+      </button>
+      <button
+        id="btn-font-increase"
+        type="button"
+        class="w-10 h-10 min-w-[40px] min-h-[40px] rounded-xl bg-surface border border-outline/15 text-on-surface font-bold text-sm flex items-center justify-center hover:bg-surface-variant/50 active:scale-95 transition-all cursor-pointer select-none"
+        aria-label="Increase text size"
+      >
+        A+
+      </button>
+    </div>
 
-  <!-- Bottom Fixed/Floating Edit CTA -->
-  <div
-    class="fixed bottom-6 left-0 right-0 z-20 flex justify-center px-4 pointer-events-none"
-  >
     <button
-      id="btn-edit-script"
+      id="btn-copy-script"
       type="button"
-      class="pointer-events-auto bg-success/15 text-success hover:bg-success/25 border border-success/30 font-bold text-xs px-6 py-2.5 rounded-full flex items-center justify-center gap-2 shadow-sm transition-all duration-200 active:scale-95 cursor-pointer"
+      class="h-10 min-h-[40px] px-3.5 rounded-xl bg-surface border border-outline/15 text-on-surface font-bold text-xs flex items-center gap-1.5 hover:bg-surface-variant/50 active:scale-95 transition-all cursor-pointer shrink-0"
     >
       <Icon name="notes" size={14} />
-      <span>Edit</span>
+      <span id="copy-btn-text">Copy</span>
     </button>
+  </div>
+
+  <!-- Script Content Paragraphs Container with Teleprompter Text Styling -->
+  <div
+    id="script-reader-paragraphs"
+    class="flex flex-col gap-4 text-on-surface teleprompter-text font-medium leading-relaxed tracking-normal"
+  >
+    <!-- Populated by Client Script -->
   </div>
 </div>
 
 <script data-event-id={eventId}>
-  const editBtn = document.getElementById('btn-edit-script');
-  if (editBtn) {
-    editBtn.addEventListener('click', () => {
-      window.dispatchEvent(
-        new CustomEvent('script-mode-change', { detail: { mode: 'edit' } })
-      );
-    });
+  let fontSize = 16;
+  const readerContainer = document.getElementById('script-reader-paragraphs');
+  const decreaseBtn = document.getElementById('btn-font-decrease');
+  const increaseBtn = document.getElementById('btn-font-increase');
+  const copyBtn = document.getElementById('btn-copy-script');
+  const copyText = document.getElementById('copy-btn-text');
+
+  function updateFontSize(newSize) {
+    fontSize = Math.max(13, Math.min(28, newSize));
+    if (readerContainer) {
+      readerContainer.style.fontSize = `${fontSize}px`;
+      readerContainer.style.lineHeight = `${fontSize * 1.65}px`;
+
+      const elements = readerContainer.querySelectorAll('p, div, span');
+      elements.forEach((el) => {
+        if (el instanceof HTMLElement) {
+          el.style.fontSize = `${fontSize}px`;
+          el.style.lineHeight = `${fontSize * 1.65}px`;
+        }
+      });
+    }
   }
+
+  decreaseBtn?.addEventListener('click', () => updateFontSize(fontSize - 2));
+  increaseBtn?.addEventListener('click', () => updateFontSize(fontSize + 2));
+
+  copyBtn?.addEventListener('click', () => {
+    if (!readerContainer) return;
+    const fullText = readerContainer.innerText;
+    navigator.clipboard
+      .writeText(fullText)
+      .then(() => {
+        if (copyText) copyText.textContent = 'Copied!';
+        setTimeout(() => {
+          if (copyText) copyText.textContent = 'Copy';
+        }, 2000);
+      })
+      .catch((err) => console.error('Copy failed:', err));
+  });
 </script>
