@@ -78,18 +78,22 @@ A modern, high-performance Progressive Web Application (PWA) built with [Astro](
 
 ## 🧞 Development Commands
 
+> [!NOTE]
+> When running the local server (`npm run dev` or `npm run preview`), navigate to:
+> 👉 **[http://localhost:4321/GDG-Event-Companion/](http://localhost:4321/GDG-Event-Companion/)** in your browser.
+
 All commands are run from the root of the project:
 
-| Command                | Action                                       |
-| :--------------------- | :------------------------------------------- |
-| `npm install`          | Installs dependencies                        |
-| `npm run dev`          | Starts local dev server at `localhost:4321`  |
-| `npm run build`        | Builds static production bundle to `./dist/` |
-| `npm run preview`      | Previews the production build locally        |
-| `npm run lint`         | Lints code using ESLint                      |
-| `npm run lint:fix`     | Automatically fixes ESLint warnings/errors   |
-| `npm run format`       | Checks code formatting with Prettier         |
-| `npm run format:write` | Formats all files with Prettier              |
+| Command                | Action                                                                  |
+| :--------------------- | :---------------------------------------------------------------------- |
+| `npm install`          | Installs dependencies                                                   |
+| `npm run dev`          | Starts local dev server at `http://localhost:4321/GDG-Event-Companion/` |
+| `npm run build`        | Builds static production bundle to `./dist/`                            |
+| `npm run preview`      | Previews the production build locally                                   |
+| `npm run lint`         | Lints code using ESLint                                                 |
+| `npm run lint:fix`     | Automatically fixes ESLint warnings/errors                              |
+| `npm run format`       | Checks code formatting with Prettier                                    |
+| `npm run format:write` | Formats all files with Prettier                                         |
 
 ---
 
