@@ -9,24 +9,11 @@ import {
   getCarouselEvents,
 } from '../lib/bevy';
 import skylineImg from '../../public/images/orlando-skyline.png';
+import gdgLogoImg from '../../public/images/gdg-logo.png';
 
 const allEvents = await fetchChapterEvents();
 const currentEvent = getLiveOrNextEvent(allEvents);
 const upcomingEvents = getCarouselEvents(allEvents);
-
-const getSpeakerDetails = (eventTitle: string) => {
-  if (eventTitle.includes('AI Honesty')) {
-    return {
-      name: 'Muntaser Syed',
-      avatar:
-        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120',
-    };
-  }
-  return {
-    name: 'GDG Speaker',
-    avatar: '/images/gdg-logo.png',
-  };
-};
 
 const calculateDaysRemaining = (startDateString: string) => {
   const diffTime = new Date(startDateString).getTime() - new Date().getTime();
@@ -59,8 +46,11 @@ const getColorClasses = (colorToken: string) => {
   <div
     class="relative -mx-4 px-4 pt-5 pb-8 overflow-hidden bg-gradient-to-b from-[#4285f4]/8 via-[#4285f4]/2 to-transparent"
   >
-    <!-- Orlando Skyline absolute positioned in the background -->
-    <div class="absolute inset-0 z-0 pointer-events-none select-none">
+    <!-- Orlando Skyline absolute positioned in the background (default chapter 920) -->
+    <div
+      id="hero-skyline-bg"
+      class="absolute inset-0 z-0 pointer-events-none select-none"
+    >
       <Image
         src={skylineImg}
         alt="Orlando Skyline"
@@ -68,6 +58,109 @@ const getColorClasses = (colorToken: string) => {
         loading="eager"
       />
       <!-- Gentle mask to blend the skyline bottom with the page -->
+      <div
+        class="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-background to-transparent"
+      >
+      </div>
+    </div>
+
+    <!-- Neutral GDG Cloud Hero Background for other chapters -->
+    <div
+      id="hero-cloud-bg"
+      class="hidden absolute inset-0 z-0 pointer-events-none select-none"
+    >
+      <svg
+        viewBox="0 0 400 160"
+        class="w-full h-full"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        preserveAspectRatio="xMidYMid slice"
+      >
+        <!-- Sky Gradient -->
+        <rect width="400" height="160" fill="url(#sky-grad)"></rect>
+        <defs>
+          <linearGradient id="sky-grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#4285F4" stop-opacity="0.12"></stop>
+            <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"></stop>
+          </linearGradient>
+        </defs>
+        <!-- Soft background clouds of different shapes (still) -->
+        <!-- 1. Left background small cloud -->
+        <path
+          d="M20 60 a8 8 0 0 1 8 -8 a12 12 0 0 1 20 -2 a8 8 0 0 1 6 10 z"
+          fill="white"
+          opacity="0.35"></path>
+        <!-- 2. Top-left cloud -->
+        <path
+          d="M70 45 a10 10 0 0 1 10 -10 a15 15 0 0 1 27 -3 a10 10 0 0 1 7 13 z"
+          fill="white"
+          opacity="0.4"></path>
+        <!-- 3. Top center wide flat cloud -->
+        <path
+          d="M165 30 a8 8 0 0 1 8 -8 h24 a8 8 0 0 1 8 8 a6 6 0 0 1 -6 6 h-28 a6 6 0 0 1 -6 -6 Z"
+          fill="white"
+          opacity="0.5"></path>
+        <!-- 4. Right-center low cloud -->
+        <path
+          d="M260 75 a8 8 0 0 1 8 -8 h20 a8 8 0 0 1 8 8 a6 6 0 0 1 -6 6 h-26 a6 6 0 0 1 -6 -6 Z"
+          fill="white"
+          opacity="0.45"></path>
+        <!-- 5. Right side medium cloud -->
+        <path
+          d="M330 50 a14 14 0 0 1 14 -14 a20 20 0 0 1 35 -2 a14 14 0 0 1 8 16 z"
+          fill="white"
+          opacity="0.6"></path>
+        <!-- Large empty cloud on the right to balance layout -->
+        <path
+          d="M230 105 a22 22 0 0 1 22 -22 a32 32 0 0 1 60 -12 a22 22 0 0 1 32 12 a22 22 0 0 1 10 22 a15 15 0 0 1 -15 15 h-94 a15 15 0 0 1 -15 -15 z"
+          fill="white"
+          filter="drop-shadow(0px 3px 6px rgba(0,0,0,0.03))"
+          stroke="#E0E0E0"
+          stroke-width="0.5"></path>
+        <!-- Confetti shapes -->
+        <rect
+          x="180"
+          y="20"
+          width="8"
+          height="4"
+          transform="rotate(30 180 20)"
+          fill="#34A853"
+          opacity="0.8"></rect>
+        <circle cx="210" cy="35" r="3" fill="#FBBC05" opacity="0.8"></circle>
+        <polygon points="90,40 94,46 88,46" fill="#EA4335" opacity="0.8"
+        ></polygon>
+        <rect
+          x="330"
+          y="35"
+          width="4"
+          height="8"
+          transform="rotate(-15 330 35)"
+          fill="#4285F4"
+          opacity="0.8"></rect>
+        <!-- Floating Cloud containing the Logo (Left-Center Cloud) -->
+        <g class="float-cloud-logo">
+          <!-- White Cloud Shape (Left-Center, with drop shadow and outline) -->
+          <path
+            d="M40 115 a20 20 0 0 1 20 -20 a30 30 0 0 1 55 -10 a20 20 0 0 1 30 10 a20 20 0 0 1 10 20 a15 15 0 0 1 -15 15 h-90 a15 15 0 0 1 -10 -15 z"
+            fill="white"
+            filter="drop-shadow(0px 4px 8px rgba(0,0,0,0.06))"
+            stroke="#E0E0E0"
+            stroke-width="0.5"></path>
+          <!-- GDG Brackets Logo inside the cloud (Correct Colors: Left Red/Blue, Right Green/Yellow) -->
+          <g transform="translate(68, 85)">
+            <!-- Left Bracket -->
+            <polygon points="18,9 6,19.5 9.375,22.5 21.375,12" fill="#EA4335"
+            ></polygon>
+            <polygon points="18,30 6,19.5 9.375,16.5 21.375,27" fill="#4285F4"
+            ></polygon>
+            <!-- Right Bracket -->
+            <polygon points="27,9 39,19.5 35.625,22.5 23.625,12" fill="#34A853"
+            ></polygon>
+            <polygon points="27,30 39,19.5 35.625,16.5 23.625,27" fill="#FBBC05"
+            ></polygon>
+          </g>
+        </g>
+      </svg>
       <div
         class="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-background to-transparent"
       >
@@ -87,83 +180,121 @@ const getColorClasses = (colorToken: string) => {
     </div>
   </div>
 
+  <!-- Synchronous fast-sync for hero background & chapter quick links -->
+  <script is:inline>
+    (() => {
+      try {
+        const raw = localStorage.getItem('gdg-event-companion.active-chapter');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          const id = Number(parsed?.id);
+          if (id && id !== 920) {
+            const skyline = document.getElementById('hero-skyline-bg');
+            const cloud = document.getElementById('hero-cloud-bg');
+            if (skyline) {
+              skyline.style.display = 'none';
+              skyline.classList.add('hidden');
+            }
+            if (cloud) {
+              cloud.style.display = 'block';
+              cloud.classList.remove('hidden');
+            }
+            const quickLink = document.getElementById('quick-link-gdg-chapter');
+            const quickTitle = document.getElementById(
+              'quick-link-title-gdg-chapter'
+            );
+            if (quickLink && parsed.url) quickLink.href = parsed.url;
+            if (quickTitle && parsed.name) quickTitle.textContent = parsed.name;
+          }
+        }
+      } catch (err) {
+        console.warn('Fast-sync active chapter notice:', err);
+      }
+    })();
+  </script>
+
   <!-- Hero Event Card -->
-  {
-    currentEvent ? (
-      <div
-        class="card card-elevated p-0 overflow-hidden border border-outline/10 flex flex-col bg-surface shadow-elevation-2 rounded-[24px] transition-all duration-300 mt-[-32px] z-10 relative cursor-pointer hover:shadow-elevation-4 hover:border-primary/30"
-        data-event={JSON.stringify(currentEvent)}
-      >
-        {/* Simple card header bar (Calendar + Live Tag) */}
-        <div class="px-4.5 pt-4 pb-2.5 flex justify-between items-center bg-surface border-b border-outline/5">
-          <div class="flex items-center gap-1.5 text-primary font-bold text-[11px] tracking-wider uppercase">
-            <Icon name="calendar" size={16} class="text-primary" />
-            {currentEvent.cardLabel}
-          </div>
-          <span
-            class={`text-[10px] font-black px-2.5 py-0.5 rounded-full border border-white/20 animate-pulse tracking-wider uppercase ${
-              currentEvent.statusLabel === 'Live'
-                ? 'bg-error text-white'
-                : 'bg-secondary text-white'
-            }`}
-          >
-            {currentEvent.statusLabel}
-          </span>
-        </div>
-
-        {/* Card Details Area */}
-        <div class="p-4.5 flex justify-between items-center gap-4 bg-surface">
-          <div class="flex flex-col gap-1.5 max-w-[72%]">
-            <h3 class="text-[15px] font-extrabold leading-tight text-on-surface">
-              {currentEvent.title}
-            </h3>
-            <p class="text-[12px] text-on-surface-variant font-medium leading-normal mt-0.5">
-              {currentEvent.descriptionShort}
-            </p>
-
-            {/* Details Grid */}
-            <div class="flex flex-col gap-1 border-t border-outline/5 pt-2.5 mt-1">
-              <div class="flex items-center gap-1.5 text-[11px] text-on-surface-variant/80 font-medium">
-                <span>📅 {currentEvent.displayDate}</span>
-                <span class="opacity-30">•</span>
-                <span>⏰ {currentEvent.displayTime}</span>
-              </div>
-              <div class="flex items-center gap-1 text-[11px] text-on-surface-variant font-semibold">
-                <span>📍 {currentEvent.displayLocation}</span>
-              </div>
+  <div id="hero-event-container">
+    {
+      currentEvent ? (
+        <div
+          class="card card-elevated p-0 overflow-hidden border border-outline/10 flex flex-col bg-surface shadow-elevation-2 rounded-[24px] transition-all duration-300 mt-[-32px] z-10 relative cursor-pointer hover:shadow-elevation-4 hover:border-primary/30"
+          data-event={JSON.stringify(currentEvent)}
+        >
+          {/* Simple card header bar (Calendar + Live Tag) */}
+          <div class="px-4.5 pt-4 pb-2.5 flex justify-between items-center bg-surface border-b border-outline/5">
+            <div class="flex items-center gap-1.5 text-primary font-bold text-[11px] tracking-wider uppercase">
+              <Icon name="calendar" size={16} class="text-primary" />
+              {currentEvent.cardLabel}
             </div>
+            <span
+              class={`text-[10px] font-black px-2.5 py-0.5 rounded-full border border-white/20 animate-pulse tracking-wider uppercase ${
+                currentEvent.statusLabel === 'Live'
+                  ? 'bg-error text-white'
+                  : 'bg-secondary text-white'
+              }`}
+            >
+              {currentEvent.statusLabel}
+            </span>
           </div>
 
-          {/* Speaker Avatar Circular Image on Right */}
-          {(() => {
-            const speaker = getSpeakerDetails(currentEvent.title);
-            const avatarSrc = currentEvent.croppedPictureUrl || speaker.avatar;
-            return (
-              <div class="flex flex-col items-center shrink-0">
-                <div class="w-13 h-13 rounded-full border-2 border-primary/25 overflow-hidden shadow-elevation-1 bg-surface-variant">
-                  <img
-                    src={avatarSrc}
-                    alt={speaker.name}
-                    class="w-full h-full object-cover"
-                  />
+          {/* Card Details Area */}
+          <div class="p-4.5 flex justify-between items-center gap-4 bg-surface">
+            <div class="flex flex-col gap-1.5 max-w-[72%]">
+              <h3 class="text-[15px] font-extrabold leading-tight text-on-surface">
+                {currentEvent.title}
+              </h3>
+              <p class="text-[12px] text-on-surface-variant font-medium leading-normal mt-0.5">
+                {currentEvent.descriptionShort}
+              </p>
+
+              {/* Details Grid */}
+              <div class="flex flex-col gap-1 border-t border-outline/5 pt-2.5 mt-1">
+                <div class="flex items-center gap-1.5 text-[11px] text-on-surface-variant/80 font-medium">
+                  <span>📅 {currentEvent.displayDate}</span>
+                  <span class="opacity-30">•</span>
+                  <span>⏰ {currentEvent.displayTime}</span>
+                </div>
+                <div class="flex items-center gap-1 text-[11px] text-on-surface-variant font-semibold">
+                  <span>📍 {currentEvent.displayLocation}</span>
                 </div>
               </div>
-            );
-          })()}
+            </div>
+
+            {/* Event Artwork / Avatar Circular Image on Right */}
+            {(() => {
+              const avatarSrc =
+                currentEvent.croppedPictureUrl || gdgLogoImg.src;
+              return (
+                <div class="flex flex-col items-center shrink-0">
+                  <div class="w-13 h-13 rounded-full border-2 border-primary/25 overflow-hidden shadow-elevation-1 bg-surface-variant flex items-center justify-center">
+                    <img
+                      src={avatarSrc}
+                      alt={currentEvent.title}
+                      class="w-full h-full object-cover"
+                      onerror={`this.onerror=null; this.src='${gdgLogoImg.src}';`}
+                    />
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
         </div>
-      </div>
-    ) : (
-      <div class="card card-elevated p-6 flex flex-col items-center text-center border border-outline/10 bg-surface shadow-elevation-2 rounded-[24px] transition-all duration-300 mt-[-32px] z-10 relative gap-2">
-        <div class="w-12 h-12 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant">
-          <Icon name="calendar" size={22} />
+      ) : (
+        <div class="card card-elevated p-6 flex flex-col items-center text-center border border-outline/10 bg-surface shadow-elevation-2 rounded-[24px] transition-all duration-300 mt-[-32px] z-10 relative gap-2">
+          <div class="w-12 h-12 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant">
+            <Icon name="calendar" size={22} />
+          </div>
+          <h3 class="text-sm font-bold text-on-surface mt-1">
+            No Active Event
+          </h3>
+          <p class="text-[12px] text-on-surface-variant/80 font-medium px-4">
+            There are no sessions in progress right now. Check back later!
+          </p>
         </div>
-        <h3 class="text-sm font-bold text-on-surface mt-1">No Active Event</h3>
-        <p class="text-[12px] text-on-surface-variant/80 font-medium px-4">
-          There are no sessions in progress right now. Check back later!
-        </p>
-      </div>
-    )
-  }
+      )
+    }
+  </div>
 
   <!-- Upcoming Events Section -->
   <div class="flex flex-col gap-2 mt-1">
@@ -179,101 +310,146 @@ const getColorClasses = (colorToken: string) => {
       >
     </div>
 
-    {
-      upcomingEvents.length > 0 ? (
-        <div class="relative w-full">
-          <div
-            id="upcoming-carousel"
-            class="flex gap-3 overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar pb-1.5"
-            style="scrollbar-width: none; -ms-overflow-style: none;"
-          >
-            {upcomingEvents.map((event) => {
-              const dateParts = event.displayDate.split(' ');
-              const month = dateParts[0] || 'Jun';
-              const day = dateParts[1]?.replace(',', '') || '27';
-              const daysRemaining = calculateDaysRemaining(event.startDate);
-              return (
-                <div
-                  class="card card-outlined border-outline/25 p-3 flex items-center justify-between gap-3 bg-surface/40 hover:border-primary/50 transition-colors duration-150 rounded-2xl w-full shrink-0 snap-start cursor-pointer"
-                  data-event={JSON.stringify(event)}
-                >
-                  <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-xl bg-primary text-on-primary flex flex-col items-center justify-center shrink-0 shadow-elevation-1">
-                      <span class="text-[10px] font-black uppercase tracking-wide leading-none">
-                        {month}
-                      </span>
-                      <span class="text-[15px] font-black leading-none mt-0.5">
-                        {day}
-                      </span>
+    <div id="upcoming-events-container">
+      {
+        upcomingEvents.length > 0 ? (
+          <div class="relative w-full">
+            <div
+              id="upcoming-carousel"
+              class="flex gap-3 overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar pb-1.5"
+              style="scrollbar-width: none; -ms-overflow-style: none;"
+            >
+              {upcomingEvents.map((event) => {
+                const dateParts = event.displayDate.split(' ');
+                const month = dateParts[0] || 'Jun';
+                const day = dateParts[1]?.replace(',', '') || '27';
+                const daysRemaining = calculateDaysRemaining(event.startDate);
+                return (
+                  <div
+                    class="card card-outlined border-outline/25 p-3 flex items-center justify-between gap-3 bg-surface/40 hover:border-primary/50 transition-colors duration-150 rounded-2xl w-full shrink-0 snap-start cursor-pointer"
+                    data-event={JSON.stringify(event)}
+                  >
+                    <div class="flex items-center gap-3">
+                      <div class="w-12 h-12 rounded-xl bg-primary text-on-primary flex flex-col items-center justify-center shrink-0 shadow-elevation-1">
+                        <span class="text-[10px] font-black uppercase tracking-wide leading-none">
+                          {month}
+                        </span>
+                        <span class="text-[15px] font-black leading-none mt-0.5">
+                          {day}
+                        </span>
+                      </div>
+
+                      <div class="flex flex-col gap-0.5 max-w-[170px]">
+                        <h4 class="text-[13px] font-black text-on-surface truncate leading-tight">
+                          {event.title}
+                        </h4>
+                        <span class="text-[11px] text-on-surface-variant font-semibold">
+                          {event.audienceType.replace('_', ' ')}
+                        </span>
+                        <span class="text-[11px] text-on-surface-variant/80 font-medium flex items-center gap-0.5 mt-0.5">
+                          📍 {event.displayLocation}
+                        </span>
+                      </div>
                     </div>
 
-                    <div class="flex flex-col gap-0.5 max-w-[170px]">
-                      <h4 class="text-[13px] font-black text-on-surface truncate leading-tight">
-                        {event.title}
-                      </h4>
-                      <span class="text-[11px] text-on-surface-variant font-semibold">
-                        {event.audienceType.replace('_', ' ')}
-                      </span>
-                      <span class="text-[11px] text-on-surface-variant/80 font-medium flex items-center gap-0.5 mt-0.5">
-                        📍 {event.displayLocation}
-                      </span>
+                    <div class="flex items-center gap-2 shrink-0">
+                      <div class="flex flex-col items-end leading-none">
+                        <span class="text-sm font-black text-primary">
+                          {daysRemaining}
+                        </span>
+                        <span class="text-[9px] font-bold text-on-surface-variant uppercase mt-0.5">
+                          Days
+                        </span>
+                      </div>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="w-3.5 h-3.5 text-on-surface-variant/60"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="2.5"
+                      >
+                        <polyline points="9 18 15 12 9 6" />
+                      </svg>
                     </div>
                   </div>
+                );
+              })}
+            </div>
 
-                  <div class="flex items-center gap-2 shrink-0">
-                    <div class="flex flex-col items-end leading-none">
-                      <span class="text-sm font-black text-primary">
-                        {daysRemaining}
-                      </span>
-                      <span class="text-[9px] font-bold text-on-surface-variant uppercase mt-0.5">
-                        Days
-                      </span>
-                    </div>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="w-3.5 h-3.5 text-on-surface-variant/60"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      stroke-width="2.5"
-                    >
-                      <polyline points="9 18 15 12 9 6" />
-                    </svg>
+            {/* Carousel Dot Indicators */}
+            <div
+              id="carousel-dots"
+              class="flex justify-center items-center gap-1.5 mt-1"
+            >
+              {upcomingEvents.map((_, index) => (
+                <span
+                  class={`h-1.5 rounded-full transition-all duration-200 cursor-pointer ${
+                    index === 0
+                      ? 'w-4 bg-primary'
+                      : 'w-1.5 bg-outline-variant/60'
+                  }`}
+                  data-index={index}
+                  role="button"
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div class="card card-outlined border-outline/25 p-5 flex flex-col items-center text-center justify-center gap-1.5 bg-surface/30 rounded-2xl">
+            <span class="text-[12px] font-bold text-on-surface">
+              No Upcoming Events
+            </span>
+            <span class="text-[11px] text-on-surface-variant/80 font-medium">
+              Check back later for new workshops and meetups!
+            </span>
+          </div>
+        )
+      }
+    </div>
+  </div>
+
+  <!-- Synchronous fast-sync to immediately clear default Central Florida events for custom chapters -->
+  <script is:inline>
+    (() => {
+      try {
+        const raw = localStorage.getItem('gdg-event-companion.active-chapter');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          const id = Number(parsed?.id);
+          if (id && id !== 920) {
+            const heroContainer = document.getElementById(
+              'hero-event-container'
+            );
+            const upcomingContainer = document.getElementById(
+              'upcoming-events-container'
+            );
+            if (heroContainer) {
+              heroContainer.innerHTML = `
+                <div class="card card-elevated p-6 flex items-center justify-center border border-outline/10 bg-surface shadow-elevation-2 rounded-[24px] mt-[-32px] z-10 relative">
+                  <div class="flex items-center gap-2 text-xs font-bold text-on-surface-variant">
+                    <span class="animate-spin w-4 h-4 border-2 border-primary border-t-transparent rounded-full"></span>
+                    Loading events for ${parsed.name || 'active chapter'}...
                   </div>
                 </div>
-              );
-            })}
-          </div>
-
-          {/* Carousel Dot Indicators */}
-          <div
-            id="carousel-dots"
-            class="flex justify-center items-center gap-1.5 mt-1"
-          >
-            {upcomingEvents.map((_, index) => (
-              <span
-                class={`h-1.5 rounded-full transition-all duration-200 cursor-pointer ${
-                  index === 0 ? 'w-4 bg-primary' : 'w-1.5 bg-outline-variant/60'
-                }`}
-                data-index={index}
-                role="button"
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
-          </div>
-        </div>
-      ) : (
-        <div class="card card-outlined border-outline/25 p-5 flex flex-col items-center text-center justify-center gap-1.5 bg-surface/30 rounded-2xl">
-          <span class="text-[12px] font-bold text-on-surface">
-            No Upcoming Events
-          </span>
-          <span class="text-[11px] text-on-surface-variant/80 font-medium">
-            Check back later for new workshops and meetups!
-          </span>
-        </div>
-      )
-    }
-  </div>
+              `;
+            }
+            if (upcomingContainer) {
+              upcomingContainer.innerHTML = `
+                <div class="card card-outlined border-outline/25 p-5 flex items-center justify-center gap-2 bg-surface/30 rounded-2xl">
+                  <span class="animate-spin w-4 h-4 border-2 border-primary border-t-transparent rounded-full"></span>
+                  <span class="text-xs text-on-surface-variant">Loading upcoming events...</span>
+                </div>
+              `;
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('Fast-sync event container notice:', err);
+      }
+    })();
+  </script>
 
   <!-- Quick Links Grid (Matching panel 1 prototype with bright solid background, 3 columns, vertical stack with white text/icons) -->
   <div class="flex flex-col gap-2 mt-1">
@@ -294,13 +470,21 @@ const getColorClasses = (colorToken: string) => {
       {
         PUBLIC_LINKS.map((link) => (
           <a
+            id={link.id === 'gdg-cf' ? 'quick-link-gdg-chapter' : undefined}
             href={link.url}
             target={link.isExternal ? '_blank' : undefined}
             rel={link.isExternal ? 'noopener noreferrer' : undefined}
             class={`flex flex-col items-center justify-center text-center gap-2 py-4 px-1.5 rounded-[20px] shadow-elevation-1 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 hover:shadow-elevation-2 min-h-[96px] ${getColorClasses(link.colorToken)}`}
           >
             <Icon name={link.icon} size={28} class="shrink-0" />
-            <span class="text-[11px] font-extrabold tracking-wide leading-tight break-words w-full px-0.5">
+            <span
+              id={
+                link.id === 'gdg-cf'
+                  ? 'quick-link-title-gdg-chapter'
+                  : undefined
+              }
+              class="text-[11px] font-extrabold tracking-wide leading-tight break-words w-full px-0.5"
+            >
               {link.title}
             </span>
           </a>
@@ -345,6 +529,47 @@ const getColorClasses = (colorToken: string) => {
 </style>
 
 <script>
+  import {
+    getActiveChapter,
+    ACTIVE_CHAPTER_CHANGED_EVENT,
+  } from '../lib/active-chapter-storage';
+  import { fetchBevyEvents } from '../services/bevy-events-service';
+  import { getLiveOrNextEvent, getCarouselEvents } from '../lib/bevy';
+  import type { ActiveChapter } from '../models/chapter';
+  import type { Event } from '../models/event';
+
+  function escapeHtml(text: string): string {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function escapeAttr(text: string): string {
+    return String(text)
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  const baseUrl = import.meta.env.BASE_URL.endsWith('/')
+    ? import.meta.env.BASE_URL.slice(0, -1)
+    : import.meta.env.BASE_URL;
+
+  function calculateDaysRemaining(startDateString: string): number {
+    const diffTime = new Date(startDateString).getTime() - new Date().getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays > 0 ? diffDays : 0;
+  }
+
+  function getSpeakerAvatar(event: Event): string {
+    if (event.croppedPictureUrl && event.croppedPictureUrl.trim().length > 0) {
+      return event.croppedPictureUrl;
+    }
+    return `${baseUrl}/images/gdg-logo.png`;
+  }
+
   function initCarousel() {
     const carousel = document.getElementById('upcoming-carousel');
     const dotsContainer = document.getElementById('carousel-dots');
@@ -382,7 +607,294 @@ const getColorClasses = (colorToken: string) => {
     });
   }
 
-  // Initialize on load & Astro transition swap
-  initCarousel();
-  document.addEventListener('astro:after-swap', initCarousel);
+  async function syncHomeToActiveChapter(chapter?: ActiveChapter) {
+    const active = chapter || getActiveChapter();
+    const isDefault = Number(active.id) === 920;
+
+    // Retry safeguard if DOM elements are not yet parsed
+    let heroContainer = document.getElementById('hero-event-container');
+    let upcomingContainer = document.getElementById(
+      'upcoming-events-container'
+    );
+    if (!heroContainer || !upcomingContainer) {
+      await new Promise((resolve) => setTimeout(resolve, 20));
+      heroContainer = document.getElementById('hero-event-container');
+      upcomingContainer = document.getElementById('upcoming-events-container');
+    }
+
+    // 1. Update hero background (Orlando skyline for 920, cloud SVG for other chapters)
+    const skylineBg = document.getElementById('hero-skyline-bg');
+    const cloudBg = document.getElementById('hero-cloud-bg');
+    if (skylineBg) {
+      skylineBg.style.display = isDefault ? 'block' : 'none';
+      if (isDefault) skylineBg.classList.remove('hidden');
+      else skylineBg.classList.add('hidden');
+    }
+    if (cloudBg) {
+      cloudBg.style.display = isDefault ? 'none' : 'block';
+      if (isDefault) cloudBg.classList.add('hidden');
+      else cloudBg.classList.remove('hidden');
+    }
+
+    // 2. Update quick link
+    const quickLinkEl = document.getElementById(
+      'quick-link-gdg-chapter'
+    ) as HTMLAnchorElement | null;
+    const quickLinkTitleEl = document.getElementById(
+      'quick-link-title-gdg-chapter'
+    );
+    if (quickLinkEl) {
+      quickLinkEl.href =
+        active.url || `https://gdg.community.dev/chapter/${active.id}`;
+    }
+    if (quickLinkTitleEl) {
+      quickLinkTitleEl.textContent = active.name;
+    }
+
+    // 3. For non-default chapters, show loading placeholder
+    if (!isDefault) {
+      if (heroContainer) {
+        heroContainer.innerHTML = `
+          <div class="card card-elevated p-6 flex items-center justify-center border border-outline/10 bg-surface shadow-elevation-2 rounded-[24px] mt-[-32px] z-10 relative">
+            <div class="flex items-center gap-2 text-xs font-bold text-on-surface-variant">
+              <span class="animate-spin w-4 h-4 border-2 border-primary border-t-transparent rounded-full"></span>
+              Loading events for ${escapeHtml(active.name)}...
+            </div>
+          </div>
+        `;
+      }
+      if (upcomingContainer) {
+        upcomingContainer.innerHTML = `
+          <div class="card card-outlined border-outline/25 p-5 flex items-center justify-center gap-2 bg-surface/30 rounded-2xl">
+            <span class="animate-spin w-4 h-4 border-2 border-primary border-t-transparent rounded-full"></span>
+            <span class="text-xs text-on-surface-variant">Loading upcoming events...</span>
+          </div>
+        `;
+      }
+    }
+
+    // 4. Fetch and render active chapter events
+    try {
+      const allEvents = await fetchBevyEvents(active.id);
+      const currentEvent = getLiveOrNextEvent(allEvents);
+      const upcomingEvents = getCarouselEvents(allEvents);
+
+      // Re-render Hero Card
+      if (heroContainer) {
+        if (currentEvent) {
+          const avatarSrc = getSpeakerAvatar(currentEvent);
+          const isLive = currentEvent.statusLabel === 'Live';
+          heroContainer.innerHTML = `
+            <div
+              class="card card-elevated p-0 overflow-hidden border border-outline/10 flex flex-col bg-surface shadow-elevation-2 rounded-[24px] transition-all duration-300 mt-[-32px] z-10 relative cursor-pointer hover:shadow-elevation-4 hover:border-primary/30"
+              data-event="${escapeAttr(JSON.stringify(currentEvent))}"
+            >
+              <div class="px-4.5 pt-4 pb-2.5 flex justify-between items-center bg-surface border-b border-outline/5">
+                <div class="flex items-center gap-1.5 text-primary font-bold text-[11px] tracking-wider uppercase">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                  ${escapeHtml(currentEvent.cardLabel)}
+                </div>
+                <span class="text-[10px] font-black px-2.5 py-0.5 rounded-full border border-white/20 animate-pulse tracking-wider uppercase ${isLive ? 'bg-error text-white' : 'bg-secondary text-white'}">
+                  ${escapeHtml(currentEvent.statusLabel)}
+                </span>
+              </div>
+              <div class="p-4.5 flex justify-between items-center gap-4 bg-surface">
+                <div class="flex flex-col gap-1.5 max-w-[72%]">
+                  <h3 class="text-[15px] font-extrabold leading-tight text-on-surface">
+                    ${escapeHtml(currentEvent.title)}
+                  </h3>
+                  <p class="text-[12px] text-on-surface-variant font-medium leading-normal mt-0.5">
+                    ${escapeHtml(currentEvent.descriptionShort || '')}
+                  </p>
+                  <div class="flex flex-col gap-1 border-t border-outline/5 pt-2.5 mt-1">
+                    <div class="flex items-center gap-1.5 text-[11px] text-on-surface-variant/80 font-medium">
+                      <span>📅 ${escapeHtml(currentEvent.displayDate)}</span>
+                      <span class="opacity-30">•</span>
+                      <span>⏰ ${escapeHtml(currentEvent.displayTime)}</span>
+                    </div>
+                    <div class="flex items-center gap-1 text-[11px] text-on-surface-variant font-semibold">
+                      <span>📍 ${escapeHtml(currentEvent.displayLocation)}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex flex-col items-center shrink-0">
+                  <div class="w-13 h-13 rounded-full border-2 border-primary/25 overflow-hidden shadow-elevation-1 bg-surface-variant flex items-center justify-center">
+                    <img
+                      src="${escapeAttr(avatarSrc)}"
+                      alt="${escapeAttr(currentEvent.title)}"
+                      class="w-full h-full object-cover"
+                      onerror="this.onerror=null; this.src='${baseUrl}/images/gdg-logo.png';"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        } else {
+          heroContainer.innerHTML = `
+            <div class="card card-elevated p-6 flex flex-col items-center text-center border border-outline/10 bg-surface shadow-elevation-2 rounded-[24px] transition-all duration-300 mt-[-32px] z-10 relative gap-2">
+              <div class="w-12 h-12 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+              </div>
+              <h3 class="text-sm font-bold text-on-surface mt-1">No Active Event</h3>
+              <p class="text-[12px] text-on-surface-variant/80 font-medium px-4">
+                There are no sessions in progress right now for ${escapeHtml(active.name)}. Check back later!
+              </p>
+            </div>
+          `;
+        }
+      }
+
+      // Re-render Carousel
+      if (upcomingContainer) {
+        if (upcomingEvents.length > 0) {
+          const cardsHtml = upcomingEvents
+            .map((event) => {
+              const dateParts = event.displayDate.split(' ');
+              const month = dateParts[0] || 'Jun';
+              const day = dateParts[1]?.replace(',', '') || '27';
+              const daysRemaining = calculateDaysRemaining(event.startDate);
+              const audience = event.audienceType.replace('_', ' ');
+              return `
+              <div
+                class="card card-outlined border-outline/25 p-3 flex items-center justify-between gap-3 bg-surface/40 hover:border-primary/50 transition-colors duration-150 rounded-2xl w-full shrink-0 snap-start cursor-pointer"
+                data-event="${escapeAttr(JSON.stringify(event))}"
+              >
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-xl bg-primary text-on-primary flex flex-col items-center justify-center shrink-0 shadow-elevation-1">
+                    <span class="text-[10px] font-black uppercase tracking-wide leading-none">${escapeHtml(month)}</span>
+                    <span class="text-[15px] font-black leading-none mt-0.5">${escapeHtml(day)}</span>
+                  </div>
+                  <div class="flex flex-col gap-0.5 max-w-[170px]">
+                    <h4 class="text-[13px] font-black text-on-surface truncate leading-tight">${escapeHtml(event.title)}</h4>
+                    <span class="text-[11px] text-on-surface-variant font-semibold">${escapeHtml(audience)}</span>
+                    <span class="text-[11px] text-on-surface-variant/80 font-medium flex items-center gap-0.5 mt-0.5">
+                      📍 ${escapeHtml(event.displayLocation)}
+                    </span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                  <div class="flex flex-col items-end leading-none">
+                    <span class="text-sm font-black text-primary">${daysRemaining}</span>
+                    <span class="text-[9px] font-bold text-on-surface-variant uppercase mt-0.5">Days</span>
+                  </div>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-on-surface-variant/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                </div>
+              </div>
+            `;
+            })
+            .join('');
+
+          const dotsHtml = upcomingEvents
+            .map(
+              (_, idx) => `
+            <span
+              class="h-1.5 rounded-full transition-all duration-200 cursor-pointer ${idx === 0 ? 'w-4 bg-primary' : 'w-1.5 bg-outline-variant/60'}"
+              data-index="${idx}"
+              role="button"
+              aria-label="Go to slide ${idx + 1}"
+            ></span>
+          `
+            )
+            .join('');
+
+          upcomingContainer.innerHTML = `
+            <div class="relative w-full">
+              <div
+                id="upcoming-carousel"
+                class="flex gap-3 overflow-x-auto scroll-smooth snap-x snap-mandatory no-scrollbar pb-1.5"
+                style="scrollbar-width: none; -ms-overflow-style: none;"
+              >
+                ${cardsHtml}
+              </div>
+              <div id="carousel-dots" class="flex justify-center items-center gap-1.5 mt-1">
+                ${dotsHtml}
+              </div>
+            </div>
+          `;
+          initCarousel();
+        } else {
+          upcomingContainer.innerHTML = `
+            <div class="card card-outlined border-outline/25 p-5 flex flex-col items-center text-center justify-center gap-1.5 bg-surface/30 rounded-2xl">
+              <span class="text-[12px] font-bold text-on-surface">No Upcoming Events</span>
+              <span class="text-[11px] text-on-surface-variant/80 font-medium">Check back later for new workshops and meetups with ${escapeHtml(active.name)}!</span>
+            </div>
+          `;
+        }
+      }
+    } catch (error) {
+      console.error(
+        'Failed to dynamically sync events for active chapter:',
+        error
+      );
+      if (!isDefault) {
+        if (heroContainer) {
+          heroContainer.innerHTML = `
+            <div class="card card-elevated p-6 flex flex-col items-center text-center border border-outline/10 bg-surface shadow-elevation-2 rounded-[24px] transition-all duration-300 mt-[-32px] z-10 relative gap-2">
+              <div class="w-12 h-12 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+              </div>
+              <h3 class="text-sm font-bold text-on-surface mt-1">No Active Event</h3>
+              <p class="text-[12px] text-on-surface-variant/80 font-medium px-4">
+                No active sessions found for ${escapeHtml(active.name)}. Check back later!
+              </p>
+            </div>
+          `;
+        }
+        if (upcomingContainer) {
+          upcomingContainer.innerHTML = `
+            <div class="card card-outlined border-outline/25 p-5 flex flex-col items-center text-center justify-center gap-1.5 bg-surface/30 rounded-2xl">
+              <span class="text-[12px] font-bold text-on-surface">No Upcoming Events</span>
+              <span class="text-[11px] text-on-surface-variant/80 font-medium">Check back later for new workshops and meetups with ${escapeHtml(active.name)}!</span>
+            </div>
+          `;
+        }
+      }
+    }
+  }
+
+  // Initial sync on module evaluation
+  syncHomeToActiveChapter();
+
+  // Lifecycle listeners
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      syncHomeToActiveChapter();
+    });
+  }
+
+  window.addEventListener('load', () => {
+    syncHomeToActiveChapter();
+  });
+
+  window.addEventListener('pageshow', () => {
+    syncHomeToActiveChapter();
+  });
+
+  // Listen for chapter updates across tabs/modals
+  window.addEventListener(ACTIVE_CHAPTER_CHANGED_EVENT, (e: Event) => {
+    const customEv = e as CustomEvent<ActiveChapter>;
+    syncHomeToActiveChapter(customEv.detail);
+  });
+
+  document.addEventListener('astro:after-swap', () => {
+    syncHomeToActiveChapter();
+  });
 </script>

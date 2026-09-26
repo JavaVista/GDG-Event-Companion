@@ -57,18 +57,36 @@ const {
     <title>{title}</title>
     <meta name="description" content={description} />
 
-    <!-- Service Worker Registration -->
+    <!-- Service Worker Registration (Production Only; Unregisters & Cleans Stale Caches on Localhost) -->
     <script is:inline>
       if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          const swPath =
-            document
-              .querySelector('link[rel="manifest"]')
-              ?.href.replace(/site\.webmanifest$/, 'sw.js') || '/sw.js';
-          navigator.serviceWorker.register(swPath).catch((err) => {
-            console.warn('ServiceWorker registration failed:', err);
+        if (
+          location.hostname === 'localhost' ||
+          location.hostname === '127.0.0.1'
+        ) {
+          navigator.serviceWorker.getRegistrations().then((registrations) => {
+            for (const registration of registrations) {
+              registration.unregister();
+            }
           });
-        });
+          if ('caches' in window) {
+            caches.keys().then((keys) => {
+              for (const key of keys) {
+                caches.delete(key);
+              }
+            });
+          }
+        } else {
+          window.addEventListener('load', () => {
+            const swPath =
+              document
+                .querySelector('link[rel="manifest"]')
+                ?.href.replace(/site\.webmanifest$/, 'sw.js') || '/sw.js';
+            navigator.serviceWorker.register(swPath).catch((err) => {
+              console.warn('ServiceWorker registration failed:', err);
+            });
+          });
+        }
       }
     </script>
 

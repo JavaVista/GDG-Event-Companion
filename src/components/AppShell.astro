@@ -29,11 +29,13 @@ import gdgLogo from '../../public/images/gdg-logo.png';
           class="font-black text-on-surface tracking-tight leading-tight flex flex-col items-start"
         >
           <span
+            id="header-chapter-prefix"
             class="text-[17px] font-black text-primary uppercase tracking-wider leading-none"
             >GDG</span
           >
           <span
-            class="text-[11px] text-on-surface-variant font-semibold tracking-wide leading-none mt-0.5"
+            id="header-chapter-name"
+            class="text-[11px] text-on-surface-variant font-semibold tracking-wide leading-none mt-0.5 truncate max-w-[170px]"
             >Central Florida</span
           >
         </h1>
@@ -90,3 +92,38 @@ import gdgLogo from '../../public/images/gdg-logo.png';
 
 <!-- Event Detail Modal Dialog Overlay component -->
 <EventDetailModal />
+
+<script>
+  import {
+    getActiveChapter,
+    ACTIVE_CHAPTER_CHANGED_EVENT,
+  } from '../lib/active-chapter-storage';
+  import type { ActiveChapter } from '../models/chapter';
+
+  function syncHeaderChapter(chapter?: ActiveChapter) {
+    const active = chapter || getActiveChapter();
+    const nameEl = document.getElementById('header-chapter-name');
+    const prefixEl = document.getElementById('header-chapter-prefix');
+    if (!nameEl) return;
+
+    const trimmed = active.name.trim();
+    const match = trimmed.match(/^GDG\s+(.*)$/i);
+    if (match && match[1]) {
+      if (prefixEl) prefixEl.textContent = 'GDG';
+      nameEl.textContent = match[1];
+    } else {
+      if (prefixEl) prefixEl.textContent = 'GDG';
+      nameEl.textContent = trimmed.replace(/^GDG\s*/i, '');
+    }
+  }
+
+  // Initial sync & page navigation sync
+  syncHeaderChapter();
+  document.addEventListener('astro:after-swap', () => syncHeaderChapter());
+
+  // Listen for chapter updates
+  window.addEventListener(ACTIVE_CHAPTER_CHANGED_EVENT, (e: Event) => {
+    const customEv = e as CustomEvent<ActiveChapter>;
+    syncHeaderChapter(customEv.detail);
+  });
+</script>

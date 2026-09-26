@@ -8,6 +8,7 @@ export interface ScriptOptions {
     specialInstructions?: string;
   };
   nextEvent?: Event;
+  chapterName?: string;
 }
 
 export interface ScriptSection {
@@ -282,6 +283,7 @@ export function generateIntroSections(
 ): ScriptSection[] {
   const speakerInfo = getSpeakerInfo(event);
   const startDate = new Date(event.startDate);
+  const chapterName = options.chapterName || 'GDG Central Florida';
 
   // Dynamic day of week and time of day greeting
   const dayOfWeek = startDate.toLocaleDateString('en-US', { weekday: 'long' });
@@ -289,7 +291,7 @@ export function generateIntroSections(
   const timeOfDay =
     hours < 12 ? 'morning' : hours < 18 ? 'afternoon' : 'evening';
 
-  const greetingText = `Good ${timeOfDay}, everyone! 👋\n\nWelcome to **GDG Central Florida**, and thank you all for spending part of your ${dayOfWeek} with us. Whether this is your first meetup or you've been coming for years, we're really glad you're here.`;
+  const greetingText = `Good ${timeOfDay}, everyone! 👋\n\nWelcome to **${chapterName}**, and thank you all for spending part of your ${dayOfWeek} with us. Whether this is your first meetup or you've been coming for years, we're really glad you're here.`;
 
   // Announcements block
   const userAnnouncements = options.talkingPoints?.announcements?.trim();
@@ -298,7 +300,7 @@ export function generateIntroSections(
     : `Before we get started, I want to share a few quick announcements.`;
 
   // Community & Discord
-  const communityDiscordText = `First, we'd love for you to join our **GDG Central Florida Discord**. It's where our community stays connected between meetups, shares projects, asks questions, and learns from one another. If you haven't joined yet, please do—we'd love to keep the conversation going after today's event.`;
+  const communityDiscordText = `First, we'd love for you to join our **${chapterName} Discord**. It's where our community stays connected between meetups, shares projects, asks questions, and learns from one another. If you haven't joined yet, please do—we'd love to keep the conversation going after today's event.`;
 
   // Code of Conduct
   const codeOfConductText = `Second, a quick reminder that all of our events follow **Google's Community Code of Conduct**. We want everyone to feel welcome, respected, and safe.`;
@@ -357,6 +359,7 @@ export function generateOutroSections(
   options: ScriptOptions = {}
 ): ScriptSection[] {
   const speakerInfo = getSpeakerInfo(event);
+  const chapterName = options.chapterName || 'GDG Central Florida';
 
   const thankYouText = `Before everyone heads out, I'd like to say a huge thank you for joining us today.`;
 
@@ -374,17 +377,17 @@ export function generateOutroSections(
       ? `I'd also like to thank **${event.venueName}** for hosting us and making today's meetup possible.\n\nI also want to give a special shout-out to our **volunteers** for their hard work in making everything run smoothly today.`
       : `I'd also like to thank our hosts and community partners for supporting today's event.\n\nI also want to give a special shout-out to our **volunteers** for their hard work in making everything run smoothly today.`;
 
-  const communityThanksText = `Most importantly, thank all of you for being here. Whether you're a student, a seasoned developer, or just getting started with tech, you're what makes this community special. Every conversation, question, and connection helps make **GDG Central Florida** stronger.`;
+  const communityThanksText = `Most importantly, thank all of you for being here. Whether you're a student, a seasoned developer, or just getting started with tech, you're what makes this community special. Every conversation, question, and connection helps make **${chapterName}** stronger.`;
 
-  const discordReminderText = `If you haven't already, please join our **GDG Central Florida Discord**. It's where we continue the conversations, share resources, announce future events, and help each other grow.`;
+  const discordReminderText = `If you haven't already, please join our **${chapterName} Discord**. It's where we continue the conversations, share resources, announce future events, and help each other grow.`;
 
   const upcomingEventsText = options.nextEvent
     ? `If you enjoyed today's meetup, we'd really appreciate it if you RSVP for our next session, "**${options.nextEvent.title}**" on **${options.nextEvent.displayDate}**, and invite a friend or coworker next time!`
     : `If you enjoyed today's meetup, we'd really appreciate it if you RSVP for one of our upcoming events at **gdg.community.dev** and invite a friend or coworker next time. The more people we bring together, the stronger our community becomes.`;
 
   const networkingClosingText = speakerInfo.hasSpeaker
-    ? `Feel free to stick around for a bit, network, ask **${speakerInfo.names}** questions, and meet someone new before you leave.\n\nThank you again for spending part of your day with us. Have a safe trip home, and we hope to see you at our next GDG Central Florida event! 🚀`
-    : `Feel free to stick around for a bit, network, chat with each other, and meet someone new before you leave.\n\nThank you again for spending part of your day with us. Have a safe trip home, and we hope to see you at our next GDG Central Florida event! 🚀`;
+    ? `Feel free to stick around for a bit, network, ask **${speakerInfo.names}** questions, and meet someone new before you leave.\n\nThank you again for spending part of your day with us. Have a safe trip home, and we hope to see you at our next ${chapterName} event! 🚀`
+    : `Feel free to stick around for a bit, network, chat with each other, and meet someone new before you leave.\n\nThank you again for spending part of your day with us. Have a safe trip home, and we hope to see you at our next ${chapterName} event! 🚀`;
 
   return [
     { id: 1, title: 'Thank You', text: thankYouText },

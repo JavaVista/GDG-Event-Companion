@@ -57,7 +57,7 @@ export const PUBLIC_LINKS: PublicLink[] = [
     id: 'coc',
     title: 'Code of Conduct',
     description: 'Our community guidelines',
-    url: 'https://googledevscentralflorida.com/codeOfConduct',
+    url: 'https://www.google.com/events/policy/anti-harassmentpolicy.html',
     icon: 'codeOfConduct',
     colorToken: 'purple',
     isExternal: true,

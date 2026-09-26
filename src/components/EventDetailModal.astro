@@ -232,9 +232,13 @@ import Icon from './Icon.astro';
     // Open Modal function
     const openModal = (eventData: Event) => {
       // 1. Banner & Audience Type
-      bannerImg.src =
-        eventData.croppedBannerUrl ||
-        'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=600';
+      const DEFAULT_BANNER =
+        'https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/event_banners/GDG_Bevy_DefaultEventBanner_x7tGQf5.png';
+      bannerImg.src = eventData.croppedBannerUrl || DEFAULT_BANNER;
+      bannerImg.onerror = () => {
+        bannerImg.onerror = null;
+        bannerImg.src = DEFAULT_BANNER;
+      };
       if (audienceBadge) {
         audienceBadge.innerText = (eventData.audienceType || '').replace(
           '_',

@@ -49,11 +49,42 @@ export function mapBevyEventToEvent(bevyEvent: BevyEvent): Event {
     });
   const displayTime = `${formatTime(start)} - ${formatTime(end)}`;
 
+  // Safe audience type inference:
+  let audienceType: 'IN_PERSON' | 'VIRTUAL' | 'HYBRID' =
+    bevyEvent.audience_type || 'IN_PERSON';
+
+  const titleLower = (bevyEvent.title || '').toLowerCase();
+  const descLower = (
+    (bevyEvent.description_short || '') +
+    ' ' +
+    (bevyEvent.description || '')
+  ).toLowerCase();
+
+  const isVirtualByText =
+    titleLower.includes('virtual') ||
+    titleLower.includes('online') ||
+    titleLower.includes('[online') ||
+    descLower.includes('virtual') ||
+    descLower.includes('online meeting') ||
+    descLower.includes('google meet') ||
+    descLower.includes('zoom');
+
+  if (audienceType === 'IN_PERSON' && isVirtualByText) {
+    audienceType = 'VIRTUAL';
+  } else if (titleLower.includes('hybrid') || descLower.includes('hybrid')) {
+    audienceType = 'HYBRID';
+  }
+
   // Determine Display Location based on Audience Type
   let displayLocation: string;
-  if (bevyEvent.audience_type === 'VIRTUAL') {
-    displayLocation = bevyEvent.virtual_venue_name || 'Online (Virtual)';
-  } else if (bevyEvent.audience_type === 'HYBRID') {
+  if (audienceType === 'VIRTUAL') {
+    displayLocation =
+      bevyEvent.virtual_venue_name &&
+      bevyEvent.virtual_venue_name !== 'null' &&
+      bevyEvent.virtual_venue_name.trim().length > 0
+        ? bevyEvent.virtual_venue_name
+        : 'Online (Virtual)';
+  } else if (audienceType === 'HYBRID') {
     displayLocation = bevyEvent.venue_name
       ? `${bevyEvent.venue_name} & Online`
       : 'Hybrid Event';
@@ -93,6 +124,9 @@ export function mapBevyEventToEvent(bevyEvent: BevyEvent): Event {
       ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fallbackAddress)}`
       : undefined);
 
+  const defaultBannerUrl =
+    'https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/event_banners/GDG_Bevy_DefaultEventBanner_x7tGQf5.png';
+
   return {
     id: bevyEvent.id,
     title: bevyEvent.title,
@@ -101,7 +135,7 @@ export function mapBevyEventToEvent(bevyEvent: BevyEvent): Event {
     startDate: bevyEvent.start_date,
     endDate: bevyEvent.end_date,
     status: bevyEvent.status,
-    audienceType: bevyEvent.audience_type,
+    audienceType,
     venueName: bevyEvent.venue_name,
     venueAddress: bevyEvent.venue_address,
     venueCity: bevyEvent.venue_city,
@@ -109,7 +143,7 @@ export function mapBevyEventToEvent(bevyEvent: BevyEvent): Event {
     venueZipCode: bevyEvent.venue_zip_code,
     virtualVenueName: bevyEvent.virtual_venue_name,
     virtualVenueLink: bevyEvent.virtual_venue_link,
-    croppedBannerUrl: bevyEvent.cropped_banner_url,
+    croppedBannerUrl: bevyEvent.cropped_banner_url || defaultBannerUrl,
     croppedPictureUrl: bevyEvent.cropped_picture_url,
     displayLocation,
     displayDate,

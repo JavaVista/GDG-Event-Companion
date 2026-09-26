@@ -101,33 +101,43 @@ const defaultSections = currentEvent
     window.location.replace(`${baseUrl}/organizer`);
   }
 
+  import {
+    getActiveChapter,
+    ACTIVE_CHAPTER_CHANGED_EVENT,
+  } from '../../lib/active-chapter-storage';
+  import { fetchBevyEvents } from '../../services/bevy-events-service';
+  import { getLiveOrNextEvent } from '../../lib/bevy';
+  import { generateOutroSections } from '../../lib/script-generator';
+  import type { ActiveChapter } from '../../models/chapter';
+
   const container = document.getElementById('outro-page-container');
-  const eventId = container?.dataset.eventId || 'default';
-  const defaultSections = container?.dataset.defaultSections
+  let currentEventId = container?.dataset.eventId || 'default';
+  let dynamicDefaultSections = container?.dataset.defaultSections
     ? JSON.parse(container.dataset.defaultSections)
     : [];
-
-  const storageKey = `gdg-outro-sections-${eventId}`;
-  const fallbackKey = 'gdg-outro-sections';
 
   let currentSections: Array<{ id: number; title: string; text: string }> = [];
 
   function loadSections() {
+    const storageKey = `gdg-outro-sections-${currentEventId}`;
+    const fallbackKey = 'gdg-outro-sections';
     try {
       const saved =
         localStorage.getItem(storageKey) || localStorage.getItem(fallbackKey);
       if (saved) {
         currentSections = JSON.parse(saved);
       } else {
-        currentSections = JSON.parse(JSON.stringify(defaultSections));
+        currentSections = JSON.parse(JSON.stringify(dynamicDefaultSections));
       }
     } catch (e) {
       console.error('Failed to load outro sections from localStorage:', e);
-      currentSections = JSON.parse(JSON.stringify(defaultSections));
+      currentSections = JSON.parse(JSON.stringify(dynamicDefaultSections));
     }
   }
 
   function saveSectionsToStorage() {
+    const storageKey = `gdg-outro-sections-${currentEventId}`;
+    const fallbackKey = 'gdg-outro-sections';
     try {
       const serialized = JSON.stringify(currentSections);
       localStorage.setItem(storageKey, serialized);
@@ -264,7 +274,7 @@ const defaultSections = currentEvent
   });
 
   btnConfirmReset?.addEventListener('click', () => {
-    currentSections = JSON.parse(JSON.stringify(defaultSections));
+    currentSections = JSON.parse(JSON.stringify(dynamicDefaultSections));
     lastDeletedSection = null;
     hideInlineUndoBanner();
     renderEditView();
@@ -542,4 +552,46 @@ const defaultSections = currentEvent
   // Initial Load
   loadSections();
   renderReadView();
+
+  async function syncOutroChapter(chapter?: ActiveChapter) {
+    const active = chapter || getActiveChapter();
+    try {
+      const allEvents = await fetchBevyEvents(active.id);
+      const currentEvent = getLiveOrNextEvent(allEvents);
+      const currentIndex = currentEvent
+        ? allEvents.findIndex((e) => e.id === currentEvent.id)
+        : -1;
+      const nextEvent =
+        currentIndex !== -1 && currentIndex + 1 < allEvents.length
+          ? allEvents[currentIndex + 1]
+          : undefined;
+
+      currentEventId = currentEvent?.id || 'default';
+      dynamicDefaultSections = currentEvent
+        ? generateOutroSections(currentEvent, {
+            nextEvent,
+            chapterName: active.name,
+          })
+        : [];
+
+      loadSections();
+      renderReadView();
+      if (!viewEdit?.classList.contains('hidden')) {
+        renderEditView();
+      }
+    } catch (err) {
+      console.error('Failed to sync outro script with active chapter:', err);
+    }
+  }
+
+  // Initial sync if non-default
+  const initialChapter = getActiveChapter();
+  if (initialChapter.id !== 920) {
+    syncOutroChapter(initialChapter);
+  }
+
+  window.addEventListener(ACTIVE_CHAPTER_CHANGED_EVENT, (e: Event) => {
+    const customEv = e as CustomEvent<ActiveChapter>;
+    syncOutroChapter(customEv.detail);
+  });
 </script>

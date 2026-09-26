@@ -12,6 +12,9 @@ export interface EventData {
   daysRemaining?: number;
 }
 
+export const UNIVERSAL_GDG_BANNER =
+  'https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/event_banners/GDG_Bevy_DefaultEventBanner_x7tGQf5.png';
+
 export const CURRENT_EVENT: EventData = {
   title:
     'Making AI Honesty Machine-Readable: A Hands-On Workshop with Muntaser Syed',

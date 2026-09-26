@@ -45,9 +45,11 @@ const getContainerColorClasses = (colorToken: string) => {
       {
         PUBLIC_LINKS.map((item) => (
           <div
+            id={`qr-card-${item.id}`}
             class="qr-trigger card card-outlined border-outline/25 p-3.5 flex justify-between items-center bg-surface/50 hover:border-primary/60 hover:bg-surface transition-all duration-200 cursor-pointer w-full text-left rounded-2xl"
             role="button"
             tabindex="0"
+            data-item-id={item.id}
             data-title={item.title}
             data-url={item.url}
             data-icon={item.icon}
@@ -59,11 +61,19 @@ const getContainerColorClasses = (colorToken: string) => {
                 <Icon name={item.icon} size={24} />
               </div>
               <div class="flex flex-col">
-                <h3 class="text-sm font-bold text-on-surface">{item.title}</h3>
+                <h3
+                  id={item.id === 'gdg-cf' ? 'qr-card-title-gdg-cf' : undefined}
+                  class="text-sm font-bold text-on-surface"
+                >
+                  {item.title}
+                </h3>
                 <p class="text-[12px] text-on-surface-variant font-medium mt-0.5">
                   {item.description}
                 </p>
-                <span class="text-[11px] text-primary font-mono truncate max-w-[180px] mt-0.5">
+                <span
+                  id={item.id === 'gdg-cf' ? 'qr-card-url-gdg-cf' : undefined}
+                  class="text-[11px] text-primary font-mono truncate max-w-[180px] mt-0.5"
+                >
                   {item.url.replace('https://', '')}
                 </span>
               </div>
@@ -134,6 +144,12 @@ const getContainerColorClasses = (colorToken: string) => {
 </BaseLayout>
 
 <script>
+  import {
+    getActiveChapter,
+    ACTIVE_CHAPTER_CHANGED_EVENT,
+  } from '../lib/active-chapter-storage';
+  import type { ActiveChapter } from '../models/chapter';
+
   const qrTriggers = document.querySelectorAll('.qr-trigger');
   const modal = document.getElementById('qr-modal');
   const modalTitle = document.getElementById('modal-title');
@@ -280,10 +296,55 @@ const getContainerColorClasses = (colorToken: string) => {
     });
   }
 
-  // Initialize page list thumbnails
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initQRCodes);
-  } else {
-    initQRCodes();
+  function syncChapterQRCode(chapter?: ActiveChapter) {
+    const active = chapter || getActiveChapter();
+    const card = document.getElementById('qr-card-gdg-cf');
+    const titleEl = document.getElementById('qr-card-title-gdg-cf');
+    const urlEl = document.getElementById('qr-card-url-gdg-cf');
+    if (!card) return;
+
+    const targetUrl =
+      active.url || `https://gdg.community.dev/chapter/${active.id}`;
+    card.setAttribute('data-title', active.name);
+    card.setAttribute('data-url', targetUrl);
+
+    if (titleEl) titleEl.textContent = active.name;
+    if (urlEl) urlEl.textContent = targetUrl.replace('https://', '');
+
+    const thumbnail = card.querySelector('.qr-thumbnail') as HTMLElement | null;
+    if (thumbnail && typeof QRCode !== 'undefined') {
+      thumbnail.innerHTML = '';
+      thumbnail.setAttribute('data-qr-url', targetUrl);
+      new QRCode(thumbnail, {
+        text: targetUrl,
+        width: 40,
+        height: 40,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M,
+      });
+    }
   }
+
+  // Initialize page list thumbnails
+  const startQRInit = () => {
+    initQRCodes();
+    syncChapterQRCode();
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startQRInit);
+  } else {
+    startQRInit();
+  }
+
+  document.addEventListener('astro:after-swap', () => {
+    initQRCodes();
+    syncChapterQRCode();
+  });
+
+  window.addEventListener(ACTIVE_CHAPTER_CHANGED_EVENT, (e: Event) => {
+    const customEv = e as CustomEvent<ActiveChapter>;
+    syncChapterQRCode(customEv.detail);
+  });
 </script>
